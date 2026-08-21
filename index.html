@@ -176,6 +176,64 @@ a{color:inherit;text-decoration:none}
 .genre-settings-actions{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #ededed;margin-top:6px;padding-top:8px}
 .genre-settings-actions button{appearance:none;border:0;background:transparent;padding:3px 0;font-size:10px;font-weight:700;color:#666}
 
+
+.find-kind-tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-strong);border-radius:10px;overflow:hidden;margin:0 0 15px;background:#fff}
+.find-kind-tab{appearance:none;-webkit-appearance:none;border:0;background:#fff;padding:10px 12px;font-size:13px;font-weight:800;color:#777}
+.find-kind-tab+ .find-kind-tab{border-left:1px solid var(--line-strong)}
+.find-kind-tab.on{background:#111;color:#fff}
+.fanart-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
+.fanart-toolbar .pills{margin:0}
+.fanart-upload-btn{appearance:none;-webkit-appearance:none;border:1px solid #111;background:#111;color:#fff;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:800;white-space:nowrap}
+.fanart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px;margin-top:12px}
+.fanart-card{min-width:0}
+.fanart-card button{all:unset;display:block;width:100%;cursor:pointer}
+.fanart-thumb{position:relative;aspect-ratio:4/5;border-radius:10px;overflow:hidden;background:#f0f0f0;border:1px solid var(--line)}
+.fanart-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.fanart-demo-art{width:100%;height:100%;position:relative;overflow:hidden;background:#e8e8e8}
+.fanart-demo-art:before,.fanart-demo-art:after{content:"";position:absolute;border-radius:999px;filter:blur(.1px)}
+.fanart-demo-art.v1{background:linear-gradient(145deg,#0d1321 0 52%,#394867 52% 70%,#f1f1f1 70%)}
+.fanart-demo-art.v1:before{width:42%;height:42%;right:8%;top:10%;background:#fff;box-shadow:0 0 0 12px rgba(255,255,255,.12)}
+.fanart-demo-art.v2{background:linear-gradient(180deg,#c8d9e6 0 55%,#2f4156 55%)}
+.fanart-demo-art.v2:before{width:10px;height:62%;left:48%;top:20%;background:#111;border-radius:4px;transform:rotate(25deg)}
+.fanart-demo-art.v3{background:linear-gradient(135deg,#111 0 45%,#6b7280 45% 58%,#f4f4f4 58%)}
+.fanart-demo-art.v3:before{width:54%;height:54%;left:-15%;bottom:-8%;background:#fff}
+.fanart-demo-art.v4{background:linear-gradient(160deg,#f4e8c1 0 50%,#7c6f64 50%)}
+.fanart-demo-art.v4:before{width:58%;height:18%;left:22%;bottom:18%;background:#222;border-radius:8px}
+.fanart-demo-art.v5{background:linear-gradient(180deg,#343a40,#111 62%,#d9d9d9 62%)}
+.fanart-demo-art.v5:before{width:34%;height:34%;left:33%;top:13%;background:#f5f5f5}
+.fanart-demo-art.v6{background:linear-gradient(145deg,#e9ecef 0 40%,#495057 40% 64%,#adb5bd 64%)}
+.fanart-demo-art.v6:before{width:30%;height:55%;left:36%;top:25%;background:#111;border-radius:45% 45% 18% 18%}
+.fanart-demo-art.v7{background:linear-gradient(120deg,#f8f9fa 0 40%,#5c677d 40% 72%,#22223b 72%)}
+.fanart-demo-art.v7:before{width:46%;height:46%;right:-12%;top:-8%;background:#fff}
+.fanart-demo-art.v8{background:linear-gradient(180deg,#dee2e6 0 52%,#212529 52%)}
+.fanart-demo-art.v8:before{width:68%;height:10%;left:16%;top:45%;background:#fff;border-radius:3px}
+.fanart-demo-art .demo-mark{position:absolute;left:10px;bottom:9px;color:#fff;font-size:10px;font-weight:900;letter-spacing:.08em;text-shadow:0 1px 4px rgba(0,0,0,.45)}
+.fanart-card-title{margin-top:7px;font-size:12px;font-weight:800;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fanart-card-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:3px;color:var(--muted);font-size:10px}
+.fanart-card-work{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fanart-detail-head{margin-bottom:12px}
+.fanart-detail-head h1{margin:8px 0 6px;font-size:25px;letter-spacing:-.035em}
+.fanart-detail-image{width:100%;max-height:72vh;object-fit:contain;background:#f2f2f2;border:1px solid var(--line);border-radius:12px;display:block}
+.fanart-detail-demo{aspect-ratio:4/5;max-height:72vh;border-radius:12px;border:1px solid var(--line);overflow:hidden}
+.fanart-work-link{appearance:none;-webkit-appearance:none;width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 12px;margin:14px 0 0;text-align:left}
+.fanart-work-link b{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fanart-work-link span{font-size:10px;color:var(--muted);white-space:nowrap}
+.fanart-desc{margin:13px 0 0;font-size:13px;line-height:1.7;color:#555;white-space:pre-wrap}
+.fanart-actions{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:16px}
+.fanart-actions button{appearance:none;-webkit-appearance:none;border:0;background:#fff;padding:12px 8px;font-size:11px;color:#666}
+.fanart-actions button+button{border-left:1px solid var(--line)}
+.fanart-actions b{display:block;color:#111;font-size:15px;margin-bottom:2px}
+.fanart-form-note{font-size:11px;color:var(--muted);line-height:1.55;margin-top:5px}
+.fanart-preview{display:none;margin-top:8px;width:100%;aspect-ratio:4/5;object-fit:cover;border:1px solid var(--line);border-radius:10px;background:#f4f4f4}
+.work-fanarts{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.work-fanart-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}
+.work-fanart-thumb{aspect-ratio:1/1;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#f1f1f1}
+.work-fanart-thumb button{all:unset;display:block;width:100%;height:100%;cursor:pointer}
+.work-fanart-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.work-fanart-thumb .fanart-demo-art{height:100%}
+.work-fanarts-all{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:#666;font-size:11px;font-weight:800;padding:8px 0 0}
+@media(max-width:380px){.fanart-grid{gap:12px 8px}.fanart-card-title{font-size:11px}}
+
 .home-feed{border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;background:#fff;overflow:hidden;box-sizing:border-box}
 .home-feed .pills{margin-bottom:6px}
 .home-feed .card:first-child{border-top:0}
@@ -340,6 +398,8 @@ a{color:inherit;text-decoration:none}
   var GENRE_PREF_KEY = "kkori_genre_tabs_v1";
   var ACCOUNT_KEY = "noveltail_test_account_v1";
   var BOOKMARK_KEY = "noveltail_bookmarks_v1";
+  var FANART_KEY = "noveltail_fanarts_v1";
+  var FANART_MINE_KEY = "noveltail_mine_fanarts_v1";
   var genres = ["판타지","과학소설","로맨스","공포","무협","미스터리","대체역사","일상","개그","기타"];
   var tailTypes = ["다음 화","다른 결말","IF분기","패러디","개그화","외전","다른 등장인물 시점","재해석","세계관 확장","기타"];
 
@@ -362,10 +422,42 @@ a{color:inherit;text-decoration:none}
   }
 
   var data = loadData();
-  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, genreSettingsOpen:false};
+  var fanarts = loadFanarts();
+  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null};
 
   function saveData() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  function loadFanarts() {
+    try {
+      var raw=localStorage.getItem(FANART_KEY),arr=raw?JSON.parse(raw):[];
+      return Array.isArray(arr)?arr:[];
+    } catch(e) { return []; }
+  }
+
+  function saveFanarts() {
+    try { localStorage.setItem(FANART_KEY,JSON.stringify(fanarts)); } catch(e) {}
+  }
+
+  function mineFanartIds() {
+    try {
+      var raw=localStorage.getItem(FANART_MINE_KEY),ids=raw?JSON.parse(raw):[];
+      return Array.isArray(ids)?ids:[];
+    } catch(e) { return []; }
+  }
+
+  function addMineFanart(id) {
+    try {
+      var ids=mineFanartIds();
+      if(ids.indexOf(id)===-1) ids.push(id);
+      localStorage.setItem(FANART_MINE_KEY,JSON.stringify(ids));
+    } catch(e) {}
+  }
+
+  function getFanart(id) {
+    for(var i=0;i<fanarts.length;i++) if(fanarts[i].id===id) return fanarts[i];
+    return null;
   }
 
   function defaultGenrePrefs() {
@@ -662,6 +754,62 @@ a{color:inherit;text-decoration:none}
     saveData();
   }
 
+  function ensureDemoFanarts() {
+    var now=Date.now(),demo=[
+      ["fa_demo_01","a","도킹 포트 너머의 지구","익명 4412","demo:1",186],
+      ["fa_demo_02","a","4번 포트 앞에서","무명","demo:5",132],
+      ["fa_demo_03","b","세 번째라는 문장","익명 7710","demo:3",241],
+      ["fa_demo_04","c","우주 배달 완료","익명 2044","demo:4",308],
+      ["fa_demo_05","d","정시퇴근 용사","구름연필","demo:2",195],
+      ["fa_demo_06","demo_series_e1","달행 막차","익명 0903","demo:7",421],
+      ["fa_demo_07","demo_series_e2","빈 좌석의 이름","익명 3312","demo:6",376],
+      ["fa_demo_08","demo_tail_series_e1","먼저 도착한 나","익명 1408","demo:8",267],
+      ["fa_demo_09","demo_home_02","지각한 마왕","익명 5520","demo:4",98],
+      ["fa_demo_10","demo_home_03","화성에서의 마지막 밤","익명 1831","demo:1",164],
+      ["fa_demo_11","demo_home_07","돌아오지 않는 막차","익명 9210","demo:5",144],
+      ["fa_demo_12","demo_home_20","왕의 마지막 편지","익명 6701","demo:7",119]
+    ];
+    for(var i=0;i<demo.length;i++) {
+      if(getFanart(demo[i][0])) continue;
+      fanarts.push({id:demo[i][0],workId:demo[i][1],title:demo[i][2],artist:demo[i][3],desc:"NovelTail 팬아트 탐색 기능을 확인하기 위한 예시 팬아트입니다.",image:demo[i][4],likes:demo[i][5],date:now-(i+1)*2400000,comments:[],adAllowed:true});
+    }
+    saveFanarts();
+  }
+
+  function fanartWork(fa) {
+    if(!fa) return null;
+    var work=getStory(fa.workId);
+    return work?seriesRootForStory(work):null;
+  }
+
+  function fanartGenre(fa) {
+    var work=fanartWork(fa);
+    return work?inheritedGenre(work):"기타";
+  }
+
+  function fanartImageHTML(fa,compact) {
+    var image=String((fa&&fa.image)||""),m;
+    if(image.indexOf("demo:")===0) {
+      m=Number(image.split(":")[1]||1); m=((m-1)%8)+1;
+      return '<div class="fanart-demo-art v'+m+'"><span class="demo-mark">FANART</span></div>';
+    }
+    if(image) return '<img src="'+esc(image)+'" alt="'+esc((fa&&fa.title)||"팬아트")+'">';
+    return '<div class="fanart-demo-art v1"><span class="demo-mark">FANART</span></div>';
+  }
+
+  function fanartsForWork(work) {
+    if(!work) return [];
+    var root=seriesRootForStory(work),ids={},out=[],eps,i;
+    ids[root.id]=true;
+    if(isSeriesRoot(root)) {
+      eps=seriesEpisodes(root.seriesId);
+      for(i=0;i<eps.length;i++) ids[eps[i].id]=true;
+    }
+    for(i=0;i<fanarts.length;i++) if(ids[fanarts[i].workId]) out.push(fanarts[i]);
+    out.sort(function(a,b){return Number(b.likes||0)-Number(a.likes||0);});
+    return out;
+  }
+
   function originBadge(s) {
     var lineage=s && s.lineage==="tail" ? "tail" : "first";
     return '<span class="origin '+lineage+'">'+(lineage==="tail"?'꼬리':'첫')+'</span>';
@@ -879,7 +1027,7 @@ a{color:inherit;text-decoration:none}
     return out;
   }
 
-  function findHTML() {
+  function workDiscoveryHTML() {
     var arr=state.findFlat?flatDiscoverWorks():rootWorks(),cards="",genresHtml="",i,s,q=(state.query||"").toLowerCase(),filtered=[],visibleGenres;
     normalizeFindGenre();
     for(i=0;i<arr.length;i++) {
@@ -898,15 +1046,69 @@ a{color:inherit;text-decoration:none}
       var g=visibleGenres[i];
       genresHtml+='<button class="pill '+(state.findGenre===g?'on':'')+'" type="button" data-find-genre="'+esc(g)+'">'+esc(g)+'</button>';
     }
-    return '<main class="wrap"><div class="head"><h2>발견</h2><span class="muted">장르와 계보로 찾기</span></div>'+
-      '<input class="search" id="searchInput" value="'+esc(state.query)+'" placeholder="작품 제목 검색">'+
+    return '<input class="search" id="searchInput" value="'+esc(state.query)+'" placeholder="작품 제목 검색">'+
       '<div class="pills">'+genresHtml+'</div>'+
       '<div class="find-controls"><button class="find-toggle '+(state.findShowTails?'on':'')+'" type="button" data-find-tails="1">꼬리작품도 보기</button><button class="find-toggle '+(state.findFlat?'on':'')+'" type="button" data-find-flat="1">장르만 보기</button></div>'+
       '<div class="genre-setting-row"><button class="genre-setting-btn" type="button" data-genre-settings="1">장르 탭 설정</button></div>'+
       genreSettingsHTML()+
       '<div class="find-note">기본 장르 분류는 첫 작품의 장르를 따릅니다. 장르만 보기를 켜면 첫 작품과 꼬리를 구분하지 않고 한 목록에서 봅니다.</div>'+
-      '<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div></main>';
+      '<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div>';
   }
+
+  function fanartCardHTML(fa) {
+    var work=fanartWork(fa),workTitle=work?displayTitle(work):"연결 작품 없음";
+    return '<div class="fanart-card"><button type="button" data-fanart="'+esc(fa.id)+'"><div class="fanart-thumb">'+fanartImageHTML(fa)+'</div><div class="fanart-card-title">'+esc(fa.title||"무제")+'</div><div class="fanart-card-meta"><span class="fanart-card-work">'+esc(workTitle)+'</span><span>♡ '+fmt(fa.likes||0)+'</span></div></button></div>';
+  }
+
+  function fanartDiscoveryHTML() {
+    var arr=[],cards="",genresHtml="",visibleGenres=visibleGenreNames(),i,fa,work;
+    if(visibleGenres.indexOf(state.fanGenre)===-1) state.fanGenre=visibleGenres.length?visibleGenres[0]:"전체";
+    for(i=0;i<fanarts.length;i++) {
+      fa=fanarts[i];work=fanartWork(fa);
+      if(!work) continue;
+      if(state.fanWorkFilter && work.id!==state.fanWorkFilter && fa.workId!==state.fanWorkFilter) continue;
+      if(state.fanGenre!=="전체" && fanartGenre(fa)!==state.fanGenre) continue;
+      arr.push(fa);
+    }
+    arr.sort(function(a,b){
+      if(state.fanRank==="인기") return Number(b.likes||0)-Number(a.likes||0);
+      return Number(b.date||0)-Number(a.date||0);
+    });
+    for(i=0;i<arr.length;i++) cards+=fanartCardHTML(arr[i]);
+    for(i=0;i<visibleGenres.length;i++) genresHtml+='<button class="pill '+(state.fanGenre===visibleGenres[i]?'on':'')+'" type="button" data-fan-genre="'+esc(visibleGenres[i])+'">'+esc(visibleGenres[i])+'</button>';
+    return '<div class="fanart-toolbar"><div class="pills"><button class="pill '+(state.fanRank==='최신'?'on':'')+'" type="button" data-fan-rank="최신">최신</button><button class="pill '+(state.fanRank==='인기'?'on':'')+'" type="button" data-fan-rank="인기">인기</button></div><button class="fanart-upload-btn" type="button" data-fanart-write="1">팬아트 올리기</button></div>'+
+      (state.fanWorkFilter?'<div class="notice">특정 작품의 팬아트만 보는 중입니다. <button type="button" class="back" style="margin:6px 0 0" data-clear-fan-work="1">전체 팬아트 보기</button></div>':'')+
+      '<div class="pills">'+genresHtml+'</div><div class="find-note">팬아트의 장르는 연결된 작품의 장르를 따릅니다. 팬아트는 꼬리 계보와는 별도의 콘텐츠입니다.</div>'+
+      '<div class="fanart-grid">'+(cards||'<div class="empty" style="grid-column:1/-1">팬아트가 없습니다.</div>')+'</div>';
+  }
+
+  function findHTML() {
+    return '<main class="wrap"><div class="head"><h2>발견</h2><span class="muted">작품과 팬아트 탐색</span></div>'+
+      '<div class="find-kind-tabs"><button class="find-kind-tab '+(state.findKind==='works'?'on':'')+'" type="button" data-find-kind="works">작품</button><button class="find-kind-tab '+(state.findKind==='fanart'?'on':'')+'" type="button" data-find-kind="fanart">팬아트</button></div>'+
+      (state.findKind==='fanart'?fanartDiscoveryHTML():workDiscoveryHTML())+'</main>';
+  }
+
+  function fanartDetailHTML() {
+    var fa=getFanart(state.selected),work=fanartWork(fa),comments="",i,workAttr="";
+    if(!fa) return '<main class="wrap"><div class="empty">팬아트를 찾을 수 없습니다.</div></main>';
+    for(i=0;i<(fa.comments||[]).length;i++) comments+='<div class="comment"><b>'+esc(fa.comments[i][0])+'</b><span>'+esc(fa.comments[i][1])+'</span></div>';
+    if(work) workAttr=isSeriesRoot(work)?' data-series="'+esc(work.seriesId)+'"':' data-story="'+esc(work.id)+'"';
+    return '<main class="wrap"><button class="back" data-view="find">←</button><section class="fanart-detail-head"><div class="meta"><span>팬아트</span><span>'+esc(fanartGenre(fa))+'</span></div><h1>'+esc(fa.title||"무제")+'</h1><div class="meta"><span>'+esc(fa.artist||"익명")+'</span><span>'+fmt(fa.likes||0)+' 좋아요</span></div></section>'+
+      (String(fa.image||'').indexOf('demo:')===0?'<div class="fanart-detail-demo">'+fanartImageHTML(fa)+'</div>':'<img class="fanart-detail-image" src="'+esc(fa.image||'')+'" alt="'+esc(fa.title||'팬아트')+'">')+
+      (fa.desc?'<p class="fanart-desc">'+esc(fa.desc)+'</p>':'')+
+      (work?'<button class="fanart-work-link" type="button"'+workAttr+'><b>「'+esc(displayTitle(work))+'」</b><span>원작 보러가기 →</span></button>':'')+
+      '<div class="fanart-actions"><button type="button" data-fanart-like="'+esc(fa.id)+'"><b>'+fmt(fa.likes||0)+'</b>좋아요</button><button type="button" data-fanart-comments="1"><b>'+((fa.comments||[]).length)+'</b>댓글</button></div>'+
+      '<section class="sec" id="fanartComments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="fanartCommentInput" maxlength="240" placeholder="팬아트에 한마디"><button class="btn primary" data-add-fanart-comment="'+esc(fa.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+  }
+
+  function fanartFormHTML() {
+    var works=flatDiscoverWorks(),opts="",i,w;
+    if(!isMember()) return '<main class="wrap"><button class="back" data-view="find">←</button><div class="notice">팬아트를 올리려면 회원가입이 필요합니다.</div><button class="btn primary" style="width:100%;margin-top:12px" type="button" data-view="profile">프로필에서 회원가입</button></main>';
+    works.sort(function(a,b){return displayTitle(a).localeCompare(displayTitle(b),'ko');});
+    for(i=0;i<works.length;i++){w=works[i];opts+='<option value="'+esc(w.id)+'">'+esc(displayTitle(w))+' · '+esc(inheritedGenre(w))+'</option>';}
+    return '<main class="wrap"><button class="back" data-view="find">←</button><form class="form" id="fanartForm"><div class="head"><h2>팬아트 올리기</h2><span class="muted">작품과 연결</span></div><div class="field"><label>연결할 작품 *</label><select name="workId" required>'+opts+'</select><div class="fanart-form-note">팬아트는 선택한 작품에 연결되며, 해당 작품의 장르를 따라 발견 탭에 표시됩니다.</div></div><div class="field"><label>이미지 *</label><input id="fanartFile" name="image" type="file" accept="image/*" required><img id="fanartPreview" class="fanart-preview" alt="팬아트 미리보기"><div class="fanart-form-note">테스트판에서는 이미지를 이 브라우저에 축소 저장합니다.</div></div><div class="field"><label>팬아트 제목 <span class="muted">선택</span></label><input name="title" maxlength="80" placeholder="비우면 무제"></div><div class="field"><label>팬아트 작가명 <span class="muted">선택</span></label><input name="artist" maxlength="30" placeholder="비우면 익명"></div><div class="field"><label>짧은 설명</label><textarea name="desc" maxlength="300" style="min-height:90px"></textarea></div><div class="field"><label style="display:flex;align-items:flex-start;gap:8px;font-weight:650"><input name="adAllowed" type="checkbox" checked style="width:auto;margin-top:2px">광고 제거 이용자의 랜덤 팬아트 영역에 노출 허용</label><div class="fanart-form-note">나중에 광고 대신 팬아트를 보여주는 기능에서 사용할 수 있는 동의 항목입니다.</div></div><button class="btn primary" style="width:100%">게시</button></form></main>';
+  }
+
 
   function treeNodeTags(k) {
     return '<span class="origin tail">꼬리</span>'+(isSeriesRoot(k)?seriesBadge():tailTypeBadge(k));
@@ -981,7 +1183,7 @@ a{color:inherit;text-decoration:none}
     }
     tailDisclosure=tailDisclosureHTML(root);
     back=root.p?' data-story="'+esc(root.p)+'"':' data-view="home"';
-    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="work-topline"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div>'+bookmarkButtonHTML(root)+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta"><span>'+esc(root.pen)+'</span><span>'+esc(root.genre)+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+'</main>';
+    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="work-topline"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div>'+bookmarkButtonHTML(root)+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta"><span>'+esc(root.pen)+'</span><span>'+esc(root.genre)+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+workFanartSectionHTML(root)+'</main>';
   }
   function seriesEpisodeForm(rootId) {
     var root=getStory(rootId),eps=root?seriesEpisodes(root.seriesId):[],next=eps.length+1;
@@ -1016,8 +1218,15 @@ a{color:inherit;text-decoration:none}
       else if(policyFor(s).policy==="noncommercial") currentRoyalty='<div class="notice">이 꼬리 작품은 비상업 작품입니다.</div>';
     }
     tailDisclosure=tailDisclosureHTML(s);
-    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.pen)+'</span><span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section><section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.pen)+'</span><span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
+  function workFanartSectionHTML(work) {
+    var arr=fanartsForWork(work),html="",i;
+    if(!arr.length) return '<section class="work-fanarts"><div class="head"><h2>팬아트</h2><span class="muted">0개</span></div><div class="empty compact">아직 이 작품의 팬아트가 없습니다.</div></section>';
+    for(i=0;i<Math.min(3,arr.length);i++) html+='<div class="work-fanart-thumb"><button type="button" data-fanart="'+esc(arr[i].id)+'">'+fanartImageHTML(arr[i],true)+'</button></div>';
+    return '<section class="work-fanarts"><div class="head"><h2>팬아트</h2><span class="muted">'+arr.length+'개</span></div><div class="work-fanart-grid">'+html+'</div><button class="work-fanarts-all" type="button" data-work-fanarts="'+esc(seriesRootForStory(work).id)+'">이 작품의 팬아트 모두 보기 →</button></section>';
+  }
+
   function policyFieldHTML() {
     return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 플랫폼 10% · 계보 로열티</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">수익화 시 플랫폼 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자 10% 고정, 가까운 꼬리 조상부터 6% → 3% → 1.5% → 0.75%…로 배분하고 나머지는 현재 작가가 받습니다. 실제 결제·정산은 아직 하지 않습니다.</div></div>';
   }
@@ -1057,9 +1266,9 @@ a{color:inherit;text-decoration:none}
   }
 
   function profileHTML() {
-    var ids,arr=[],cards="",i,bids,barr=[],bcards="",seen={},work;
+    var ids,arr=[],cards="",i,bids,barr=[],bcards="",seen={},work,fids,farr=[],fcards="",fa;
     if(!isMember()) {
-      return '<main class="wrap"><section class="profile-guest"><h1>프로필</h1><div class="profile-guest-lead">회원가입하면<br>이야기를 모아둘 수 있습니다.</div><p class="profile-guest-copy">읽기와 둘러보기는 가볍게 시작하고, 내 작품과 마음에 든 작품을 계속 관리하고 싶을 때 계정을 만들 수 있습니다.</p><div class="profile-benefits"><div class="profile-benefit"><div class="profile-benefit-num">1</div><div><b>내 작품을 한곳에서</b><span>내가 작성한 첫 작품과 꼬리 작품, 시리즈를 프로필에서 모아볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">2</div><div><b>북마크로 다시 찾기</b><span>마음에 든 작품을 저장하고 프로필의 북마크 목록에서 바로 다시 열 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">3</div><div><b>창작자 기능의 기반</b><span>정식 서비스에서는 후원과 수익 정산 같은 창작자 기능도 계정에 연결할 예정입니다.</span></div></div></div><button class="btn primary profile-signup" type="button" data-signup="1">회원가입</button><p class="profile-test-note">현재 테스트판에서는 개인정보 입력 없이 버튼을 누르면 바로 회원 상태가 됩니다.</p></section></main>';
+      return '<main class="wrap"><section class="profile-guest"><h1>프로필</h1><div class="profile-guest-lead">회원가입하면<br>이야기를 모아둘 수 있습니다.</div><p class="profile-guest-copy">읽기와 둘러보기는 가볍게 시작하고, 내 작품과 마음에 든 작품을 계속 관리하고 싶을 때 계정을 만들 수 있습니다.</p><div class="profile-benefits"><div class="profile-benefit"><div class="profile-benefit-num">1</div><div><b>내 작품을 한곳에서</b><span>내가 작성한 첫 작품과 꼬리 작품, 시리즈를 프로필에서 모아볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">2</div><div><b>북마크로 다시 찾기</b><span>마음에 든 작품을 저장하고 프로필의 북마크 목록에서 바로 다시 열 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">3</div><div><b>내 팬아트도 함께</b><span>작품에 연결해 올린 팬아트를 프로필에서 다시 관리할 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">4</div><div><b>창작자 기능의 기반</b><span>정식 서비스에서는 후원과 수익 정산 같은 창작자 기능도 계정에 연결할 예정입니다.</span></div></div></div><button class="btn primary profile-signup" type="button" data-signup="1">회원가입</button><p class="profile-test-note">현재 테스트판에서는 개인정보 입력 없이 버튼을 누르면 바로 회원 상태가 됩니다.</p></section></main>';
     }
     ids=mineIds();
     for(i=0;i<data.length;i++) {
@@ -1081,7 +1290,12 @@ a{color:inherit;text-decoration:none}
     }
     for(i=0;i<barr.length;i++) bcards+=cardHTML(barr[i]);
 
-    return '<main class="wrap"><div class="profile-member-head"><h1>프로필</h1><span class="profile-member-badge">회원</span></div><div class="notice">현재 테스트판은 계정 상태·내 작품·북마크를 이 브라우저에 저장합니다.</div><section class="profile-section"><div class="head"><h2>내 작품</h2><span class="muted">'+arr.length+'개</span></div><div class="list">'+(cards||'<div class="empty">아직 작성한 작품이 없습니다.</div>')+'</div></section><section class="profile-section"><div class="head"><h2>북마크</h2><span class="muted">'+barr.length+'개</span></div><div class="list">'+(bcards||'<div class="empty">아직 북마크한 작품이 없습니다.<br>작품 상단에서 북마크할 수 있습니다.</div>')+'</div></section><div class="profile-logout-wrap"><button class="profile-withdraw" type="button" data-withdraw="1">탈퇴</button></div></main>';
+    fids=mineFanartIds();
+    for(i=0;i<fids.length;i++){fa=getFanart(fids[i]);if(fa)farr.push(fa);}
+    farr.sort(function(a,b){return Number(b.date||0)-Number(a.date||0);});
+    for(i=0;i<farr.length;i++) fcards+=fanartCardHTML(farr[i]);
+
+    return '<main class="wrap"><div class="profile-member-head"><h1>프로필</h1><span class="profile-member-badge">회원</span></div><div class="notice">현재 테스트판은 계정 상태·내 작품·북마크·팬아트를 이 브라우저에 저장합니다.</div><section class="profile-section"><div class="head"><h2>내 작품</h2><span class="muted">'+arr.length+'개</span></div><div class="list">'+(cards||'<div class="empty">아직 작성한 작품이 없습니다.</div>')+'</div></section><section class="profile-section"><div class="head"><h2>북마크</h2><span class="muted">'+barr.length+'개</span></div><div class="list">'+(bcards||'<div class="empty">아직 북마크한 작품이 없습니다.<br>작품 상단에서 북마크할 수 있습니다.</div>')+'</div></section><section class="profile-section"><div class="head"><h2>내 팬아트</h2><span class="muted">'+farr.length+'개</span></div>'+(fcards?'<div class="fanart-grid">'+fcards+'</div>':'<div class="empty">아직 올린 팬아트가 없습니다.</div>')+'</section><div class="profile-logout-wrap"><button class="profile-withdraw" type="button" data-withdraw="1">탈퇴</button></div></main>';
   }
 
   function render() {
@@ -1096,6 +1310,8 @@ a{color:inherit;text-decoration:none}
     else if(state.view==="write") app.innerHTML=formHTML(null);
     else if(state.view==="tail") app.innerHTML=formHTML(state.selected);
     else if(state.view==="profile") app.innerHTML=profileHTML();
+    else if(state.view==="fanart") app.innerHTML=fanartDetailHTML();
+    else if(state.view==="fanartwrite") app.innerHTML=fanartFormHTML();
     else if(state.view==="info") app.innerHTML=infoHTML();
     updateNav();
   }
@@ -1111,7 +1327,7 @@ a{color:inherit;text-decoration:none}
   var navIndex=0,maxNavIndex=0;
 
   function navSnapshot() {
-    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded};
+    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter};
   }
 
   function updateHistoryButtons() {
@@ -1200,6 +1416,41 @@ a{color:inherit;text-decoration:none}
     data.unshift(ep);saveData();addMine(id);state.selected=root.id;go("series");
   }
 
+  function compressFanartFile(file,done) {
+    var reader=new FileReader();
+    reader.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        var max=1000,w=img.width,h=img.height,scale=Math.min(1,max/Math.max(w,h));
+        w=Math.max(1,Math.round(w*scale));h=Math.max(1,Math.round(h*scale));
+        var canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
+        var ctx=canvas.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
+        var out;
+        try{out=canvas.toDataURL("image/jpeg",.82);}catch(err){out=reader.result;}
+        done(out);
+      };
+      img.onerror=function(){done(reader.result);};
+      img.src=reader.result;
+    };
+    reader.onerror=function(){done(null);};
+    reader.readAsDataURL(file);
+  }
+
+  function submitFanart(form) {
+    if(!isMember()) {go("profile");return;}
+    var fd=new FormData(form),file=form.querySelector('input[name="image"]')&&form.querySelector('input[name="image"]').files[0];
+    var workId=String(fd.get("workId")||""),work=getStory(workId);
+    if(!file || !work) return;
+    var btn=form.querySelector('button[type="submit"],button:not([type])');
+    if(btn){btn.disabled=true;btn.textContent="이미지 처리 중";}
+    compressFanartFile(file,function(image){
+      if(!image){if(btn){btn.disabled=false;btn.textContent="게시";}return;}
+      var id="fa"+Date.now()+Math.floor(Math.random()*10000);
+      var fa={id:id,workId:workId,title:String(fd.get("title")||"").trim()||"무제",artist:String(fd.get("artist")||"").trim()||"익명",desc:String(fd.get("desc")||"").trim(),image:image,likes:0,date:Date.now(),comments:[],adAllowed:fd.get("adAllowed")==="on"};
+      fanarts.unshift(fa);saveFanarts();addMineFanart(id);state.selected=id;go("fanart");
+    });
+  }
+
   document.addEventListener("click", function(e){
     var t=e.target;
     while(t && t!==document.body) {
@@ -1214,6 +1465,16 @@ a{color:inherit;text-decoration:none}
         if(t.getAttribute("data-signup")) {setMember(true);render();return;}
         if(t.getAttribute("data-withdraw")) {setMember(false);try{localStorage.removeItem(BOOKMARK_KEY);}catch(err){}render();return;}
         if(t.getAttribute("data-bookmark")) {toggleBookmark(t.getAttribute("data-bookmark"));render();return;}
+        if(t.getAttribute("data-find-kind")) {state.findKind=t.getAttribute("data-find-kind");state.fanWorkFilter=null;render();return;}
+        if(t.getAttribute("data-fan-rank")) {state.fanRank=t.getAttribute("data-fan-rank");render();return;}
+        if(t.getAttribute("data-fan-genre")) {state.fanGenre=t.getAttribute("data-fan-genre");render();return;}
+        if(t.getAttribute("data-fanart-write")) {if(isMember())go("fanartwrite");else go("profile");return;}
+        if(t.getAttribute("data-fanart")) {state.selected=t.getAttribute("data-fanart");go("fanart");return;}
+        if(t.getAttribute("data-fanart-like")) {var faLike=getFanart(t.getAttribute("data-fanart-like"));if(faLike){faLike.likes=Number(faLike.likes||0)+1;saveFanarts();render();}return;}
+        if(t.getAttribute("data-fanart-comments")) {var fc=document.getElementById("fanartComments");if(fc)fc.scrollIntoView();return;}
+        if(t.getAttribute("data-add-fanart-comment")) {var fi=document.getElementById("fanartCommentInput"),ft=fi?fi.value.trim():"",fao=getFanart(t.getAttribute("data-add-fanart-comment"));if(ft&&fao){fao.comments=fao.comments||[];fao.comments.push(["익명 "+Math.floor(1000+Math.random()*9000),ft]);saveFanarts();render();}return;}
+        if(t.getAttribute("data-work-fanarts")) {state.findKind="fanart";state.fanWorkFilter=t.getAttribute("data-work-fanarts");state.fanGenre="전체";go("find");return;}
+        if(t.getAttribute("data-clear-fan-work")) {state.fanWorkFilter=null;render();return;}
         if(t.getAttribute("data-view")) {go(t.getAttribute("data-view"));return;}
         if(t.getAttribute("data-series")) {openSeries(t.getAttribute("data-series"));return;}
         if(t.getAttribute("data-seriesnext")) {state.selected=t.getAttribute("data-seriesnext");go("serieswrite");return;}
@@ -1260,9 +1521,15 @@ a{color:inherit;text-decoration:none}
   document.addEventListener("submit", function(e){
     if(e.target && e.target.id==="storyForm") {e.preventDefault();submitStory(e.target);}
     else if(e.target && e.target.id==="seriesEpisodeForm") {e.preventDefault();submitSeriesEpisode(e.target);}
+    else if(e.target && e.target.id==="fanartForm") {e.preventDefault();submitFanart(e.target);}
   });
 
   document.addEventListener("change", function(e){
+    if(e.target && e.target.id==="fanartFile") {
+      var preview=document.getElementById("fanartPreview"),file=e.target.files&&e.target.files[0];
+      if(preview&&file){preview.src=URL.createObjectURL(file);preview.style.display="block";}
+      return;
+    }
     if(e.target && e.target.name==="format") {
       var field=document.getElementById("seriesTitleField");
       if(field) {
@@ -1283,10 +1550,14 @@ a{color:inherit;text-decoration:none}
       state.rank=h.rank||"최신";
       state.homeExpanded=!!h.homeExpanded;
       state.homePage=Number(h.homePage||0);
+      state.findKind=h.findKind||"works";
       state.findGenre=h.findGenre||"전체";
       state.findShowTails=!!h.findShowTails;
       state.findFlat=!!h.findFlat;
       state.findExpanded=h.findExpanded||{};
+      state.fanRank=h.fanRank||"최신";
+      state.fanGenre=h.fanGenre||"전체";
+      state.fanWorkFilter=h.fanWorkFilter||null;
       window.scrollTo(0,0);
       render();
       updateHistoryButtons();
@@ -1427,6 +1698,7 @@ a{color:inherit;text-decoration:none}
   ensureDemoSeries();
   ensureDiscoveryDemoTails();
   ensureHomeDemoWorks();
+  ensureDemoFanarts();
   migrateData();
   try { history.replaceState(navSnapshot(),"",location.href); } catch(e) {}
   render();
