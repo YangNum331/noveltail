@@ -8,8 +8,8 @@
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="꼬리소설">
-<title>꼬리소설</title>
+<meta name="apple-mobile-web-app-title" content="NovelTail 노벨테일">
+<title>NovelTail (노벨테일)</title>
 <style>
 :root{
   --bg:#ffffff;
@@ -29,7 +29,9 @@ button{cursor:pointer}
 a{color:inherit;text-decoration:none}
 .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .topin{max-width:760px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.logo{all:unset;font-size:22px;font-weight:800;letter-spacing:-.03em;cursor:pointer;display:inline-block;color:var(--text)}
+.logo{all:unset;cursor:pointer;display:inline-flex;align-items:baseline;gap:7px;color:var(--text);white-space:nowrap}
+.logo-en{font-size:22px;font-weight:800;letter-spacing:-.03em}
+.logo-ko{font-size:11px;font-weight:700;letter-spacing:-.02em;color:#777}
 .logo:active{opacity:.58}
 .top-actions{display:flex;align-items:center;gap:7px}
 .top-link{appearance:none;border:0;background:transparent;padding:7px 5px;font-size:12px;font-weight:700;color:#666}
@@ -170,22 +172,30 @@ a{color:inherit;text-decoration:none}
 .genre-settings-actions{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #ededed;margin-top:6px;padding-top:8px}
 .genre-settings-actions button{appearance:none;border:0;background:transparent;padding:3px 0;font-size:10px;font-weight:700;color:#666}
 
-.home-feed{border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;background:#fff}
+.home-feed{border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;background:#fff;overflow:hidden;box-sizing:border-box}
 .home-feed .pills{margin-bottom:6px}
 .home-feed .card:first-child{border-top:0}
 .home-feed-more{display:flex;justify-content:center;padding:8px 0 1px}
 .home-expand-btn{border:0;background:transparent;color:#666;font-size:12px;font-weight:750;padding:8px 12px;border-radius:8px}
 .home-expand-btn:active{background:#f4f4f4}
-.home-pager{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:8px;padding:5px 0 9px}
-.home-pager.bottom{padding:10px 0 1px}
-.home-page-btn{height:34px;border:1px solid var(--line-strong);background:#fff;border-radius:8px;font-size:17px;line-height:1}
+.home-list-frame{width:100%;min-width:0;max-width:100%;overflow:hidden;overflow:clip;box-sizing:border-box}
+.home-pager{position:relative!important;inset:auto!important;transform:none!important;display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-width:0;max-width:100%;box-sizing:border-box;margin:0;padding:7px 8px 9px;overflow:hidden}
+.home-pager.top{border-bottom:1px solid #f2f2f2}
+.home-pager.bottom{border-top:1px solid #f2f2f2;padding:9px 8px 7px}
+.home-page-btn{-webkit-appearance:none!important;appearance:none!important;position:static!important;inset:auto!important;transform:none!important;flex:0 0 34px;display:grid;place-items:center;width:34px!important;min-width:34px!important;max-width:34px!important;height:32px!important;box-sizing:border-box;border:1px solid var(--line-strong);background:#fff;border-radius:8px;font-size:16px;line-height:1;padding:0!important;margin:0!important}
 .home-page-btn:disabled{color:#c9c9c9;background:#fafafa}
-.home-page-status{text-align:center;font-size:11px;color:#777;font-weight:700}
+.home-page-status{flex:1 1 auto;min-width:0;text-align:center;font-size:11px;color:#777;font-weight:700;white-space:nowrap;overflow:hidden}
+.home-list-frame>.list{width:100%;min-width:0;max-width:100%;overflow:hidden}
 .ad-slot{height:108px;margin:26px 0 34px;border-radius:10px;background:#ececec;color:#8b8b8b;display:grid;place-items:center;font-size:12px;font-weight:700;letter-spacing:.02em}
-.project-intro{padding:4px 0 20px}
-.project-kicker{font-size:12px;font-weight:800;color:#777;margin-bottom:10px}
-.project-intro h1{margin:0;font-size:31px;line-height:1.2;letter-spacing:-.045em}
-.project-lead{margin:16px 0 0;font-size:15px;line-height:1.8;color:#3d3d3d;max-width:650px}
+.project-intro{padding:18px 0 24px}
+.project-kicker{font-size:12px;font-weight:850;letter-spacing:.12em;color:#777;margin-bottom:15px}
+.project-intro h1{margin:0;font-size:42px;line-height:1.08;letter-spacing:-.055em}
+.project-lead{margin:18px 0 0;font-size:15px;line-height:1.85;color:#3d3d3d;max-width:650px}
+.project-fee{padding:30px 0;border-top:1px solid var(--line)}
+.project-fee strong{display:block;font-size:30px;line-height:1.18;letter-spacing:-.045em}
+.project-fee strong em{font-style:normal;font-size:1.18em}
+.project-fee p{margin:12px 0 0;font-size:14px;line-height:1.85;color:#555;max-width:660px}
+.project-fee .fee-note{margin-top:9px;font-size:12px;color:#777;line-height:1.7}
 .project-section{padding:28px 0;border-top:1px solid var(--line)}
 .project-section h2{margin:0 0 10px;font-size:19px;letter-spacing:-.025em}
 .project-section p{margin:0;font-size:14px;line-height:1.85;color:#555;max-width:660px}
@@ -193,6 +203,7 @@ a{color:inherit;text-decoration:none}
 .project-final{padding:34px 0 8px;border-top:1px solid var(--line)}
 .project-final strong{display:block;font-size:24px;line-height:1.45;letter-spacing:-.035em}
 .project-final span{display:block;margin-top:10px;color:#777;font-size:12px;line-height:1.65}
+@media (max-width:520px){.project-intro h1{font-size:38px}.project-fee strong{font-size:27px}}
 
 .info-title{margin:0 0 6px;font-size:27px;letter-spacing:-.035em}
 .info-intro{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
@@ -225,7 +236,7 @@ a{color:inherit;text-decoration:none}
 <body>
 <header class="top">
   <div class="topin">
-    <button class="logo" id="logoProject" type="button" aria-label="홈 프로젝트 소개로 이동">꼬리소설</button>
+    <button class="logo" id="logoProject" type="button" aria-label="홈 프로젝트 소개로 이동"><span class="logo-en">NovelTail</span><span class="logo-ko">노벨테일</span></button>
     <div class="top-actions"><button class="top-link" id="installApp" type="button">앱 설치</button><button class="top-link" id="infoToggle" type="button" data-info-toggle="1">안내</button><button class="btn ghost small" id="randomTop" type="button">랜덤</button></div>
   </div>
 </header>
@@ -237,26 +248,30 @@ a{color:inherit;text-decoration:none}
         <button class="pill on" type="button">최신</button>
         <button class="pill" type="button">인기</button>
       </div>
-      <div class="home-pager top"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
-      <div class="list">
-        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>새벽 세 시의 편의점</div><div class="views">180</div></div></button></div>
-        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>마왕은 오늘도 지각했다</div><div class="views">527</div></div></button></div>
-        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>우리는 화성에서 헤어졌다</div><div class="views">874</div></div></button></div>
-        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>고양이는 범인을 알고 있다</div><div class="views">1.2K</div></div></button></div>
-        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>검은 우산 아래</div><div class="views">1.6K</div></div></button></div>
+      <div class="home-list-frame">
+        <div class="home-pager top"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
+        <div class="list">
+          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>새벽 세 시의 편의점</div><div class="views">180</div></div></button></div>
+          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>마왕은 오늘도 지각했다</div><div class="views">527</div></div></button></div>
+          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>우리는 화성에서 헤어졌다</div><div class="views">874</div></div></button></div>
+          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>고양이는 범인을 알고 있다</div><div class="views">1.2K</div></div></button></div>
+          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>검은 우산 아래</div><div class="views">1.6K</div></div></button></div>
+        </div>
+        <div class="home-pager bottom"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
       </div>
-      <div class="home-pager bottom"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
     </section>
     <div class="ad-slot">광고 영역</div>
     <section class="project-intro" id="projectIntro">
-      <div class="project-kicker">NOVELTAIL</div>
-      <h1>한 이야기가 끝나는 곳에서,<br>다른 이야기가 시작됩니다.</h1>
-      <p class="project-lead">NovelTail은 누군가의 이야기에 다음 화, 다른 결말, 외전, 재해석을 이어 붙일 수 있는 공동창작 소설 플랫폼입니다. 읽는 사람과 쓰는 사람의 경계를 없애고, 하나의 이야기가 수많은 방향으로 자라게 합니다.</p>
+      <div class="project-kicker">NovelTail · 노벨테일</div>
+      <h1>작가를 위한<br>플랫폼.</h1>
+      <p class="project-lead">좋은 이야기가 더 많은 사람에게 닿고, 그 가치가 가능한 한 창작자에게 돌아가야 한다고 생각합니다. NovelTail(노벨테일)은 읽는 사람을 다음 작가로 연결하고, 혼자 시작한 이야기가 함께 자랄 수 있게 만드는 공동창작 플랫폼입니다.</p>
     </section>
-    <section class="project-section"><h2>첫 이야기에서, 수많은 꼬리로.</h2><p><b>첫</b>은 이야기의 시작점이고, <b>꼬리</b>는 그 이야기에서 파생된 새로운 작품입니다. 꼬리는 또 다른 꼬리의 시작점이 될 수 있습니다. 그래서 NovelTail의 작품은 한 줄로 끝나는 연재물이 아니라, 계속 갈라지고 이어지는 이야기의 계보가 됩니다.</p></section>
-    <section class="project-section"><h2>작가의 정사는 지키고, 가능성은 열어둡니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 유지됩니다. 동시에 각 회차에서 독자들은 자유롭게 꼬리를 만들 수 있습니다.</p><p class="project-highlight">작가가 이어가는 이야기와 독자가 만들어가는 가능성이 같은 작품 안에 공존합니다.</p></section>
-    <section class="project-section"><h2>이야기가 이어지면, 기여도 이어집니다.</h2><p>수익이 발생하면 플랫폼 운영 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자는 10%, 가까운 꼬리 조상부터 6% → 3% → 1.5%…를 받고, 나머지는 현재 작가에게 돌아갑니다.</p></section>
-    <section class="project-final"><strong>누군가 끝낸 이야기에서,<br>당신의 이야기가 시작됩니다.</strong><span>읽기만 해도 좋고, 마음에 들면 그 다음을 직접 써도 됩니다.</span></section>
+    <section class="project-fee"><strong>플랫폼이 가져가는 몫은 <em>10%</em>.</strong><p>작품에서 수익이 발생하면 NovelTail의 플랫폼 운영 수수료는 10%입니다. 나머지 90%는 창작자 배분금으로 남습니다. 꼬리 작품에서는 최초 원작자와 앞선 창작자의 기여도 계보에 따라 함께 기록하고 배분합니다.</p><div class="fee-note">창작물이 커질수록 플랫폼보다 창작자에게 더 많은 가치가 돌아가는 구조를 지향합니다.</div></section>
+    <section class="project-section"><h2>누구나 쓰기 시작할 수 있도록.</h2><p>이름값이나 등단 여부, 팔로워 수보다 이야기가 먼저 보이는 공간을 지향합니다. 짧은 단편 하나도 시작이 될 수 있고, 누군가가 그 뒤를 이어 더 큰 세계를 만들 수 있습니다.</p></section>
+    <section class="project-section"><h2>이어 쓴 사람의 기여가 사라지지 않도록.</h2><p><b>첫</b> 작품에서 시작된 모든 <b>꼬리</b>는 어디에서 이어졌는지 계보를 남깁니다. 꼬리에서 다시 꼬리가 이어져도 앞선 창작자의 흔적과 기여가 함께 보존되는 구조를 지향합니다.</p></section>
+    <section class="project-section"><h2>원작자의 이야기는 원작자가 결정합니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 분명하게 구분됩니다. 꼬리 창작 허용 범위 역시 원작자가 정합니다.</p><p class="project-highlight">원작자의 권리는 지키면서, 허용된 범위 안에서는 누구나 새로운 가능성을 만들 수 있게.</p></section>
+    <section class="project-section"><h2>읽는 사람도 창작자가 될 수 있도록.</h2><p>다음 화, 다른 결말, 외전, 패러디, 다른 인물의 시점. 마음속에 떠오른 ‘이렇게 이어지면 어떨까?’를 감상으로 끝내지 않고 하나의 작품으로 이어갈 수 있습니다.</p></section>
+    <section class="project-final"><strong>이야기를 독점하는 플랫폼보다,<br>이야기가 계속 태어나는 공간으로.</strong><span>NovelTail(노벨테일)은 창작의 문턱을 낮추고, 창작자의 권리와 기여를 연결하는 플랫폼을 지향합니다.</span></section>
   </main>
 </div>
 
@@ -277,12 +292,12 @@ a{color:inherit;text-decoration:none}
 
 <div class="install-sheet" id="installSheet" aria-hidden="true">
   <section class="install-panel" role="dialog" aria-modal="true" aria-labelledby="installTitle">
-    <h2 id="installTitle">꼬리소설을 앱처럼 사용하기</h2>
+    <h2 id="installTitle">NovelTail(노벨테일)을 앱처럼 사용하기</h2>
     <p>홈 화면에 설치하면 주소창과 브라우저 하단 도구막대 없이 독립된 앱 화면으로 열립니다.</p>
     <ol class="install-steps">
       <li class="install-step"><b>1</b><span>브라우저의 <strong>공유</strong> 메뉴를 엽니다.</span></li>
       <li class="install-step"><b>2</b><span><strong>홈 화면에 추가</strong>를 선택합니다.</span></li>
-      <li class="install-step"><b>3</b><span><strong>추가</strong>를 누른 뒤 홈 화면의 꼬리소설 아이콘으로 실행합니다.</span></li>
+      <li class="install-step"><b>3</b><span><strong>추가</strong>를 누른 뒤 홈 화면의 NovelTail(노벨테일) 아이콘으로 실행합니다.</span></li>
     </ol>
     <p class="install-note">지원 브라우저에서는 이 버튼을 누르면 설치 창이 바로 뜰 수도 있습니다.</p>
     <div class="install-actions"><button class="btn primary" id="closeInstallSheet" type="button">확인</button></div>
@@ -722,13 +737,15 @@ a{color:inherit;text-decoration:none}
     for(i=0;i<shown.length;i++) cards+=cardHTML(shown[i]);
     ["최신","인기"].forEach(function(x){rankButtons+='<button class="pill '+(state.rank===x?'on':'')+'" data-rank="'+x+'">'+x+'</button>';});
     return '<main class="wrap">'+
-      '<section class="home-feed"><div class="pills">'+rankButtons+'</div>'+pagerTop+'<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div>'+pagerBottom+'<div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
+      '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame">'+pagerTop+'<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div>'+pagerBottom+'</div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
       '<div class="ad-slot">광고 영역</div>'+ 
-      '<section class="project-intro" id="projectIntro"><div class="project-kicker">NOVELTAIL</div><h1>한 이야기가 끝나는 곳에서,<br>다른 이야기가 시작됩니다.</h1><p class="project-lead">NovelTail은 누군가의 이야기에 다음 화, 다른 결말, 외전, 재해석을 이어 붙일 수 있는 공동창작 소설 플랫폼입니다. 읽는 사람과 쓰는 사람의 경계를 없애고, 하나의 이야기가 수많은 방향으로 자라게 합니다.</p></section>'+ 
-      '<section class="project-section"><h2>첫 이야기에서, 수많은 꼬리로.</h2><p><b>첫</b>은 이야기의 시작점이고, <b>꼬리</b>는 그 이야기에서 파생된 새로운 작품입니다. 꼬리는 또 다른 꼬리의 시작점이 될 수 있습니다. 그래서 NovelTail의 작품은 한 줄로 끝나는 연재물이 아니라, 계속 갈라지고 이어지는 이야기의 계보가 됩니다.</p></section>'+ 
-      '<section class="project-section"><h2>작가의 정사는 지키고, 가능성은 열어둡니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 유지됩니다. 동시에 각 회차에서 독자들은 자유롭게 꼬리를 만들 수 있습니다.</p><p class="project-highlight">작가가 이어가는 이야기와 독자가 만들어가는 가능성이 같은 작품 안에 공존합니다.</p></section>'+ 
-      '<section class="project-section"><h2>이야기가 이어지면, 기여도 이어집니다.</h2><p>수익이 발생하면 플랫폼 운영 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자는 10%, 가까운 꼬리 조상부터 6% → 3% → 1.5%…를 받고, 나머지는 현재 작가에게 돌아갑니다.</p></section>'+ 
-      '<section class="project-final"><strong>누군가 끝낸 이야기에서,<br>당신의 이야기가 시작됩니다.</strong><span>읽기만 해도 좋고, 마음에 들면 그 다음을 직접 써도 됩니다.</span></section>'+ 
+      '<section class="project-intro" id="projectIntro"><div class="project-kicker">NovelTail · 노벨테일</div><h1>작가를 위한<br>플랫폼.</h1><p class="project-lead">좋은 이야기가 더 많은 사람에게 닿고, 그 가치가 가능한 한 창작자에게 돌아가야 한다고 생각합니다. NovelTail(노벨테일)은 읽는 사람을 다음 작가로 연결하고, 혼자 시작한 이야기가 함께 자랄 수 있게 만드는 공동창작 플랫폼입니다.</p></section>'+ 
+      '<section class="project-fee"><strong>플랫폼이 가져가는 몫은 <em>10%</em>.</strong><p>작품에서 수익이 발생하면 NovelTail의 플랫폼 운영 수수료는 10%입니다. 나머지 90%는 창작자 배분금으로 남습니다. 꼬리 작품에서는 최초 원작자와 앞선 창작자의 기여도 계보에 따라 함께 기록하고 배분합니다.</p><div class="fee-note">창작물이 커질수록 플랫폼보다 창작자에게 더 많은 가치가 돌아가는 구조를 지향합니다.</div></section>'+ 
+      '<section class="project-section"><h2>누구나 쓰기 시작할 수 있도록.</h2><p>이름값이나 등단 여부, 팔로워 수보다 이야기가 먼저 보이는 공간을 지향합니다. 짧은 단편 하나도 시작이 될 수 있고, 누군가가 그 뒤를 이어 더 큰 세계를 만들 수 있습니다.</p></section>'+ 
+      '<section class="project-section"><h2>이어 쓴 사람의 기여가 사라지지 않도록.</h2><p><b>첫</b> 작품에서 시작된 모든 <b>꼬리</b>는 어디에서 이어졌는지 계보를 남깁니다. 꼬리에서 다시 꼬리가 이어져도 앞선 창작자의 흔적과 기여가 함께 보존되는 구조를 지향합니다.</p></section>'+ 
+      '<section class="project-section"><h2>원작자의 이야기는 원작자가 결정합니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 분명하게 구분됩니다. 꼬리 창작 허용 범위 역시 원작자가 정합니다.</p><p class="project-highlight">원작자의 권리는 지키면서, 허용된 범위 안에서는 누구나 새로운 가능성을 만들 수 있게.</p></section>'+ 
+      '<section class="project-section"><h2>읽는 사람도 창작자가 될 수 있도록.</h2><p>다음 화, 다른 결말, 외전, 패러디, 다른 인물의 시점. 마음속에 떠오른 ‘이렇게 이어지면 어떨까?’를 감상으로 끝내지 않고 하나의 작품으로 이어갈 수 있습니다.</p></section>'+ 
+      '<section class="project-final"><strong>이야기를 독점하는 플랫폼보다,<br>이야기가 계속 태어나는 공간으로.</strong><span>NovelTail(노벨테일)은 창작의 문턱을 낮추고, 창작자의 권리와 기여를 연결하는 플랫폼을 지향합니다.</span></section>'+ 
       '</main>';
   }
 
@@ -958,9 +975,9 @@ a{color:inherit;text-decoration:none}
   }
 
   function infoHTML() {
-    return '<main class="wrap"><h1 class="info-title">꼬리소설 안내</h1><p class="info-intro">처음 보는 사람도 핵심 규칙만 빠르게 이해할 수 있게 정리했습니다.</p>'+ 
+    return '<main class="wrap"><h1 class="info-title">NovelTail(노벨테일) 안내</h1><p class="info-intro">처음 보는 사람도 핵심 규칙만 빠르게 이해할 수 있게 정리했습니다.</p>'+ 
       '<div class="info-grid">'+
-      '<section class="info-card"><h2>꼬리소설이란?</h2><p><b>첫</b> 작품에서 다른 이용자가 이야기를 이어 쓰고, 그 꼬리에서 다시 새로운 꼬리가 갈라지는 공동창작 플랫폼입니다.</p></section>'+ 
+      '<section class="info-card"><h2>NovelTail(노벨테일)이란?</h2><p><b>첫</b> 작품에서 다른 이용자가 이야기를 이어 쓰고, 그 꼬리에서 다시 새로운 꼬리가 갈라지는 공동창작 플랫폼입니다.</p></section>'+ 
       '<section class="info-card"><h2>첫 · 꼬리 · 시리즈</h2><p><b>첫</b>은 이야기의 시작점, <b>꼬리</b>는 다른 작품에서 파생된 작품입니다. 첫과 꼬리 모두 단편 또는 시리즈가 될 수 있으며, 시리즈의 공식 회차는 꼬리와 별개인 정사 라인으로 유지됩니다.</p></section>'+ 
       '<section class="info-card"><h2>수익 배분</h2><p>전체 매출에서 플랫폼 운영 수수료 10%를 먼저 제외합니다. 남은 90%의 창작자 배분금 안에서 첫 원작자는 10%를 고정으로 받고, 그 외 꼬리 조상은 가까운 순서대로 6% → 3% → 1.5% → 0.75%…로 절반씩 받습니다. 나머지는 현재 작가에게 돌아갑니다.</p>'+ 
       '<div class="info-example"><div class="info-row"><span>1세대 꼬리 · 전체 매출 기준</span><span>플랫폼 10% · 현재 81% · 첫 9%</span></div><div class="info-row"><span>2세대 꼬리</span><span>플랫폼 10% · 현재 75.6% · 첫 9% · 부모 5.4%</span></div><div class="info-row"><span>4세대 꼬리</span><span>플랫폼 10% · 현재 71.55% · 첫 9% · 5.4% · 2.7% · 1.35%</span></div></div></section>'+ 
@@ -1181,19 +1198,44 @@ a{color:inherit;text-decoration:none}
   if(randomTop) randomTop.addEventListener("click",randomStory);
   var logoProject=document.getElementById("logoProject");
   if(logoProject) logoProject.addEventListener("click",function(){
-    function scrollProject(){
-      var el=document.getElementById("projectIntro");
-      if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+    function jumpProject(){
+      var el=document.getElementById("projectIntro"),top=document.querySelector(".top"),offset=14;
+      if(!el) return;
+      if(top) offset+=top.getBoundingClientRect().height;
+      window.scrollTo(0,Math.max(0,Math.round(el.getBoundingClientRect().top+window.pageYOffset-offset)));
     }
-    if(state.view!=="home") {
-      go("home");
-      window.setTimeout(scrollProject,30);
-    } else scrollProject();
+    if(state.view!=="home") go("home");
+    jumpProject();
   });
   var siteBack=document.getElementById("siteBack"),siteForward=document.getElementById("siteForward"),siteRefresh=document.getElementById("siteRefresh");
   if(siteBack) siteBack.addEventListener("click",function(){if(navIndex>0) history.back();});
   if(siteForward) siteForward.addEventListener("click",function(){if(navIndex<maxNavIndex) history.forward();});
   if(siteRefresh) siteRefresh.addEventListener("click",function(){location.reload();});
+
+  // iOS Safari의 더블탭 스마트 확대를 막되, 일반 스크롤과 핀치 확대는 유지한다.
+  (function preventDoubleTapZoom(){
+    var lastTap=0,lastX=0,lastY=0,multiTouch=false;
+    document.addEventListener("touchstart",function(e){
+      if(e.touches && e.touches.length>1) multiTouch=true;
+    },{passive:true});
+    document.addEventListener("touchend",function(e){
+      if(multiTouch){
+        if(!e.touches || e.touches.length===0) multiTouch=false;
+        lastTap=0;
+        return;
+      }
+      if(!e.changedTouches || e.changedTouches.length!==1) return;
+      var t=e.changedTouches[0],now=Date.now();
+      var close=Math.abs(t.clientX-lastX)<36 && Math.abs(t.clientY-lastY)<36;
+      if(lastTap && now-lastTap<360 && close){
+        e.preventDefault();
+        lastTap=0;
+        return;
+      }
+      lastTap=now;lastX=t.clientX;lastY=t.clientY;
+    },{passive:false});
+    document.addEventListener("dblclick",function(e){e.preventDefault();},{passive:false});
+  })();
 
   // iPhone Safari는 주소창/하단 도구막대가 접히고 펼쳐질 때 실제 보이는 viewport가 바뀐다.
   // visualViewport 기준으로 페이지 하단 UI를 브라우저 도구막대 위에 계속 붙여 둔다.

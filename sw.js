@@ -1,4 +1,4 @@
-const CACHE_NAME = "kkorisoseol-pwa-v1";
+const CACHE_NAME = "noveltail-pwa-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
