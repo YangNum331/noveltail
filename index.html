@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="꼬리소설">
 <title>꼬리소설</title>
 <style>
 :root{
@@ -171,6 +176,19 @@ a{color:inherit;text-decoration:none}
 .info-example{margin-top:10px;border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
 .info-row{display:flex;justify-content:space-between;gap:12px;font-size:12px}
 .info-row span:last-child{font-weight:750;white-space:nowrap}
+
+.install-sheet{position:fixed;z-index:20000;inset:0;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.28);padding:18px 12px calc(18px + env(safe-area-inset-bottom))}
+.install-sheet.open{display:flex}
+.install-panel{width:min(100%,520px);background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.14)}
+.install-panel h2{margin:0 0 8px;font-size:20px;letter-spacing:-.03em}
+.install-panel p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+.install-steps{margin:15px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.install-step{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;font-size:13px;line-height:1.6}
+.install-step b{display:grid;place-items:center;width:26px;height:26px;border-radius:999px;background:#111;color:#fff;font-size:11px}
+.install-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.install-note{margin-top:12px!important;font-size:11px!important;color:#888!important}
+@media (display-mode:standalone){#installApp{display:none}.bottom-shell{bottom:0!important}}
+
 @media (min-width:720px){
   .title{font-size:19px}
   .reader,.form{padding:22px}
@@ -181,7 +199,7 @@ a{color:inherit;text-decoration:none}
 <header class="top">
   <div class="topin">
     <div class="logo">꼬리소설</div>
-    <div class="top-actions"><button class="top-link" type="button" data-view="info">안내</button><button class="btn ghost small" id="randomTop" type="button">랜덤</button></div>
+    <div class="top-actions"><button class="top-link" id="installApp" type="button">앱 설치</button><button class="top-link" type="button" data-view="info">안내</button><button class="btn ghost small" id="randomTop" type="button">랜덤</button></div>
   </div>
 </header>
 
@@ -212,6 +230,21 @@ a{color:inherit;text-decoration:none}
     <button class="history-btn" id="siteForward" type="button" aria-label="앞으로">→</button>
     <button class="history-btn refresh-btn" id="siteRefresh" type="button" aria-label="새로고침">↻</button>
   </div>
+</div>
+
+
+<div class="install-sheet" id="installSheet" aria-hidden="true">
+  <section class="install-panel" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+    <h2 id="installTitle">꼬리소설을 앱처럼 사용하기</h2>
+    <p>홈 화면에 설치하면 주소창과 브라우저 하단 도구막대 없이 독립된 앱 화면으로 열립니다.</p>
+    <ol class="install-steps">
+      <li class="install-step"><b>1</b><span>브라우저의 <strong>공유</strong> 메뉴를 엽니다.</span></li>
+      <li class="install-step"><b>2</b><span><strong>홈 화면에 추가</strong>를 선택합니다.</span></li>
+      <li class="install-step"><b>3</b><span><strong>추가</strong>를 누른 뒤 홈 화면의 꼬리소설 아이콘으로 실행합니다.</span></li>
+    </ol>
+    <p class="install-note">지원 브라우저에서는 이 버튼을 누르면 설치 창이 바로 뜰 수도 있습니다.</p>
+    <div class="install-actions"><button class="btn primary" id="closeInstallSheet" type="button">확인</button></div>
+  </section>
 </div>
 
 <noscript><div class="fatal">스크립트 기능이 꺼져 있습니다. 브라우저 설정에서 스크립트를 켜주세요.</div></noscript>
@@ -831,6 +864,7 @@ a{color:inherit;text-decoration:none}
       '<section class="info-card"><h2>수익 배분</h2><p>첫 원작자는 항상 10%를 받습니다. 그 외 꼬리 조상은 현재 작품에서 가까운 순서대로 6% → 3% → 1.5% → 0.75%…로 절반씩 받으며, 남은 금액은 현재 작가에게 돌아갑니다.</p>'+
       '<div class="info-example"><div class="info-row"><span>1세대 꼬리</span><span>현재 90% · 첫 10%</span></div><div class="info-row"><span>2세대 꼬리</span><span>현재 84% · 첫 10% · 부모 6%</span></div><div class="info-row"><span>4세대 꼬리</span><span>현재 79.5% · 첫 10% · 6% · 3% · 1.5%</span></div></div></section>'+
       '<section class="info-card"><h2>꼬리 이용 권한</h2><p>첫 작품 작성자는 수익화 가능한 꼬리 허용, 비상업 꼬리만 허용, 꼬리 금지 중 하나를 선택합니다. 파생 작품은 첫 작품의 조건을 계보 전체에서 따릅니다.</p></section>'+
+      '<section class="info-card"><h2>앱처럼 사용하기</h2><p>상단의 <b>앱 설치</b>를 누르거나 브라우저 공유 메뉴에서 <b>홈 화면에 추가</b>를 선택하면 독립된 앱 화면으로 실행할 수 있습니다. 설치 후에는 일반 브라우저 주소창과 하단 도구막대가 표시되지 않습니다.</p></section>'+
       '<section class="info-card"><h2>현재 테스트판</h2><p>지금 버전은 브라우저 저장 기반 MVP입니다. 실제 결제·정산·법적 권리 처리는 아직 연결하지 않았습니다.</p></section>'+
       '</div></main>';
   }
@@ -1059,6 +1093,70 @@ a{color:inherit;text-decoration:none}
   if(window.visualViewport) {
     window.visualViewport.addEventListener("resize",syncBottomToVisualViewport,{passive:true});
     window.visualViewport.addEventListener("scroll",syncBottomToVisualViewport,{passive:true});
+  }
+
+
+  // PWA 설치: 지원 브라우저는 설치 프롬프트를 사용하고,
+  // iPhone/iPad 등 직접 프롬프트가 없는 환경에서는 홈 화면 추가 안내를 보여준다.
+  var deferredInstallPrompt=null;
+  var installAppButton=document.getElementById("installApp");
+  var installSheet=document.getElementById("installSheet");
+  var closeInstallSheet=document.getElementById("closeInstallSheet");
+
+  function isStandaloneApp() {
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone===true;
+  }
+  function openInstallSheet() {
+    if(!installSheet) return;
+    installSheet.classList.add("open");
+    installSheet.setAttribute("aria-hidden","false");
+  }
+  function closeInstallHelp() {
+    if(!installSheet) return;
+    installSheet.classList.remove("open");
+    installSheet.setAttribute("aria-hidden","true");
+  }
+  function syncInstallButton() {
+    if(!installAppButton) return;
+    if(isStandaloneApp()) {
+      installAppButton.textContent="앱 실행 중";
+      installAppButton.disabled=true;
+      installAppButton.style.opacity=".45";
+    } else {
+      installAppButton.textContent="앱 설치";
+      installAppButton.disabled=false;
+      installAppButton.style.opacity="";
+    }
+  }
+  window.addEventListener("beforeinstallprompt",function(e){
+    e.preventDefault();
+    deferredInstallPrompt=e;
+    syncInstallButton();
+  });
+  window.addEventListener("appinstalled",function(){
+    deferredInstallPrompt=null;
+    closeInstallHelp();
+    syncInstallButton();
+  });
+  if(installAppButton) installAppButton.addEventListener("click",function(){
+    if(isStandaloneApp()) return;
+    if(deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(function(){ deferredInstallPrompt=null; syncInstallButton(); }).catch(function(){ deferredInstallPrompt=null; });
+    } else {
+      openInstallSheet();
+    }
+  });
+  if(closeInstallSheet) closeInstallSheet.addEventListener("click",closeInstallHelp);
+  if(installSheet) installSheet.addEventListener("click",function(e){ if(e.target===installSheet) closeInstallHelp(); });
+  syncInstallButton();
+
+  // GitHub Pages는 HTTPS이므로 서비스 워커를 등록할 수 있다.
+  // 탐색은 네트워크 우선으로 처리해 새 index.html 배포가 오래 캐시되는 문제를 줄인다.
+  if("serviceWorker" in navigator) {
+    window.addEventListener("load",function(){
+      navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){});
+    });
   }
 
   migrateData();

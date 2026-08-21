@@ -1,0 +1,32 @@
+{
+  "id": "./",
+  "name": "꼬리소설",
+  "short_name": "꼬리소설",
+  "description": "익명 분기형 공동창작 소설 플랫폼",
+  "lang": "ko-KR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "any",
+  "categories": [
+    "books",
+    "entertainment",
+    "social"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
