@@ -121,6 +121,20 @@ a{color:inherit;text-decoration:none}
 .royalty{border-left:3px solid #111}
 .hint{font-size:11px;line-height:1.55;color:var(--muted);margin-top:6px}
 .empty.compact{padding:18px 8px;margin-top:10px}
+.find-controls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}
+.find-toggle{appearance:none;border:1px solid var(--line-strong);background:#fff;border-radius:9px;padding:9px 11px;font-size:12px;font-weight:750}
+.find-toggle.on{background:#111;color:#fff;border-color:#111}
+.family-block{border-top:1px solid var(--line)}
+.family-block:last-child{border-bottom:1px solid var(--line)}
+.family-block>.card{border-top:0;border-bottom:0}
+.family-tails{margin:0 0 7px 22px;border-left:1px solid var(--line-strong);padding-left:12px}
+.family-tail-row{border-top:1px solid #f0f0f0}
+.family-tail-row:first-child{border-top:0}
+.family-tail-row button{all:unset;display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 0;cursor:pointer}
+.family-tail-title{font-size:13px;font-weight:620;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.family-tail-views{font-size:11px;color:var(--muted);white-space:nowrap}
+.expand-tails{appearance:none;border:0;background:transparent;color:#666;padding:7px 0 5px;font-size:12px;font-weight:700}
+.find-note{font-size:11px;color:var(--muted);line-height:1.55;margin:4px 0 10px}
 @media (min-width:720px){
   .title{font-size:19px}
   .reader,.form{padding:22px}
@@ -172,7 +186,7 @@ a{color:inherit;text-decoration:none}
 
   var STORAGE_KEY = "kkori_mobile_safe_v1";
   var MINE_KEY = "kkori_mine_safe_v1";
-  var genres = ["판타지","과학소설","로맨스","공포","무협","미스터리","대체역사","일상","코미디","기타"];
+  var genres = ["판타지","과학소설","로맨스","공포","무협","미스터리","대체역사","일상","개그","기타"];
   var tailTypes = ["다음 화","다른 결말","IF분기","패러디","개그화","외전","다른 등장인물 시점","재해석","세계관 확장","기타"];
 
   function seed() {
@@ -194,7 +208,7 @@ a{color:inherit;text-decoration:none}
   }
 
   var data = loadData();
-  var state = {view:"home", selected:null, query:"", rank:"최신"};
+  var state = {view:"home", selected:null, query:"", rank:"최신", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}};
 
   function saveData() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -305,6 +319,7 @@ a{color:inherit;text-decoration:none}
     var i,s,root;
     for(i=0;i<data.length;i++) {
       s=data[i];
+      if(s.genre==="코미디") s.genre="개그";
       if(!s.format) s.format=s.p?"tail":"short";
       if(s.official && s.format!=="series") s.format="series";
       if(!s.lineage) s.lineage=s.p?"tail":"first";
@@ -340,6 +355,17 @@ a{color:inherit;text-decoration:none}
       {id:"demo_series_e2",p:null,root:"demo_series_e1",sourceRootId:"demo_series_e1",lineage:"first",format:"series",official:true,seriesId:"demo_series",seriesTitle:"막차는 달로 간다",episode:2,type:null,title:"2화. 없는 승객",genre:"과학소설",pen:"익명 0721",desc:"빈 좌석에 적힌 이름.",body:"내 맞은편 좌석은 비어 있었다.\n\n그런데 좌석표에는 이름이 적혀 있었다.\n\n내 이름이었다.",views:1410,likes:176,date:now-170000000,comments:[]},
       {id:"demo_tail_series_e1",p:"demo_series_e2",root:"demo_tail_series_e1",sourceRootId:"demo_series_e1",lineage:"tail",format:"series",official:true,seriesId:"demo_tail_series",seriesTitle:"좌석에 먼저 앉아 있던 나",episode:1,type:"IF분기",title:"1화. 먼저 도착한 사람",genre:"과학소설",pen:"익명 3310",desc:"2화에서 갈라진 꼬리 시리즈.",body:"고개를 들자 빈 좌석에 누군가 앉아 있었다.\n\n나였다.\n\n그가 먼저 말했다.\n\n“이번엔 네가 내리는 차례야.”",views:730,likes:92,date:now-165000000,comments:[]},
       {id:"demo_series_e3",p:null,root:"demo_series_e1",sourceRootId:"demo_series_e1",lineage:"first",format:"series",official:true,seriesId:"demo_series",seriesTitle:"막차는 달로 간다",episode:3,type:null,title:"3화. 종착역",genre:"과학소설",pen:"익명 0721",desc:"열차가 멈춘 곳.",body:"열차는 달에 도착하지 않았다.\n\n문이 열린 곳은 출발하기 전의 승강장이었다.\n\n시계만 하루 전으로 돌아가 있었다.",views:1080,likes:139,date:now-160000000,comments:[]}
+    ];
+    for(i=0;i<demo.length;i++) if(!getStory(demo[i].id)) data.unshift(demo[i]);
+    saveData();
+  }
+
+  function ensureDiscoveryDemoTails() {
+    var now=Date.now(),root=getStory("a"),demo,i;
+    if(!root) return;
+    demo=[
+      {id:"demo_find_tail_1",p:"a",root:"a",sourceRootId:"a",lineage:"tail",format:"tail",official:false,type:"다른 결말",title:"문을 끝내 열지 않았다",genre:"과학소설",pen:"익명 1180",desc:"4번 도킹 포트를 무시한 선택.",body:"나는 손잡이에서 손을 뗐다.\n\n노크는 멈췄다.\n\n대신 창밖에서 누군가 유리를 두드렸다.",views:920,likes:83,date:now-120000000,comments:[]},
+      {id:"demo_find_tail_2",p:"a",root:"a",sourceRootId:"a",lineage:"tail",format:"tail",official:false,type:"IF분기",title:"관제가 한 번 대답했다",genre:"과학소설",pen:"익명 5521",desc:"끊긴 줄 알았던 교신이 돌아온 분기.",body:"잡음 사이에서 목소리가 들렸다.\n\n“문 열지 마.”\n\n그리고 통신은 다시 끊겼다.",views:510,likes:61,date:now-110000000,comments:[]}
     ];
     for(i=0;i<demo.length;i++) if(!getStory(demo[i].id)) data.unshift(demo[i]);
     saveData();
@@ -441,20 +467,95 @@ a{color:inherit;text-decoration:none}
     return '<main class="wrap"><section class="sec" style="margin-top:0"><div class="pills" style="margin-bottom:8px">'+rankButtons+'</div><div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div></section></main>';
   }
 
-  function findHTML() {
-    var arr=[],cards="",i,s,q=(state.query||"").toLowerCase();
+  function inheritedGenre(s) {
+    var root=sourceRootFor(s);
+    var g=(root&&root.genre)||s.genre||"기타";
+    return g==="코미디"?"개그":g;
+  }
+
+  function rootWorks() {
+    var out=[],i,s;
+    for(i=0;i<data.length;i++) {
+      s=data[i];
+      if(s.lineage==="tail") continue;
+      if(isSeriesEpisode(s) && s.episode!==1) continue;
+      if(!isSeriesEpisode(s) && s.p) continue;
+      out.push(s);
+    }
+    return out;
+  }
+
+  function firstLevelTailsFor(root) {
+    var anchors=[],out=[],seen={},i,j,kids,k;
+    if(!root) return out;
+    if(isSeriesRoot(root)) anchors=seriesEpisodes(root.seriesId);
+    else anchors=[root];
+    for(i=0;i<anchors.length;i++) {
+      kids=childrenOf(anchors[i].id);
+      for(j=0;j<kids.length;j++) {
+        k=kids[j];
+        if(seen[k.id]) continue;
+        seen[k.id]=true;
+        out.push(k);
+      }
+    }
+    out.sort(function(a,b){
+      return (displayViews(b)+Number(b.likes||0)*3)-(displayViews(a)+Number(a.likes||0)*3);
+    });
+    return out;
+  }
+
+  function tailMiniRowHTML(s) {
+    var attr=isSeriesRoot(s)?' data-series="'+esc(s.seriesId)+'"':' data-story="'+esc(s.id)+'"';
+    var tags=originBadge(s)+(isSeriesRoot(s)?seriesBadge():tailTypeBadge(s));
+    return '<div class="family-tail-row"><button type="button"'+attr+'><div class="family-tail-title"><span class="tags">'+tags+'</span>'+esc(displayTitle(s))+'</div><div class="family-tail-views">'+fmt(displayViews(s))+'</div></button></div>';
+  }
+
+  function familyBlockHTML(root) {
+    var tails=firstLevelTailsFor(root),shown=[],i,tailHtml="",expanded=!!state.findExpanded[root.id];
+    if(state.findShowTails) shown=expanded?tails:tails.slice(0,3);
+    for(i=0;i<shown.length;i++) tailHtml+=tailMiniRowHTML(shown[i]);
+    if(state.findShowTails && tails.length) {
+      tailHtml='<div class="family-tails">'+tailHtml+(tails.length>3?'<button class="expand-tails" type="button" data-expand-root="'+esc(root.id)+'">'+(expanded?'접기':'펼치기')+'</button>':'')+'</div>';
+    }
+    return '<div class="family-block">'+cardHTML(root)+tailHtml+'</div>';
+  }
+
+  function flatDiscoverWorks() {
+    var out=[],seen={},i,s,work;
     for(i=0;i<data.length;i++) {
       s=data[i];
       if(isSeriesEpisode(s) && s.episode!==1) continue;
+      work=isSeriesEpisode(s)?seriesRootForStory(s):s;
+      if(!work || seen[work.id]) continue;
+      seen[work.id]=true;
+      out.push(work);
+    }
+    return out;
+  }
+
+  function findHTML() {
+    var arr=state.findFlat?flatDiscoverWorks():rootWorks(),cards="",genresHtml="",i,s,q=(state.query||"").toLowerCase(),filtered=[];
+    for(i=0;i<arr.length;i++) {
+      s=arr[i];
+      if(state.findGenre!=="전체" && inheritedGenre(s)!==state.findGenre) continue;
       if(q) {
-        var hay=(displayTitle(s)+" "+(s.title||"")+" "+(s.pen||"")+" "+(s.genre||"")+" "+(s.type||"")).toLowerCase();
+        var hay=(displayTitle(s)+" "+(s.title||"")+" "+(s.pen||"")+" "+inheritedGenre(s)+" "+(s.type||"")).toLowerCase();
         if(hay.indexOf(q)===-1) continue;
       }
-      arr.push(s);
+      filtered.push(s);
     }
-    arr.sort(function(a,b){return Number(b.date||0)-Number(a.date||0);});
-    for(i=0;i<arr.length;i++) cards+=cardHTML(arr[i]);
-    return '<main class="wrap"><div class="head"><h2>전체 검색</h2><span class="muted">첫 작품과 꼬리를 함께 검색</span></div><input class="search" id="searchInput" value="'+esc(state.query)+'" placeholder="작품 제목 검색"><div class="list">'+(cards||'<div class="empty">검색 결과가 없습니다.</div>')+'</div></main>';
+    filtered.sort(function(a,b){return Number(b.date||0)-Number(a.date||0);});
+    for(i=0;i<filtered.length;i++) cards+=state.findFlat?cardHTML(filtered[i]):familyBlockHTML(filtered[i]);
+    ["전체"].concat(genres).forEach(function(g){
+      genresHtml+='<button class="pill '+(state.findGenre===g?'on':'')+'" type="button" data-find-genre="'+esc(g)+'">'+esc(g)+'</button>';
+    });
+    return '<main class="wrap"><div class="head"><h2>발견</h2><span class="muted">장르와 계보로 찾기</span></div>'+
+      '<input class="search" id="searchInput" value="'+esc(state.query)+'" placeholder="작품 제목 검색">'+
+      '<div class="pills">'+genresHtml+'</div>'+
+      '<div class="find-controls"><button class="find-toggle '+(state.findShowTails?'on':'')+'" type="button" data-find-tails="1">꼬리작품도 보기</button><button class="find-toggle '+(state.findFlat?'on':'')+'" type="button" data-find-flat="1">장르만 보기</button></div>'+
+      '<div class="find-note">기본 장르 분류는 첫 작품의 장르를 따릅니다. 장르만 보기를 켜면 첫 작품과 꼬리를 구분하지 않고 한 목록에서 봅니다.</div>'+
+      '<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div></main>';
   }
 
   function treeNodeTags(k) {
@@ -629,7 +730,7 @@ a{color:inherit;text-decoration:none}
   var navIndex=0,maxNavIndex=0;
 
   function navSnapshot() {
-    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank};
+    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded};
   }
 
   function updateHistoryButtons() {
@@ -727,6 +828,10 @@ a{color:inherit;text-decoration:none}
         if(t.getAttribute("data-story")) {openStory(t.getAttribute("data-story"));return;}
         if(t.getAttribute("data-random")) {randomStory();return;}
         if(t.getAttribute("data-rank")) {state.rank=t.getAttribute("data-rank");render();return;}
+        if(t.getAttribute("data-find-genre")) {state.findGenre=t.getAttribute("data-find-genre");render();return;}
+        if(t.getAttribute("data-find-tails")) {state.findShowTails=!state.findShowTails;render();return;}
+        if(t.getAttribute("data-find-flat")) {state.findFlat=!state.findFlat;render();return;}
+        if(t.getAttribute("data-expand-root")) {var er=t.getAttribute("data-expand-root");state.findExpanded[er]=!state.findExpanded[er];render();return;}
         if(t.getAttribute("data-like")) {var s=getStory(t.getAttribute("data-like"));if(s){s.likes=Number(s.likes||0)+1;saveData();render();}return;}
         if(t.getAttribute("data-tail")) {var target=getStory(t.getAttribute("data-tail"));if(target && policyFor(target).policy!=="deny"){state.selected=target.id;go("tail");}return;}
         if(t.getAttribute("data-comments")) {var c=document.getElementById("comments");if(c)c.scrollIntoView();return;}
@@ -768,6 +873,10 @@ a{color:inherit;text-decoration:none}
       state.selected=h.selected||null;
       state.query=h.query||"";
       state.rank=h.rank||"최신";
+      state.findGenre=h.findGenre||"전체";
+      state.findShowTails=!!h.findShowTails;
+      state.findFlat=!!h.findFlat;
+      state.findExpanded=h.findExpanded||{};
       window.scrollTo(0,0);
       render();
       updateHistoryButtons();
@@ -783,6 +892,7 @@ a{color:inherit;text-decoration:none}
 
   migrateData();
   ensureDemoSeries();
+  ensureDiscoveryDemoTails();
   migrateData();
   try { history.replaceState(navSnapshot(),"",location.href); } catch(e) {}
   render();
