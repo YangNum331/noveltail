@@ -116,6 +116,10 @@ a{color:inherit;text-decoration:none}
 .tail-type-tag{display:inline-block;font-size:11px;font-weight:700;color:#555;background:#f4f4f4;border-radius:5px;padding:3px 5px;margin-right:5px;vertical-align:1px}
 .reader-topline{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:9px}
 .reader-topline .reader-tags{margin-bottom:0;min-width:0;flex-wrap:wrap}
+.work-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;min-height:30px}
+.work-topline .reader-tags,.work-topline .series-tags{margin-bottom:0;min-width:0;flex-wrap:wrap}
+.bookmark-btn{appearance:none;-webkit-appearance:none;flex:0 0 auto;border:1px solid var(--line-strong);background:#fff;border-radius:8px;padding:6px 9px;font-size:11px;font-weight:750;color:#555;white-space:nowrap}
+.bookmark-btn.on{background:#111;color:#fff;border-color:#111}
 .tail-tree-btn{appearance:none;border:1px solid var(--line-strong);background:#fff;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:700;white-space:nowrap}
 .tailtree-head{padding-bottom:14px;border-bottom:1px solid var(--line)}
 .tailtree-head h1{font-size:25px;margin:0;letter-spacing:-.03em}
@@ -186,6 +190,8 @@ a{color:inherit;text-decoration:none}
 .home-page-btn:disabled{color:#c9c9c9;background:#fafafa}
 .home-page-status{flex:1 1 auto;min-width:0;text-align:center;font-size:11px;color:#777;font-weight:700;white-space:nowrap;overflow:hidden}
 .home-list-frame>.list{width:100%;min-width:0;max-width:100%;overflow:hidden}
+.home-slot-empty button{pointer-events:none;cursor:default}
+.home-slot-empty .card-row{visibility:hidden}
 .ad-slot{height:108px;margin:26px 0 34px;border-radius:10px;background:#ececec;color:#8b8b8b;display:grid;place-items:center;font-size:12px;font-weight:700;letter-spacing:.02em}
 .project-intro{padding:18px 0 24px}
 .project-kicker{font-size:12px;font-weight:850;letter-spacing:.12em;color:#777;margin-bottom:15px}
@@ -216,6 +222,23 @@ a{color:inherit;text-decoration:none}
 .info-row:last-child{border-bottom:0}
 .info-row span:first-child{font-weight:800;color:#111}
 .info-row span:last-child{font-weight:650;color:#555;white-space:normal}
+.profile-guest{padding:8px 0 2px}
+.profile-guest h1,.profile-member-head h1{margin:0;font-size:30px;letter-spacing:-.04em}
+.profile-guest-lead{margin:34px 0 8px;font-size:26px;font-weight:850;line-height:1.25;letter-spacing:-.045em}
+.profile-guest-copy{margin:0;color:#666;font-size:13px;line-height:1.75;max-width:620px}
+.profile-benefits{margin:24px 0 18px;border-top:1px solid var(--line)}
+.profile-benefit{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:15px 0;border-bottom:1px solid var(--line)}
+.profile-benefit b{font-size:13px;line-height:1.45}
+.profile-benefit span{display:block;margin-top:3px;color:var(--muted);font-size:11px;line-height:1.55}
+.profile-benefit-num{display:grid;place-items:center;width:26px;height:26px;border-radius:999px;background:#111;color:#fff;font-size:10px;font-weight:800}
+.profile-signup{width:100%;margin-top:8px}
+.profile-test-note{margin:10px 0 0;text-align:center;color:#999;font-size:10px;line-height:1.5}
+.profile-member-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px}
+.profile-member-badge{font-size:11px;font-weight:750;color:#555;border:1px solid var(--line-strong);border-radius:999px;padding:5px 8px}
+.profile-section{margin-top:28px}
+.profile-section .head{margin-bottom:10px}
+.profile-logout-wrap{display:flex;justify-content:center;margin-top:44px;padding-top:18px;border-top:1px solid var(--line)}
+.profile-withdraw{appearance:none;border:0;background:transparent;color:#aaa;font-size:10px;padding:8px 12px;text-decoration:underline;text-underline-offset:3px}
 
 .install-sheet{position:fixed;z-index:20000;inset:0;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.28);padding:18px 12px calc(18px + env(safe-area-inset-bottom))}
 .install-sheet.open{display:flex}
@@ -282,7 +305,7 @@ a{color:inherit;text-decoration:none}
     <button class="nav on" data-view="home">홈</button>
     <button class="nav" data-view="find">발견</button>
     <button class="nav write" data-view="write">쓰기</button>
-    <button class="nav" data-view="mine">내 작품</button>
+    <button class="nav" data-view="profile">프로필</button>
   </nav>
   <div class="bottom-tools" aria-label="페이지 도구">
     <button class="history-btn" id="siteBack" type="button" aria-label="뒤로">←</button>
@@ -315,6 +338,8 @@ a{color:inherit;text-decoration:none}
   var STORAGE_KEY = "kkori_mobile_safe_v1";
   var MINE_KEY = "kkori_mine_safe_v1";
   var GENRE_PREF_KEY = "kkori_genre_tabs_v1";
+  var ACCOUNT_KEY = "noveltail_test_account_v1";
+  var BOOKMARK_KEY = "noveltail_bookmarks_v1";
   var genres = ["판타지","과학소설","로맨스","공포","무협","미스터리","대체역사","일상","개그","기타"];
   var tailTypes = ["다음 화","다른 결말","IF분기","패러디","개그화","외전","다른 등장인물 시점","재해석","세계관 확장","기타"];
 
@@ -492,6 +517,47 @@ a{color:inherit;text-decoration:none}
       if(ids.indexOf(id)===-1) ids.push(id);
       localStorage.setItem(MINE_KEY,JSON.stringify(ids));
     } catch(e) {}
+  }
+
+  function isMember() {
+    try { return localStorage.getItem(ACCOUNT_KEY)==="1"; } catch(e) { return false; }
+  }
+
+  function setMember(flag) {
+    try {
+      if(flag) localStorage.setItem(ACCOUNT_KEY,"1");
+      else localStorage.removeItem(ACCOUNT_KEY);
+    } catch(e) {}
+  }
+
+  function bookmarkIds() {
+    try {
+      var raw=localStorage.getItem(BOOKMARK_KEY),ids=raw?JSON.parse(raw):[];
+      return Array.isArray(ids)?ids:[];
+    } catch(e) { return []; }
+  }
+
+  function bookmarkTarget(s) {
+    if(!s) return null;
+    return isSeriesEpisode(s)?seriesRootForStory(s):s;
+  }
+
+  function isBookmarked(id) {
+    return bookmarkIds().indexOf(id)!==-1;
+  }
+
+  function toggleBookmark(id) {
+    if(!isMember()) return;
+    var ids=bookmarkIds(),i=ids.indexOf(id);
+    if(i===-1) ids.push(id); else ids.splice(i,1);
+    try { localStorage.setItem(BOOKMARK_KEY,JSON.stringify(ids)); } catch(e) {}
+  }
+
+  function bookmarkButtonHTML(s) {
+    var target=bookmarkTarget(s),on;
+    if(!isMember() || !target) return "";
+    on=isBookmarked(target.id);
+    return '<button class="bookmark-btn '+(on?'on':'')+'" type="button" data-bookmark="'+esc(target.id)+'">'+(on?'북마크됨':'북마크')+'</button>';
   }
 
   function sourceRootFor(s) {
@@ -702,12 +768,15 @@ a{color:inherit;text-decoration:none}
   }
 
   function homePagerHTML(page,totalPages,position) {
-    if(totalPages<=1) return "";
     return '<div class="home-pager '+(position||'')+'"><button class="home-page-btn" type="button" data-home-page="prev" '+(page<=0?'disabled':'')+'>←</button><div class="home-page-status">'+(page+1)+' / '+totalPages+'</div><button class="home-page-btn" type="button" data-home-page="next" '+(page>=totalPages-1?'disabled':'')+'>→</button></div>';
   }
 
+  function homeEmptySlotHTML() {
+    return '<div class="card home-slot-empty" aria-hidden="true"><button type="button" disabled tabindex="-1"><div class="card-row"><div class="title">&nbsp;</div><div class="views">&nbsp;</div></div></button></div>';
+  }
+
   function homeHTML() {
-    var arr=[],i,s,cards="",rankButtons="",shown=[],totalPages=1,start=0,end=0,pagerTop="",pagerBottom="";
+    var arr=[],i,s,cards="",rankButtons="",shown=[],totalPages=1,start=0,end=0,pagerTop="",pagerBottom="",pageSize=state.homeExpanded?20:5;
     for(i=0;i<data.length;i++) {
       s=data[i];
       if(s.lineage==="tail") continue;
@@ -719,27 +788,19 @@ a{color:inherit;text-decoration:none}
       if(state.rank==="인기") return (displayViews(b)+Number(b.likes||0)*3)-(displayViews(a)+Number(a.likes||0)*3);
       return Number(b.date||0)-Number(a.date||0);
     });
-    if(state.homeExpanded) {
-      totalPages=Math.max(1,Math.ceil(arr.length/20));
-      if(state.homePage>=totalPages) state.homePage=totalPages-1;
-      if(state.homePage<0) state.homePage=0;
-      start=state.homePage*20;
-      end=Math.min(start+20,arr.length);
-      shown=arr.slice(start,end);
-    } else {
-      totalPages=Math.max(1,Math.ceil(arr.length/5));
-      if(state.homePage>=totalPages) state.homePage=totalPages-1;
-      if(state.homePage<0) state.homePage=0;
-      start=state.homePage*5;
-      end=Math.min(start+5,arr.length);
-      shown=arr.slice(start,end);
-    }
+    totalPages=Math.max(1,Math.ceil(arr.length/pageSize));
+    if(state.homePage>=totalPages) state.homePage=totalPages-1;
+    if(state.homePage<0) state.homePage=0;
+    start=state.homePage*pageSize;
+    end=Math.min(start+pageSize,arr.length);
+    shown=arr.slice(start,end);
     pagerTop=homePagerHTML(state.homePage,totalPages,'pager-top');
     pagerBottom=homePagerHTML(state.homePage,totalPages,'pager-bottom');
     for(i=0;i<shown.length;i++) cards+=cardHTML(shown[i]);
+    for(i=shown.length;i<pageSize;i++) cards+=homeEmptySlotHTML();
     ["최신","인기"].forEach(function(x){rankButtons+='<button class="pill '+(state.rank===x?'on':'')+'" data-rank="'+x+'">'+x+'</button>';});
     return '<main class="wrap">'+
-      '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame">'+pagerTop+'<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div>'+pagerBottom+'</div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
+      '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame">'+pagerTop+'<div class="list">'+cards+'</div>'+pagerBottom+'</div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
       '<div class="ad-slot">광고 영역</div>'+ 
       '<section class="project-intro" id="projectIntro"><div class="project-kicker">NovelTail · 노벨테일</div><h1>작가를 위한<br>플랫폼.</h1><p class="project-lead">좋은 이야기가 더 많은 사람에게 닿고, 그 가치가 가능한 한 창작자에게 돌아가야 한다고 생각합니다. NovelTail(노벨테일)은 읽는 사람을 다음 작가로 연결하고, 혼자 시작한 이야기가 함께 자랄 수 있게 만드는 공동창작 플랫폼입니다.</p></section>'+ 
       '<section class="project-fee"><strong>플랫폼이 가져가는 몫은 <em>10%</em>.</strong><p>작품에서 수익이 발생하면 NovelTail의 플랫폼 운영 수수료는 10%입니다. 나머지 90%는 창작자 배분금으로 남습니다. 꼬리 작품에서는 최초 원작자와 앞선 창작자의 기여도 계보에 따라 함께 기록하고 배분합니다.</p><div class="fee-note">창작물이 커질수록 플랫폼보다 창작자에게 더 많은 가치가 돌아가는 구조를 지향합니다.</div></section>'+ 
@@ -920,7 +981,7 @@ a{color:inherit;text-decoration:none}
     }
     tailDisclosure=tailDisclosureHTML(root);
     back=root.p?' data-story="'+esc(root.p)+'"':' data-view="home"';
-    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta"><span>'+esc(root.pen)+'</span><span>'+esc(root.genre)+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+'</main>';
+    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="work-topline"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div>'+bookmarkButtonHTML(root)+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta"><span>'+esc(root.pen)+'</span><span>'+esc(root.genre)+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+'</main>';
   }
   function seriesEpisodeForm(rootId) {
     var root=getStory(rootId),eps=root?seriesEpisodes(root.seriesId):[],next=eps.length+1;
@@ -955,7 +1016,7 @@ a{color:inherit;text-decoration:none}
       else if(policyFor(s).policy==="noncommercial") currentRoyalty='<div class="notice">이 꼬리 작품은 비상업 작품입니다.</div>';
     }
     tailDisclosure=tailDisclosureHTML(s);
-    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.pen)+'</span><span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section><section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.pen)+'</span><span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section><section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
   function policyFieldHTML() {
     return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 플랫폼 10% · 계보 로열티</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">수익화 시 플랫폼 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자 10% 고정, 가까운 꼬리 조상부터 6% → 3% → 1.5% → 0.75%…로 배분하고 나머지는 현재 작가가 받습니다. 실제 결제·정산은 아직 하지 않습니다.</div></div>';
@@ -995,8 +1056,12 @@ a{color:inherit;text-decoration:none}
       '</div></main>';
   }
 
-  function mineHTML() {
-    var ids=mineIds(),arr=[],cards="",i;
+  function profileHTML() {
+    var ids,arr=[],cards="",i,bids,barr=[],bcards="",seen={},work;
+    if(!isMember()) {
+      return '<main class="wrap"><section class="profile-guest"><h1>프로필</h1><div class="profile-guest-lead">회원가입하면<br>이야기를 모아둘 수 있습니다.</div><p class="profile-guest-copy">읽기와 둘러보기는 가볍게 시작하고, 내 작품과 마음에 든 작품을 계속 관리하고 싶을 때 계정을 만들 수 있습니다.</p><div class="profile-benefits"><div class="profile-benefit"><div class="profile-benefit-num">1</div><div><b>내 작품을 한곳에서</b><span>내가 작성한 첫 작품과 꼬리 작품, 시리즈를 프로필에서 모아볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">2</div><div><b>북마크로 다시 찾기</b><span>마음에 든 작품을 저장하고 프로필의 북마크 목록에서 바로 다시 열 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">3</div><div><b>창작자 기능의 기반</b><span>정식 서비스에서는 후원과 수익 정산 같은 창작자 기능도 계정에 연결할 예정입니다.</span></div></div></div><button class="btn primary profile-signup" type="button" data-signup="1">회원가입</button><p class="profile-test-note">현재 테스트판에서는 개인정보 입력 없이 버튼을 누르면 바로 회원 상태가 됩니다.</p></section></main>';
+    }
+    ids=mineIds();
     for(i=0;i<data.length;i++) {
       if(ids.indexOf(data[i].id)===-1) continue;
       if(isSeriesEpisode(data[i]) && data[i].episode!==1) continue;
@@ -1004,12 +1069,25 @@ a{color:inherit;text-decoration:none}
     }
     arr.sort(function(a,b){return Number(b.date||0)-Number(a.date||0);});
     for(i=0;i<arr.length;i++) cards+=cardHTML(arr[i]);
-    return '<main class="wrap"><div class="head"><h2>내 작품</h2><span class="muted">이 브라우저에서 작성</span></div><div class="notice">현재 테스트판은 서버 없이 이 브라우저에 저장됩니다.</div><div class="list sec">'+(cards||'<div class="empty">아직 작성한 작품이 없습니다.</div>')+'</div></main>';
+
+    bids=bookmarkIds();
+    for(i=0;i<bids.length;i++) {
+      work=getStory(bids[i]);
+      if(!work) continue;
+      work=bookmarkTarget(work);
+      if(!work || seen[work.id]) continue;
+      seen[work.id]=true;
+      barr.push(work);
+    }
+    for(i=0;i<barr.length;i++) bcards+=cardHTML(barr[i]);
+
+    return '<main class="wrap"><div class="profile-member-head"><h1>프로필</h1><span class="profile-member-badge">회원</span></div><div class="notice">현재 테스트판은 계정 상태·내 작품·북마크를 이 브라우저에 저장합니다.</div><section class="profile-section"><div class="head"><h2>내 작품</h2><span class="muted">'+arr.length+'개</span></div><div class="list">'+(cards||'<div class="empty">아직 작성한 작품이 없습니다.</div>')+'</div></section><section class="profile-section"><div class="head"><h2>북마크</h2><span class="muted">'+barr.length+'개</span></div><div class="list">'+(bcards||'<div class="empty">아직 북마크한 작품이 없습니다.<br>작품 상단에서 북마크할 수 있습니다.</div>')+'</div></section><div class="profile-logout-wrap"><button class="profile-withdraw" type="button" data-withdraw="1">탈퇴</button></div></main>';
   }
 
   function render() {
     var app=document.getElementById("app");
     if(!app) return;
+    if(state.view==="mine") state.view="profile";
     if(state.view==="home") app.innerHTML=homeHTML();
     else if(state.view==="find") app.innerHTML=findHTML();
     else if(state.view==="series") app.innerHTML=seriesHTML();
@@ -1017,7 +1095,7 @@ a{color:inherit;text-decoration:none}
     else if(state.view==="story") app.innerHTML=storyHTML();
     else if(state.view==="write") app.innerHTML=formHTML(null);
     else if(state.view==="tail") app.innerHTML=formHTML(state.selected);
-    else if(state.view==="mine") app.innerHTML=mineHTML();
+    else if(state.view==="profile") app.innerHTML=profileHTML();
     else if(state.view==="info") app.innerHTML=infoHTML();
     updateNav();
   }
@@ -1050,6 +1128,7 @@ a{color:inherit;text-decoration:none}
   }
 
   function go(view,push) {
+    if(view==="mine") view="profile";
     if(view==="find" && state.view!=="find") state.findGenre=defaultFindGenre();
     if(view==="story" && !state.selected) view="home";
     state.view=view;
@@ -1132,6 +1211,9 @@ a{color:inherit;text-decoration:none}
           } else go("info");
           return;
         }
+        if(t.getAttribute("data-signup")) {setMember(true);render();return;}
+        if(t.getAttribute("data-withdraw")) {setMember(false);try{localStorage.removeItem(BOOKMARK_KEY);}catch(err){}render();return;}
+        if(t.getAttribute("data-bookmark")) {toggleBookmark(t.getAttribute("data-bookmark"));render();return;}
         if(t.getAttribute("data-view")) {go(t.getAttribute("data-view"));return;}
         if(t.getAttribute("data-series")) {openSeries(t.getAttribute("data-series"));return;}
         if(t.getAttribute("data-seriesnext")) {state.selected=t.getAttribute("data-seriesnext");go("serieswrite");return;}
@@ -1195,6 +1277,7 @@ a{color:inherit;text-decoration:none}
     if(h && h.kkori) {
       navIndex=Number(h.navIndex||0);
       state.view=h.view||"home";
+      if(state.view==="mine") state.view="profile";
       state.selected=h.selected||null;
       state.query=h.query||"";
       state.rank=h.rank||"최신";
