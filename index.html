@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fffaf3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>꼬리소설</title>
+<style>
+:root{--g:#26734d;--bg:#fffaf3;--c:#fff;--l:#ece7df;--m:#778079;--t:#202520}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
+button,input,textarea,select{font:inherit}.top{position:sticky;top:0;z-index:8;background:#fffaf3ee;backdrop-filter:blur(12px);border-bottom:1px solid var(--l)}
+.topin{max-width:720px;margin:auto;padding:13px 16px;display:flex;align-items:center;justify-content:space-between}.logo{font-weight:900;font-size:21px}
+.logo b{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:12px;background:var(--g);color:#fff;margin-right:8px}
+.wrap{max-width:720px;margin:auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom))}
+.hero{padding:22px;border-radius:25px;background:linear-gradient(140deg,#e3f6ea,#ffecda);box-shadow:0 10px 28px #0000000d}
+.hero h1{font-size:27px;line-height:1.2;margin:0 0 8px}.hero p{font-size:13px;line-height:1.55;color:#58635c;margin:0}
+.btn{border:0;border-radius:13px;padding:11px 14px;font-weight:850}.primary{background:var(--g);color:white}.soft{background:#e2f3e9;color:#185d3d}.ghost{background:white;border:1px solid var(--l)}
+.acts{display:flex;gap:8px;margin-top:15px}.sec{margin-top:20px}.head{display:flex;align-items:end;justify-content:space-between;margin-bottom:10px}
+.head h2{font-size:18px;margin:0}.muted{font-size:12px;color:var(--m)}.pills{display:flex;gap:7px;overflow:auto;padding-bottom:8px;scrollbar-width:none}
+.pill{white-space:nowrap;border:1px solid var(--l);background:white;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:800}.pill.on{background:#202520;color:white}
+.list{display:grid;gap:10px}.card{background:white;border:1px solid var(--l);border-radius:18px;padding:15px}.card:active{transform:scale(.99)}
+.badge{float:right;background:#fff0df;color:#80512a;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900}.title{font-size:16px;font-weight:900}
+.desc{font-size:13px;color:#666e68;line-height:1.45;margin-top:5px}.meta{display:flex;gap:9px;flex-wrap:wrap;color:var(--m);font-size:11px;margin-top:10px}
+.bottom{position:fixed;z-index:10;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,720px);display:grid;grid-template-columns:repeat(4,1fr);
+padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#fffffff4;border-top:1px solid var(--l);backdrop-filter:blur(12px)}
+.nav{border:0;background:none;color:#777d78;font-size:11px;font-weight:800}.nav i{display:block;font-style:normal;font-size:20px;margin-bottom:2px}.nav.on{color:var(--g)}
+.nav.write i{width:42px;height:42px;display:grid;place-items:center;background:var(--g);color:white;border-radius:15px;margin:-24px auto 2px;font-size:28px}
+.search{width:100%;border:1px solid var(--l);background:white;border-radius:13px;padding:11px;margin-bottom:12px}.reader,.form{background:white;border:1px solid var(--l);border-radius:21px;padding:18px}
+.reader h1{font-size:26px;line-height:1.25;margin:0}.body{white-space:pre-wrap;font-size:16px;line-height:1.85;margin-top:22px}.triple{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.act{border:1px solid var(--l);background:white;border-radius:13px;padding:11px 5px;font-size:11px;font-weight:800}.act b{display:block;font-size:18px}
+.back{border:1px solid var(--l);background:white;width:39px;height:39px;border-radius:12px;margin-bottom:12px}.tree{border-left:2px solid #cce5d7;padding-left:12px;display:grid;gap:8px}
+.node{border:1px solid var(--l);background:white;border-radius:13px;padding:11px}.field{margin-bottom:14px}.field label{display:block;font-weight:850;font-size:13px;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--l);border-radius:13px;padding:12px;background:white}.field textarea{min-height:220px;resize:vertical;line-height:1.7}
+.commentbox{display:flex;gap:7px}.commentbox input{flex:1;min-width:0;border:1px solid var(--l);border-radius:13px;padding:11px}.comment{border:1px solid var(--l);background:white;border-radius:13px;padding:11px;margin-top:7px}
+.comment small{color:var(--m)}.notice{font-size:12px;line-height:1.5;color:#606862;background:#f2f6f4;border-radius:13px;padding:12px}.empty{text-align:center;color:var(--m);padding:36px 10px}
+</style></head>
+<body><div id="app"></div>
+<script>
+const K='kkori_mobile_v3';
+const genres=['판타지','SF','로맨스','공포','무협','미스터리','대체역사','일상','코미디','기타'];
+const types=['다음 화','다른 결말','IF 분기','패러디','개그화','스핀오프','다른 등장인물 시점','리메이크','세계관 확장','기타'];
+const seed=()=>[
+{id:'a',p:null,root:'a',type:null,title:'문이 열리지 않는 우주정거장',genre:'SF',pen:'익명 1420',desc:'교신이 끊긴 궤도 정거장에서 혼자 깨어난 정비사의 이야기.',
+body:'경고등은 세 번 깜빡이고 꺼졌다.\n\n지구는 창밖에서 너무 조용했다.\n\n“관제, 들리면 대답해.”\n\n대답 대신 4번 도킹 포트에서 노크 소리가 났다.\n\n세 번. 두 번. 한 번.\n\n나는 렌치를 들고 문 앞에 섰다. 손잡이는 안쪽에서 천천히 돌아가고 있었다.',
+views:3280,likes:294,date:Date.now()-5e8,comments:[['익명 3912','이거 다음 장면 너무 궁금한데 여기서 끊는 건 반칙 아님?']]},
+{id:'b',p:'a',root:'a',type:'다음 화',title:'4번 도킹 포트의 손님',genre:'SF',pen:'무명',desc:'문을 연 뒤 실제로 들어온 것은 사람이 아니었다.',
+body:'문이 열렸다.\n\n산소가 빠져나가는 소리 대신 종이가 바닥에 떨어지는 소리가 났다.\n\n종이에는 단 한 줄만 적혀 있었다.\n\n“너는 세 번째다.”',views:6120,likes:870,date:Date.now()-3e8,comments:[]},
+{id:'c',p:'a',root:'a',type:'개그화',title:'노크한 놈이 배달기사였다',genre:'코미디',pen:'익명 0044',desc:'궤도상 배달 지연에 화가 난 우주 배달기사.',
+body:'문을 열자 배달기사가 서 있었다.\n\n“고객님, 공동현관 비밀번호를 안 적으시면 어떡합니까.”\n\n나는 지구를 가리켰다.\n\n“저기 전쟁 났는데요.”\n\n“그건 제 배송평가랑 상관없습니다.”',views:4980,likes:731,date:Date.now()-2e8,comments:[['익명 9901','이딴 전개를 왜 넣은 거임? 개웃기네 ㅋㅋ']]},
+{id:'d',p:null,root:'d',type:null,title:'용사가 퇴근했다',genre:'판타지',pen:'구름사탕',desc:'마왕성 앞에서 정시퇴근을 선언한 용사의 이야기.',
+body:'“오늘은 여기까지.”\n\n용사는 검을 칼집에 넣었다.\n\n마왕이 자리에서 일어났다.\n\n“지금 결전 중인데?”\n\n“제 근무시간은 여섯 시까지입니다.”',views:2230,likes:410,date:Date.now()-4e8,comments:[]}
+];
+let data; try{data=JSON.parse(localStorage.getItem(K))||seed()}catch(e){data=seed()}
+let st={view:'home',sel:null,q:'',genre:'전체',rank:'실시간'};
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(data))}catch(e){}};
+const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const fmt=n=>n>999?(n/1000).toFixed(1)+'K':n;
+const kids=id=>data.filter(x=>x.p===id);
+const desc=id=>{let n=0,q=[id];while(q.length){let x=q.pop();kids(x).forEach(k=>{n++;q.push(k.id)})}return n};
+
+function top(){return `<div class=top><div class=topin><div class=logo onclick="go('home')"><b>🌱</b>꼬리소설</div><button class="btn ghost" onclick="randomS()">🎲</button></div></div>`}
+function nav(){return `<div class=bottom>${[['home','🏠','홈'],['find','🧭','발견'],['write','＋','쓰기'],['mine','🪴','내 작품']].map(x=>`<button class="nav ${st.view===x[0]?'on':''} ${x[0]==='write'?'write':''}" onclick="go('${x[0]}')"><i>${x[1]}</i>${x[2]}</button>`).join('')}</div>`}
+function card(s,n=''){return `<div class=card onclick="openS('${s.id}')"><span class=badge>${esc(s.type||s.genre)}</span><div class=title>${n?n+'. ':''}${esc(s.title)}</div><div class=desc>${esc(s.desc)}</div><div class=meta><span>${esc(s.pen)}</span><span>👁 ${fmt(s.views)}</span><span>❤️ ${fmt(s.likes)}</span><span>🌱 ${desc(s.id)}</span></div></div>`}
+function home(){
+ let arr=data.filter(x=>!x.p&&(!st.q||(x.title+x.desc+x.genre+x.pen).includes(st.q))&&(st.genre==='전체'||x.genre===st.genre));
+ arr.sort((a,b)=>st.rank==='신작'?b.date-a.date:st.rank==='꼬리'?desc(b.id)-desc(a.id):(b.views+b.likes*3)-(a.views+a.likes*3));
+ return `<main class=wrap><section class=hero><h1>읽다가 마음에 들면<br>네가 다음 화를 써라.</h1><p>로그인 없이 쓰고, 누구나 꼬리를 붙이는 익명 공동창작 놀이터.</p><div class=acts><button class="btn primary" onclick="go('write')">첫 이야기 쓰기</button><button class="btn soft" onclick="randomS()">🎲 랜덤 읽기</button></div></section><section class=sec><input class=search value="${esc(st.q)}" oninput="st.q=this.value;render()" placeholder="작품·장르·필명 검색"><div class=pills>${['실시간','신작','꼬리'].map(x=>`<button class="pill ${st.rank===x?'on':''}" onclick="st.rank='${x}';render()">${x==='꼬리'?'🌱 꼬리 많은 작품':x}</button>`).join('')}</div><div class=pills>${['전체',...genres].map(x=>`<button class="pill ${st.genre===x?'on':''}" onclick="st.genre='${x}';render()">${x}</button>`).join('')}</div><div class=list>${arr.map((s,i)=>card(s,i+1)).join('')||'<div class=empty>작품이 없습니다.</div>'}</div></section></main>`
+}
+function find(){let arr=[...data].sort((a,b)=>b.date-a.date);return `<main class=wrap><div class=head><h2>🧭 발견</h2><span class=muted>원작 ${data.filter(x=>!x.p).length} · 꼬리 ${data.filter(x=>x.p).length}</span></div><div class=list>${arr.map(s=>card(s)).join('')}</div></main>`}
+function reader(){
+ let s=data.find(x=>x.id===st.sel); if(!s)return home(); let ks=kids(s.id);
+ return `<main class=wrap><button class=back onclick="go('home')">←</button><article class=reader><h1>${esc(s.title)}</h1><div class=meta>${esc(s.genre)} · ${esc(s.pen)} · ${s.p?esc(s.type):'원작'}</div><div class=body>${esc(s.body)}</div></article><div class=triple><button class=act onclick="like('${s.id}')"><b>❤️</b>${fmt(s.likes)}</button><button class=act onclick="document.querySelector('#comments').scrollIntoView({behavior:'smooth'})"><b>💬</b>${s.comments.length}</button><button class=act onclick="tail('${s.id}')"><b>🌱</b>${ks.length}</button></div><section class=sec><div class=head><h2>🌳 이야기 가지</h2><span class=muted>후손 ${desc(s.id)}개</span></div>${ks.length?`<div class=tree>${tree(s.id)}</div>`:'<div class=notice>아직 꼬리가 없습니다. 첫 분기를 만들어보세요.</div>'}<button class="btn primary" style="width:100%;margin-top:10px" onclick="tail('${s.id}')">🌱 이 작품 이어쓰기</button></section><section class=sec id=comments><div class=head><h2>댓글</h2><span class=muted>익명</span></div><div class=commentbox><input id=com maxlength=240 placeholder="가볍게 한마디"><button class="btn primary" onclick="comment('${s.id}')">등록</button></div>${[...s.comments].reverse().map(c=>`<div class=comment><small>${esc(c[0])}</small><div>${esc(c[1])}</div></div>`).join('')||'<div class=empty>첫 댓글을 남겨보세요.</div>'}</section></main>`
+}
+function tree(id){return kids(id).map(k=>`<div class=node onclick="openS('${k.id}')"><b>${esc(k.title)}</b><div class=muted>${esc(k.type)} · ❤️ ${fmt(k.likes)} · 👁 ${fmt(k.views)}</div>${kids(k.id).length?`<div class=tree style="margin-top:7px">${tree(k.id)}</div>`:''}</div>`).join('')}
+function form(parent){
+ let p=parent&&data.find(x=>x.id===parent);
+ return `<main class=wrap><button class=back onclick="${p?`openS('${p.id}')`:`go('home')`}">←</button><form class=form onsubmit="submitS(event,'${p?.id||''}')"><div class=head><h2>${p?'꼬리 소설 쓰기':'새 작품 쓰기'}</h2><span class=muted>${p?esc(p.title):'1분 안에 공개'}</span></div>${p?`<div class=field><label>꼬리 유형</label><select name=type>${types.map(x=>`<option>${x}</option>`).join('')}</select></div>`:''}<div class=field><label>제목 *</label><input name=title required maxlength=80></div>${p?'':`<div class=field><label>장르</label><select name=genre>${genres.map(x=>`<option>${x}</option>`).join('')}</select></div>`}<div class=field><label>필명 <span class=muted>선택</span></label><input name=pen maxlength=30 placeholder="비우면 익명"></div><div class=field><label>한 줄 소개</label><input name=desc maxlength=120></div><div class=field><label>본문 *</label><textarea name=body required placeholder="생각난 이야기를 바로 적어보세요."></textarea></div><button class="btn primary" style="width:100%">게시</button></form></main>`
+}
+function mine(){
+ let ids=[];try{ids=JSON.parse(localStorage.getItem('kkori_mine_v3')||'[]')}catch(e){}
+ let arr=data.filter(x=>ids.includes(x.id));
+ return `<main class=wrap><div class=head><h2>🪴 내 작품</h2><span class=muted>이 Safari에서 작성</span></div><div class=notice>현재 테스트판은 서버 DB 없이 이 브라우저에 저장됩니다.</div><div class="list sec">${arr.map(s=>card(s)).join('')||'<div class=empty>아직 작성한 작품이 없습니다.</div>'}</div></main>`
+}
+function render(){let c=st.view==='home'?home():st.view==='find'?find():st.view==='story'?reader():st.view==='write'?form():st.view==='tail'?form(st.sel):mine();document.querySelector('#app').innerHTML=top()+c+nav()}
+window.go=v=>{st.view=v;scrollTo(0,0);render()};
+window.openS=id=>{let s=data.find(x=>x.id===id);if(!s)return;s.views++;save();st.sel=id;st.view='story';scrollTo(0,0);render()};
+window.randomS=()=>openS(data[Math.floor(Math.random()*data.length)].id);
+window.like=id=>{data.find(x=>x.id===id).likes++;save();render()};
+window.tail=id=>{st.sel=id;st.view='tail';scrollTo(0,0);render()};
+window.comment=id=>{let i=document.querySelector('#com'),t=i.value.trim();if(!t)return;data.find(x=>x.id===id).comments.push(['익명 '+Math.floor(1000+Math.random()*9000),t]);save();render()};
+window.submitS=(e,pid)=>{
+ e.preventDefault();let f=new FormData(e.target),p=data.find(x=>x.id===pid),id='s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+ s={id,p:p?.id||null,root:p?.root||id,type:p?f.get('type'):null,title:f.get('title').trim(),genre:p?.genre||f.get('genre'),pen:f.get('pen').trim()||'익명 '+Math.floor(1000+Math.random()*9000),desc:f.get('desc').trim()||'새로운 이야기',body:f.get('body').trim(),views:0,likes:0,date:Date.now(),comments:[]};
+ data.unshift(s);let mine=[];try{mine=JSON.parse(localStorage.getItem('kkori_mine_v3')||'[]')}catch(e){}
+ mine.push(id);try{localStorage.setItem('kkori_mine_v3',JSON.stringify(mine))}catch(e){} save();st.sel=id;st.view='story';render()
+};
+render();
+</script></body></html>
