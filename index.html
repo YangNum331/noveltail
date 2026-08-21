@@ -21,13 +21,16 @@
   --nav-h:74px;
 }
 *{box-sizing:border-box}
+html,body{touch-action:manipulation}
+button,a,[role="button"],summary{touch-action:manipulation}
 html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:inherit;text-decoration:none}
 .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .topin{max-width:760px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.logo{font-size:22px;font-weight:800;letter-spacing:-.03em}
+.logo{all:unset;font-size:22px;font-weight:800;letter-spacing:-.03em;cursor:pointer;display:inline-block;color:var(--text)}
+.logo:active{opacity:.58}
 .top-actions{display:flex;align-items:center;gap:7px}
 .top-link{appearance:none;border:0;background:transparent;padding:7px 5px;font-size:12px;font-weight:700;color:#666}
 .wrap{max-width:760px;margin:0 auto;padding:22px 18px calc(142px + env(safe-area-inset-bottom))}
@@ -222,8 +225,8 @@ a{color:inherit;text-decoration:none}
 <body>
 <header class="top">
   <div class="topin">
-    <div class="logo">꼬리소설</div>
-    <div class="top-actions"><button class="top-link" id="installApp" type="button">앱 설치</button><button class="top-link" type="button" data-view="info">안내</button><button class="btn ghost small" id="randomTop" type="button">랜덤</button></div>
+    <button class="logo" id="logoProject" type="button" aria-label="홈 프로젝트 소개로 이동">꼬리소설</button>
+    <div class="top-actions"><button class="top-link" id="installApp" type="button">앱 설치</button><button class="top-link" id="infoToggle" type="button" data-info-toggle="1">안내</button><button class="btn ghost small" id="randomTop" type="button">랜덤</button></div>
   </div>
 </header>
 
@@ -245,14 +248,14 @@ a{color:inherit;text-decoration:none}
       <div class="home-pager bottom"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
     </section>
     <div class="ad-slot">광고 영역</div>
-    <section class="project-intro">
+    <section class="project-intro" id="projectIntro">
       <div class="project-kicker">NOVELTAIL</div>
       <h1>한 이야기가 끝나는 곳에서,<br>다른 이야기가 시작됩니다.</h1>
       <p class="project-lead">NovelTail은 누군가의 이야기에 다음 화, 다른 결말, 외전, 재해석을 이어 붙일 수 있는 공동창작 소설 플랫폼입니다. 읽는 사람과 쓰는 사람의 경계를 없애고, 하나의 이야기가 수많은 방향으로 자라게 합니다.</p>
     </section>
     <section class="project-section"><h2>첫 이야기에서, 수많은 꼬리로.</h2><p><b>첫</b>은 이야기의 시작점이고, <b>꼬리</b>는 그 이야기에서 파생된 새로운 작품입니다. 꼬리는 또 다른 꼬리의 시작점이 될 수 있습니다. 그래서 NovelTail의 작품은 한 줄로 끝나는 연재물이 아니라, 계속 갈라지고 이어지는 이야기의 계보가 됩니다.</p></section>
     <section class="project-section"><h2>작가의 정사는 지키고, 가능성은 열어둡니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 유지됩니다. 동시에 각 회차에서 독자들은 자유롭게 꼬리를 만들 수 있습니다.</p><p class="project-highlight">작가가 이어가는 이야기와 독자가 만들어가는 가능성이 같은 작품 안에 공존합니다.</p></section>
-    <section class="project-section"><h2>이야기가 이어지면, 기여도 이어집니다.</h2><p>수익화가 가능한 꼬리에서는 첫 원작자와 앞선 꼬리들의 기여를 계보에 따라 인정합니다. 첫 원작자는 10%, 가까운 꼬리 조상부터 6% → 3% → 1.5%…로 이어지고, 나머지는 현재 작가에게 돌아갑니다.</p></section>
+    <section class="project-section"><h2>이야기가 이어지면, 기여도 이어집니다.</h2><p>수익이 발생하면 플랫폼 운영 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자는 10%, 가까운 꼬리 조상부터 6% → 3% → 1.5%…를 받고, 나머지는 현재 작가에게 돌아갑니다.</p></section>
     <section class="project-final"><strong>누군가 끝낸 이야기에서,<br>당신의 이야기가 시작됩니다.</strong><span>읽기만 해도 좋고, 마음에 들면 그 다음을 직접 써도 됩니다.</span></section>
   </main>
 </div>
@@ -620,6 +623,9 @@ a{color:inherit;text-decoration:none}
     return eps.length?eps[0]:s;
   }
 
+  var PLATFORM_FEE_RATE=10;
+  var CREATOR_POOL_RATE=100-PLATFORM_FEE_RATE;
+
   function royaltyAncestorsFrom(parent) {
     var out=[],cur=parent?seriesRootForStory(parent):null,share=6,seen={};
     while(cur && cur.lineage==="tail" && share>0.01 && !seen[cur.id]) {
@@ -639,32 +645,37 @@ a{color:inherit;text-decoration:none}
     var work=seriesRootForStory(s),pol,parent,rootShare,ancestors,i,ancestorTotal=0;
     if(!work || work.lineage!=="tail") return null;
     pol=policyFor(work);
-    if(pol.policy!=="commercial") return {policy:pol.policy,root:pol.root,rootShare:0,ancestors:[],creatorShare:100};
+    if(pol.policy!=="commercial") return {policy:pol.policy,root:pol.root,platformShare:PLATFORM_FEE_RATE,poolRate:CREATOR_POOL_RATE,rootShare:0,ancestors:[],creatorShare:100};
     parent=work.p?getStory(work.p):null;
     rootShare=10;
     ancestors=royaltyAncestorsFrom(parent);
     for(i=0;i<ancestors.length;i++) ancestorTotal+=ancestors[i].share;
-    return {policy:pol.policy,root:pol.root,rootShare:rootShare,ancestors:ancestors,creatorShare:roundedShare(100-rootShare-ancestorTotal)};
+    return {policy:pol.policy,root:pol.root,platformShare:PLATFORM_FEE_RATE,poolRate:CREATOR_POOL_RATE,rootShare:rootShare,ancestors:ancestors,creatorShare:roundedShare(100-rootShare-ancestorTotal)};
   }
 
   function royaltyPlanForNewTail(parent) {
     var pol=policyFor(parent),rootShare,ancestors,i,ancestorTotal=0;
-    if(pol.policy!=="commercial") return {policy:pol.policy,root:pol.root,rootShare:0,ancestors:[],creatorShare:100};
+    if(pol.policy!=="commercial") return {policy:pol.policy,root:pol.root,platformShare:PLATFORM_FEE_RATE,poolRate:CREATOR_POOL_RATE,rootShare:0,ancestors:[],creatorShare:100};
     rootShare=10;
     ancestors=royaltyAncestorsFrom(parent);
     for(i=0;i<ancestors.length;i++) ancestorTotal+=ancestors[i].share;
-    return {policy:pol.policy,root:pol.root,rootShare:rootShare,ancestors:ancestors,creatorShare:roundedShare(100-rootShare-ancestorTotal)};
+    return {policy:pol.policy,root:pol.root,platformShare:PLATFORM_FEE_RATE,poolRate:CREATOR_POOL_RATE,rootShare:rootShare,ancestors:ancestors,creatorShare:roundedShare(100-rootShare-ancestorTotal)};
+  }
+
+  function grossShare(poolShare) {
+    return roundedShare(Number(poolShare||0)*CREATOR_POOL_RATE/100);
   }
 
   function royaltyPlanHTML(plan,prefix) {
     var chips="",i;
     if(!plan || plan.policy!=="commercial") return "";
-    chips+='<span class="royalty-chip">현재 작가 '+plan.creatorShare+'%</span>';
-    chips+='<span class="royalty-chip">첫 원작자 '+plan.rootShare+'%</span>';
+    chips+='<span class="royalty-chip">플랫폼 '+PLATFORM_FEE_RATE+'%</span>';
+    chips+='<span class="royalty-chip">현재 작가 '+grossShare(plan.creatorShare)+'%</span>';
+    chips+='<span class="royalty-chip">첫 원작자 '+grossShare(plan.rootShare)+'%</span>';
     for(i=0;i<(plan.ancestors||[]).length;i++) {
-      chips+='<span class="royalty-chip">'+(i+1)+'단계 위 꼬리 '+roundedShare(plan.ancestors[i].share)+'%</span>';
+      chips+='<span class="royalty-chip">'+(i+1)+'단계 위 꼬리 '+grossShare(plan.ancestors[i].share)+'%</span>';
     }
-    return '<div class="notice royalty">'+(prefix||'수익화 배분')+'<div class="royalty-split">'+chips+'</div></div>';
+    return '<div class="notice royalty">'+(prefix||'수익화 배분')+'<div class="royalty-split">'+chips+'</div><div class="hint">전체 매출 기준 · 플랫폼 10%를 제외한 90% 안에서 계보 로열티를 계산합니다.</div></div>';
   }
 
   function cardHTML(s) {
@@ -713,10 +724,10 @@ a{color:inherit;text-decoration:none}
     return '<main class="wrap">'+
       '<section class="home-feed"><div class="pills">'+rankButtons+'</div>'+pagerTop+'<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div>'+pagerBottom+'<div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
       '<div class="ad-slot">광고 영역</div>'+ 
-      '<section class="project-intro"><div class="project-kicker">NOVELTAIL</div><h1>한 이야기가 끝나는 곳에서,<br>다른 이야기가 시작됩니다.</h1><p class="project-lead">NovelTail은 누군가의 이야기에 다음 화, 다른 결말, 외전, 재해석을 이어 붙일 수 있는 공동창작 소설 플랫폼입니다. 읽는 사람과 쓰는 사람의 경계를 없애고, 하나의 이야기가 수많은 방향으로 자라게 합니다.</p></section>'+ 
+      '<section class="project-intro" id="projectIntro"><div class="project-kicker">NOVELTAIL</div><h1>한 이야기가 끝나는 곳에서,<br>다른 이야기가 시작됩니다.</h1><p class="project-lead">NovelTail은 누군가의 이야기에 다음 화, 다른 결말, 외전, 재해석을 이어 붙일 수 있는 공동창작 소설 플랫폼입니다. 읽는 사람과 쓰는 사람의 경계를 없애고, 하나의 이야기가 수많은 방향으로 자라게 합니다.</p></section>'+ 
       '<section class="project-section"><h2>첫 이야기에서, 수많은 꼬리로.</h2><p><b>첫</b>은 이야기의 시작점이고, <b>꼬리</b>는 그 이야기에서 파생된 새로운 작품입니다. 꼬리는 또 다른 꼬리의 시작점이 될 수 있습니다. 그래서 NovelTail의 작품은 한 줄로 끝나는 연재물이 아니라, 계속 갈라지고 이어지는 이야기의 계보가 됩니다.</p></section>'+ 
       '<section class="project-section"><h2>작가의 정사는 지키고, 가능성은 열어둡니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 유지됩니다. 동시에 각 회차에서 독자들은 자유롭게 꼬리를 만들 수 있습니다.</p><p class="project-highlight">작가가 이어가는 이야기와 독자가 만들어가는 가능성이 같은 작품 안에 공존합니다.</p></section>'+ 
-      '<section class="project-section"><h2>이야기가 이어지면, 기여도 이어집니다.</h2><p>수익화가 가능한 꼬리에서는 첫 원작자와 앞선 꼬리들의 기여를 계보에 따라 인정합니다. 첫 원작자는 10%, 가까운 꼬리 조상부터 6% → 3% → 1.5%…로 이어지고, 나머지는 현재 작가에게 돌아갑니다.</p></section>'+ 
+      '<section class="project-section"><h2>이야기가 이어지면, 기여도 이어집니다.</h2><p>수익이 발생하면 플랫폼 운영 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자는 10%, 가까운 꼬리 조상부터 6% → 3% → 1.5%…를 받고, 나머지는 현재 작가에게 돌아갑니다.</p></section>'+ 
       '<section class="project-final"><strong>누군가 끝낸 이야기에서,<br>당신의 이야기가 시작됩니다.</strong><span>읽기만 해도 좋고, 마음에 들면 그 다음을 직접 써도 됩니다.</span></section>'+ 
       '</main>';
   }
@@ -890,7 +901,7 @@ a{color:inherit;text-decoration:none}
     }
     tailDisclosure=tailDisclosureHTML(root);
     back=root.p?' data-story="'+esc(root.p)+'"':' data-view="home"';
-    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta"><span>'+esc(root.pen)+'</span><span>'+esc(root.genre)+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+'</main>';
+    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta"><span>'+esc(root.pen)+'</span><span>'+esc(root.genre)+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+'</main>';
   }
   function seriesEpisodeForm(rootId) {
     var root=getStory(rootId),eps=root?seriesEpisodes(root.seriesId):[],next=eps.length+1;
@@ -925,10 +936,10 @@ a{color:inherit;text-decoration:none}
       else if(policyFor(s).policy==="noncommercial") currentRoyalty='<div class="notice">이 꼬리 작품은 비상업 작품입니다.</div>';
     }
     tailDisclosure=tailDisclosureHTML(s);
-    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.pen)+'</span><span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section><section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.pen)+'</span><span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section><section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
   function policyFieldHTML() {
-    return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 첫 원작자 10%</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">수익화 허용 시 첫 원작자는 항상 10%. 가장 가까운 꼬리 조상부터 6% · 3% · 1.5% · 0.75%…로 절반씩 배분하고 나머지는 현재 작가가 받습니다. 실제 결제·정산은 아직 하지 않습니다.</div></div>';
+    return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 플랫폼 10% · 계보 로열티</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">수익화 시 플랫폼 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자 10% 고정, 가까운 꼬리 조상부터 6% → 3% → 1.5% → 0.75%…로 배분하고 나머지는 현재 작가가 받습니다. 실제 결제·정산은 아직 하지 않습니다.</div></div>';
   }
 
   function formHTML(parentId) {
@@ -947,15 +958,15 @@ a{color:inherit;text-decoration:none}
   }
 
   function infoHTML() {
-    return '<main class="wrap"><h1 class="info-title">꼬리소설 안내</h1><p class="info-intro">처음 보는 사람도 핵심 규칙만 빠르게 이해할 수 있게 정리했습니다.</p>'+
+    return '<main class="wrap"><h1 class="info-title">꼬리소설 안내</h1><p class="info-intro">처음 보는 사람도 핵심 규칙만 빠르게 이해할 수 있게 정리했습니다.</p>'+ 
       '<div class="info-grid">'+
-      '<section class="info-card"><h2>꼬리소설이란?</h2><p><b>첫</b> 작품에서 다른 이용자가 이야기를 이어 쓰고, 그 꼬리에서 다시 새로운 꼬리가 갈라지는 공동창작 플랫폼입니다.</p></section>'+
-      '<section class="info-card"><h2>첫 · 꼬리 · 시리즈</h2><p><b>첫</b>은 이야기의 시작점, <b>꼬리</b>는 다른 작품에서 파생된 작품입니다. 첫과 꼬리 모두 단편 또는 시리즈가 될 수 있으며, 시리즈의 공식 회차는 꼬리와 별개인 정사 라인으로 유지됩니다.</p></section>'+
-      '<section class="info-card"><h2>수익 배분</h2><p>첫 원작자는 항상 10%를 받습니다. 그 외 꼬리 조상은 현재 작품에서 가까운 순서대로 6% → 3% → 1.5% → 0.75%…로 절반씩 받으며, 남은 금액은 현재 작가에게 돌아갑니다.</p>'+
-      '<div class="info-example"><div class="info-row"><span>1세대 꼬리</span><span>현재 90% · 첫 10%</span></div><div class="info-row"><span>2세대 꼬리</span><span>현재 84% · 첫 10% · 부모 6%</span></div><div class="info-row"><span>4세대 꼬리</span><span>현재 79.5% · 첫 10% · 6% · 3% · 1.5%</span></div></div></section>'+
-      '<section class="info-card"><h2>꼬리 이용 권한</h2><p>첫 작품 작성자는 수익화 가능한 꼬리 허용, 비상업 꼬리만 허용, 꼬리 금지 중 하나를 선택합니다. 파생 작품은 첫 작품의 조건을 계보 전체에서 따릅니다.</p></section>'+
-      '<section class="info-card"><h2>앱처럼 사용하기</h2><p>상단의 <b>앱 설치</b>를 누르거나 브라우저 공유 메뉴에서 <b>홈 화면에 추가</b>를 선택하면 독립된 앱 화면으로 실행할 수 있습니다. 설치 후에는 일반 브라우저 주소창과 하단 도구막대가 표시되지 않습니다.</p></section>'+
-      '<section class="info-card"><h2>현재 테스트판</h2><p>지금 버전은 브라우저 저장 기반 MVP입니다. 실제 결제·정산·법적 권리 처리는 아직 연결하지 않았습니다.</p></section>'+
+      '<section class="info-card"><h2>꼬리소설이란?</h2><p><b>첫</b> 작품에서 다른 이용자가 이야기를 이어 쓰고, 그 꼬리에서 다시 새로운 꼬리가 갈라지는 공동창작 플랫폼입니다.</p></section>'+ 
+      '<section class="info-card"><h2>첫 · 꼬리 · 시리즈</h2><p><b>첫</b>은 이야기의 시작점, <b>꼬리</b>는 다른 작품에서 파생된 작품입니다. 첫과 꼬리 모두 단편 또는 시리즈가 될 수 있으며, 시리즈의 공식 회차는 꼬리와 별개인 정사 라인으로 유지됩니다.</p></section>'+ 
+      '<section class="info-card"><h2>수익 배분</h2><p>전체 매출에서 플랫폼 운영 수수료 10%를 먼저 제외합니다. 남은 90%의 창작자 배분금 안에서 첫 원작자는 10%를 고정으로 받고, 그 외 꼬리 조상은 가까운 순서대로 6% → 3% → 1.5% → 0.75%…로 절반씩 받습니다. 나머지는 현재 작가에게 돌아갑니다.</p>'+ 
+      '<div class="info-example"><div class="info-row"><span>1세대 꼬리 · 전체 매출 기준</span><span>플랫폼 10% · 현재 81% · 첫 9%</span></div><div class="info-row"><span>2세대 꼬리</span><span>플랫폼 10% · 현재 75.6% · 첫 9% · 부모 5.4%</span></div><div class="info-row"><span>4세대 꼬리</span><span>플랫폼 10% · 현재 71.55% · 첫 9% · 5.4% · 2.7% · 1.35%</span></div></div></section>'+ 
+      '<section class="info-card"><h2>꼬리 이용 권한</h2><p>첫 작품 작성자는 수익화 가능한 꼬리 허용, 비상업 꼬리만 허용, 꼬리 금지 중 하나를 선택합니다. 파생 작품은 첫 작품의 조건을 계보 전체에서 따릅니다.</p></section>'+ 
+      '<section class="info-card"><h2>앱처럼 사용하기</h2><p>상단의 <b>앱 설치</b>를 누르거나 브라우저 공유 메뉴에서 <b>홈 화면에 추가</b>를 선택하면 독립된 앱 화면으로 실행할 수 있습니다. 설치 후에는 일반 브라우저 주소창과 하단 도구막대가 표시되지 않습니다.</p></section>'+ 
+      '<section class="info-card"><h2>현재 테스트판</h2><p>지금 버전은 브라우저 저장 기반 MVP입니다. 실제 결제·정산·법적 권리 처리는 아직 연결하지 않았습니다.</p></section>'+ 
       '</div></main>';
   }
 
@@ -1089,6 +1100,13 @@ a{color:inherit;text-decoration:none}
     var t=e.target;
     while(t && t!==document.body) {
       if(t.getAttribute) {
+        if(t.getAttribute("data-info-toggle")) {
+          if(state.view==="info") {
+            if(navIndex>0) history.back();
+            else go("home");
+          } else go("info");
+          return;
+        }
         if(t.getAttribute("data-view")) {go(t.getAttribute("data-view"));return;}
         if(t.getAttribute("data-series")) {openSeries(t.getAttribute("data-series"));return;}
         if(t.getAttribute("data-seriesnext")) {state.selected=t.getAttribute("data-seriesnext");go("serieswrite");return;}
@@ -1161,6 +1179,17 @@ a{color:inherit;text-decoration:none}
 
   var randomTop=document.getElementById("randomTop");
   if(randomTop) randomTop.addEventListener("click",randomStory);
+  var logoProject=document.getElementById("logoProject");
+  if(logoProject) logoProject.addEventListener("click",function(){
+    function scrollProject(){
+      var el=document.getElementById("projectIntro");
+      if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+    if(state.view!=="home") {
+      go("home");
+      window.setTimeout(scrollProject,30);
+    } else scrollProject();
+  });
   var siteBack=document.getElementById("siteBack"),siteForward=document.getElementById("siteForward"),siteRefresh=document.getElementById("siteRefresh");
   if(siteBack) siteBack.addEventListener("click",function(){if(navIndex>0) history.back();});
   if(siteForward) siteForward.addEventListener("click",function(){if(navIndex<maxNavIndex) history.forward();});
