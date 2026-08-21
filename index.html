@@ -23,6 +23,8 @@ a{color:inherit;text-decoration:none}
 .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .topin{max-width:760px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .logo{font-size:22px;font-weight:800;letter-spacing:-.03em}
+.top-actions{display:flex;align-items:center;gap:7px}
+.top-link{appearance:none;border:0;background:transparent;padding:7px 5px;font-size:12px;font-weight:700;color:#666}
 .wrap{max-width:760px;margin:0 auto;padding:22px 18px calc(142px + env(safe-area-inset-bottom))}
 .sec{margin-top:28px}
 .head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
@@ -85,7 +87,7 @@ a{color:inherit;text-decoration:none}
 .comment small{display:block;color:var(--muted);margin-bottom:6px}
 .notice{font-size:12px;line-height:1.65;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
 .empty{text-align:center;color:var(--muted);padding:36px 10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.bottom-shell{position:fixed;z-index:30;left:0;right:0;bottom:0;margin:0 auto;max-width:760px;background:rgba(255,255,255,.98);border-top:1px solid var(--line);backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom)}
+.bottom-shell{position:fixed;z-index:9999;left:0;right:0;bottom:var(--vv-bottom,0px);margin:0 auto;max-width:760px;background:rgba(255,255,255,.985);border-top:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding-bottom:max(env(safe-area-inset-bottom),4px);transform:translate3d(0,0,0);-webkit-transform:translate3d(0,0,0);backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:bottom;isolation:isolate}
 .bottom{display:grid;grid-template-columns:repeat(4,1fr);padding:7px 8px 6px}
 .nav{border:0;background:none;color:var(--muted);font-size:13px;font-weight:750;padding:9px 4px;min-height:40px}
 .nav.on{color:var(--text)}
@@ -159,6 +161,16 @@ a{color:inherit;text-decoration:none}
 .genre-hide-btn.off{color:#999;background:#f3f3f3}
 .genre-settings-actions{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #ededed;margin-top:6px;padding-top:8px}
 .genre-settings-actions button{appearance:none;border:0;background:transparent;padding:3px 0;font-size:10px;font-weight:700;color:#666}
+
+.info-title{margin:0 0 6px;font-size:27px;letter-spacing:-.035em}
+.info-intro{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+.info-grid{display:grid;gap:10px;margin-top:22px}
+.info-card{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fff}
+.info-card h2{font-size:16px;margin:0 0 8px;letter-spacing:-.02em}
+.info-card p{font-size:13px;line-height:1.7;color:#555;margin:0}
+.info-example{margin-top:10px;border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
+.info-row{display:flex;justify-content:space-between;gap:12px;font-size:12px}
+.info-row span:last-child{font-weight:750;white-space:nowrap}
 @media (min-width:720px){
   .title{font-size:19px}
   .reader,.form{padding:22px}
@@ -169,7 +181,7 @@ a{color:inherit;text-decoration:none}
 <header class="top">
   <div class="topin">
     <div class="logo">꼬리소설</div>
-    <button class="btn ghost small" id="randomTop" type="button">랜덤</button>
+    <div class="top-actions"><button class="top-link" type="button" data-view="info">안내</button><button class="btn ghost small" id="randomTop" type="button">랜덤</button></div>
   </div>
 </header>
 
@@ -515,32 +527,51 @@ a{color:inherit;text-decoration:none}
     return eps.length?eps[0]:s;
   }
 
+  function royaltyAncestorsFrom(parent) {
+    var out=[],cur=parent?seriesRootForStory(parent):null,share=6,seen={};
+    while(cur && cur.lineage==="tail" && share>0.01 && !seen[cur.id]) {
+      seen[cur.id]=true;
+      out.push({story:cur,share:share});
+      cur=cur.p?seriesRootForStory(getStory(cur.p)):null;
+      share=share/2;
+    }
+    return out;
+  }
+
+  function roundedShare(n) {
+    return Math.round(Number(n||0)*1000)/1000;
+  }
+
   function royaltyPlanForWork(s) {
-    var work=seriesRootForStory(s),pol,parent,parentShare,rootShare;
+    var work=seriesRootForStory(s),pol,parent,rootShare,ancestors,i,ancestorTotal=0;
     if(!work || work.lineage!=="tail") return null;
     pol=policyFor(work);
-    if(pol.policy!=="commercial") return {policy:pol.policy,root:pol.root,parent:null,rootShare:0,parentShare:0,creatorShare:100};
+    if(pol.policy!=="commercial") return {policy:pol.policy,root:pol.root,rootShare:0,ancestors:[],creatorShare:100};
     parent=work.p?getStory(work.p):null;
-    rootShare=Math.max(0,Math.min(90,Number(pol.royalty||10)));
-    parentShare=(parent && parent.lineage==="tail")?5:0;
-    if(rootShare+parentShare>95) parentShare=Math.max(0,95-rootShare);
-    return {policy:pol.policy,root:pol.root,parent:parent,rootShare:rootShare,parentShare:parentShare,creatorShare:100-rootShare-parentShare};
+    rootShare=10;
+    ancestors=royaltyAncestorsFrom(parent);
+    for(i=0;i<ancestors.length;i++) ancestorTotal+=ancestors[i].share;
+    return {policy:pol.policy,root:pol.root,rootShare:rootShare,ancestors:ancestors,creatorShare:roundedShare(100-rootShare-ancestorTotal)};
   }
 
   function royaltyPlanForNewTail(parent) {
-    var pol=policyFor(parent),rootShare,parentShare;
-    if(pol.policy!=="commercial") return {policy:pol.policy,root:pol.root,parent:parent,rootShare:0,parentShare:0,creatorShare:100};
-    rootShare=Math.max(0,Math.min(90,Number(pol.royalty||10)));
-    parentShare=(parent && parent.lineage==="tail")?5:0;
-    if(rootShare+parentShare>95) parentShare=Math.max(0,95-rootShare);
-    return {policy:pol.policy,root:pol.root,parent:parent,rootShare:rootShare,parentShare:parentShare,creatorShare:100-rootShare-parentShare};
+    var pol=policyFor(parent),rootShare,ancestors,i,ancestorTotal=0;
+    if(pol.policy!=="commercial") return {policy:pol.policy,root:pol.root,rootShare:0,ancestors:[],creatorShare:100};
+    rootShare=10;
+    ancestors=royaltyAncestorsFrom(parent);
+    for(i=0;i<ancestors.length;i++) ancestorTotal+=ancestors[i].share;
+    return {policy:pol.policy,root:pol.root,rootShare:rootShare,ancestors:ancestors,creatorShare:roundedShare(100-rootShare-ancestorTotal)};
   }
 
   function royaltyPlanHTML(plan,prefix) {
+    var chips="",i;
     if(!plan || plan.policy!=="commercial") return "";
-    return '<div class="notice royalty">'+(prefix||'수익화 배분')+
-      '<div class="royalty-split"><span class="royalty-chip">현재 작가 '+plan.creatorShare+'%</span><span class="royalty-chip">첫 원작자 '+plan.rootShare+'%</span>'+
-      (plan.parentShare?'<span class="royalty-chip">바로 위 꼬리 작가 '+plan.parentShare+'%</span>':'')+'</div></div>';
+    chips+='<span class="royalty-chip">현재 작가 '+plan.creatorShare+'%</span>';
+    chips+='<span class="royalty-chip">첫 원작자 '+plan.rootShare+'%</span>';
+    for(i=0;i<(plan.ancestors||[]).length;i++) {
+      chips+='<span class="royalty-chip">'+(i+1)+'단계 위 꼬리 '+roundedShare(plan.ancestors[i].share)+'%</span>';
+    }
+    return '<div class="notice royalty">'+(prefix||'수익화 배분')+'<div class="royalty-split">'+chips+'</div></div>';
   }
 
   function cardHTML(s) {
@@ -774,7 +805,7 @@ a{color:inherit;text-decoration:none}
     return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.pen)+'</span><span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section><section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
   function policyFieldHTML() {
-    return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 첫 원작자 10%</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">수익화 허용 시 1세대 꼬리는 현재 작가 90% · 첫 원작자 10%. 꼬리의 꼬리는 현재 작가 85% · 첫 원작자 10% · 바로 위 꼬리 작가 5%로 계산합니다. 실제 결제·정산은 아직 하지 않습니다.</div></div>';
+    return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 첫 원작자 10%</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">수익화 허용 시 첫 원작자는 항상 10%. 가장 가까운 꼬리 조상부터 6% · 3% · 1.5% · 0.75%…로 절반씩 배분하고 나머지는 현재 작가가 받습니다. 실제 결제·정산은 아직 하지 않습니다.</div></div>';
   }
 
   function formHTML(parentId) {
@@ -790,6 +821,18 @@ a{color:inherit;text-decoration:none}
     if(p && pol.policy==="commercial") policyNotice=royaltyPlanHTML(royaltyPlanForNewTail(p),'이 꼬리가 수익화될 경우');
     if(p && pol.policy==="noncommercial") policyNotice='<div class="notice">이 꼬리는 비상업 작품으로만 게시됩니다.</div>';
     return '<main class="wrap"><button class="back" '+(p?'data-story="'+esc(p.id)+'"':'data-view="home"')+'>←</button>'+policyNotice+'<form class="form" id="storyForm"><div class="head"><h2>'+(p?'꼬리 쓰기':'새 작품 쓰기')+'</h2><span class="muted">'+(p?esc(displayTitle(p)):'바로 공개')+'</span></div><div class="field"><label>'+(p?'꼬리 형태':'작품 형태')+'</label><div class="type-choice"><label><input type="radio" name="format" value="short" checked><span>단편</span></label><label><input type="radio" name="format" value="series"><span>시리즈</span></label></div></div>'+(p?'<div class="field"><label>꼬리 성격</label><select name="type">'+options+'</select></div>':'')+'<div class="field"><label>작품 제목 *</label><input name="title" required maxlength="80"></div><div class="field hidden" id="seriesTitleField"><label>1화 제목 *</label><input name="episodeTitle" maxlength="70" placeholder="예: 첫 번째 승객"></div>'+(!p?'<div class="field"><label>장르</label><select name="genre">'+genreOptions+'</select></div>'+policyFieldHTML():'')+'<div class="field"><label>필명 <span class="muted">선택</span></label><input name="pen" maxlength="30" placeholder="비우면 익명"></div><div class="field"><label>한 줄 소개</label><input name="desc" maxlength="120"></div><div class="field"><label>본문 *</label><textarea name="body" required placeholder="생각난 이야기를 바로 적어보세요."></textarea></div><button class="btn primary" style="width:100%">게시</button></form></main>';
+  }
+
+  function infoHTML() {
+    return '<main class="wrap"><h1 class="info-title">꼬리소설 안내</h1><p class="info-intro">처음 보는 사람도 핵심 규칙만 빠르게 이해할 수 있게 정리했습니다.</p>'+
+      '<div class="info-grid">'+
+      '<section class="info-card"><h2>꼬리소설이란?</h2><p><b>첫</b> 작품에서 다른 이용자가 이야기를 이어 쓰고, 그 꼬리에서 다시 새로운 꼬리가 갈라지는 공동창작 플랫폼입니다.</p></section>'+
+      '<section class="info-card"><h2>첫 · 꼬리 · 시리즈</h2><p><b>첫</b>은 이야기의 시작점, <b>꼬리</b>는 다른 작품에서 파생된 작품입니다. 첫과 꼬리 모두 단편 또는 시리즈가 될 수 있으며, 시리즈의 공식 회차는 꼬리와 별개인 정사 라인으로 유지됩니다.</p></section>'+
+      '<section class="info-card"><h2>수익 배분</h2><p>첫 원작자는 항상 10%를 받습니다. 그 외 꼬리 조상은 현재 작품에서 가까운 순서대로 6% → 3% → 1.5% → 0.75%…로 절반씩 받으며, 남은 금액은 현재 작가에게 돌아갑니다.</p>'+
+      '<div class="info-example"><div class="info-row"><span>1세대 꼬리</span><span>현재 90% · 첫 10%</span></div><div class="info-row"><span>2세대 꼬리</span><span>현재 84% · 첫 10% · 부모 6%</span></div><div class="info-row"><span>4세대 꼬리</span><span>현재 79.5% · 첫 10% · 6% · 3% · 1.5%</span></div></div></section>'+
+      '<section class="info-card"><h2>꼬리 이용 권한</h2><p>첫 작품 작성자는 수익화 가능한 꼬리 허용, 비상업 꼬리만 허용, 꼬리 금지 중 하나를 선택합니다. 파생 작품은 첫 작품의 조건을 계보 전체에서 따릅니다.</p></section>'+
+      '<section class="info-card"><h2>현재 테스트판</h2><p>지금 버전은 브라우저 저장 기반 MVP입니다. 실제 결제·정산·법적 권리 처리는 아직 연결하지 않았습니다.</p></section>'+
+      '</div></main>';
   }
 
   function mineHTML() {
@@ -815,6 +858,7 @@ a{color:inherit;text-decoration:none}
     else if(state.view==="write") app.innerHTML=formHTML(null);
     else if(state.view==="tail") app.innerHTML=formHTML(state.selected);
     else if(state.view==="mine") app.innerHTML=mineHTML();
+    else if(state.view==="info") app.innerHTML=infoHTML();
     updateNav();
   }
 
@@ -993,6 +1037,29 @@ a{color:inherit;text-decoration:none}
   if(siteBack) siteBack.addEventListener("click",function(){if(navIndex>0) history.back();});
   if(siteForward) siteForward.addEventListener("click",function(){if(navIndex<maxNavIndex) history.forward();});
   if(siteRefresh) siteRefresh.addEventListener("click",function(){location.reload();});
+
+  // iPhone Safari는 주소창/하단 도구막대가 접히고 펼쳐질 때 실제 보이는 viewport가 바뀐다.
+  // visualViewport 기준으로 페이지 하단 UI를 브라우저 도구막대 위에 계속 붙여 둔다.
+  function syncBottomToVisualViewport() {
+    var vv=window.visualViewport;
+    var layoutH=Math.max(document.documentElement.clientHeight||0,window.innerHeight||0);
+    var lift=0;
+    if(vv) {
+      lift=Math.max(0,Math.round(layoutH-(vv.offsetTop+vv.height)));
+      // 키보드가 열린 경우 과도하게 화면 중앙까지 올라오는 것은 막는다.
+      if(lift>180) lift=0;
+    }
+    document.documentElement.style.setProperty("--vv-bottom",lift+"px");
+  }
+  syncBottomToVisualViewport();
+  window.addEventListener("resize",syncBottomToVisualViewport,{passive:true});
+  window.addEventListener("orientationchange",syncBottomToVisualViewport,{passive:true});
+  window.addEventListener("pageshow",syncBottomToVisualViewport,{passive:true});
+  window.addEventListener("scroll",syncBottomToVisualViewport,{passive:true});
+  if(window.visualViewport) {
+    window.visualViewport.addEventListener("resize",syncBottomToVisualViewport,{passive:true});
+    window.visualViewport.addEventListener("scroll",syncBottomToVisualViewport,{passive:true});
+  }
 
   migrateData();
   ensureDemoSeries();
