@@ -92,6 +92,21 @@ a{color:inherit;text-decoration:none}
 .nav.write i{font-size:24px;line-height:1}
 .fatal{margin:16px auto;max-width:760px;padding:14px;border-radius:10px;background:#fff7d6;border:1px solid #eedf97;font-size:13px}
 .version{margin-top:22px;color:#9a9a9a;font-size:11px;letter-spacing:.03em}
+
+.origin{display:inline-block;font-size:11px;font-weight:800;line-height:1;padding:3px 5px;border-radius:5px;margin-right:5px;vertical-align:1px}
+.origin.first{color:#16823b;background:#eef9f1}
+.origin.tail{color:#d66a00;background:#fff4e8}
+.format-tag{display:inline-block;font-size:11px;font-weight:700;color:#555;background:#f4f4f4;border-radius:5px;padding:3px 5px;margin-right:5px;vertical-align:1px}
+.tags{display:inline-flex;align-items:center;flex:0 0 auto}
+.series-tags,.reader-tags{display:flex;align-items:center;gap:0;margin-bottom:9px}
+.node-title{display:flex;align-items:center;gap:0;min-width:0}
+.node-title b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.canon{font-size:11px;font-weight:800;color:#111;border:1px solid #111;border-radius:999px;padding:3px 7px}
+.official-next{padding-top:2px}
+.tails-section{border-top:1px solid var(--line);padding-top:22px}
+.royalty{border-left:3px solid #111}
+.hint{font-size:11px;line-height:1.55;color:var(--muted);margin-top:6px}
+.empty.compact{padding:18px 8px;margin-top:10px}
 @media (min-width:720px){
   .title{font-size:19px}
   .reader,.form{padding:22px}
@@ -114,21 +129,21 @@ a{color:inherit;text-decoration:none}
         <button class="pill" type="button">인기</button>
       </div>
       <div class="list">
-        <div class="card"><button type="button"><div class="card-row"><div class="title">문이 열리지 않는 우주정거장</div><div class="views">3.3K</div></div></button></div>
-        <div class="card"><button type="button"><div class="card-row"><div class="title">용사가 퇴근했다</div><div class="views">2.2K</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>문이 열리지 않는 우주정거장</div><div class="views">3.3K</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>용사가 퇴근했다</div><div class="views">2.2K</div></div></button></div>
       </div>
     </section>
   </main>
 </div>
 
 <nav class="bottom" id="bottomNav">
-  <button class="nav on" data-view="home"><i>홈</i>Home</button>
-  <button class="nav" data-view="find"><i>발견</i>Browse</button>
-  <button class="nav write" data-view="write"><i>＋</i>Write</button>
-  <button class="nav" data-view="mine"><i>내작품</i>Mine</button>
+  <button class="nav on" data-view="home">홈</button>
+  <button class="nav" data-view="find">발견</button>
+  <button class="nav write" data-view="write">쓰기</button>
+  <button class="nav" data-view="mine">내 작품</button>
 </nav>
 
-<noscript><div class="fatal">JavaScript가 꺼져 있습니다. Safari 설정에서 JavaScript를 켜주세요.</div></noscript>
+<noscript><div class="fatal">스크립트 기능이 꺼져 있습니다. 브라우저 설정에서 스크립트를 켜주세요.</div></noscript>
 
 <script>
 (function () {
@@ -136,15 +151,15 @@ a{color:inherit;text-decoration:none}
 
   var STORAGE_KEY = "kkori_mobile_safe_v1";
   var MINE_KEY = "kkori_mine_safe_v1";
-  var genres = ["판타지","SF","로맨스","공포","무협","미스터리","대체역사","일상","코미디","기타"];
-  var tailTypes = ["다음 화","다른 결말","IF 분기","패러디","개그화","스핀오프","다른 등장인물 시점","리메이크","세계관 확장","기타"];
+  var genres = ["판타지","과학소설","로맨스","공포","무협","미스터리","대체역사","일상","코미디","기타"];
+  var tailTypes = ["다음 화","다른 결말","만약 분기","패러디","개그화","외전","다른 등장인물 시점","재해석","세계관 확장","기타"];
 
   function seed() {
     return [
-      {id:"a",p:null,root:"a",type:null,title:"문이 열리지 않는 우주정거장",genre:"SF",pen:"익명 1420",desc:"교신이 끊긴 궤도 정거장에서 혼자 깨어난 정비사의 이야기.",body:"경고등은 세 번 깜빡이고 꺼졌다.\n\n지구는 창밖에서 너무 조용했다.\n\n“관제, 들리면 대답해.”\n\n대답 대신 4번 도킹 포트에서 노크 소리가 났다.\n\n세 번. 두 번. 한 번.\n\n나는 렌치를 들고 문 앞에 섰다. 손잡이는 안쪽에서 천천히 돌아가고 있었다.",views:3280,likes:294,date:Date.now()-500000000,comments:[["익명 3912","이거 다음 장면 너무 궁금한데 여기서 끊는 건 반칙 아님?"]]},
-      {id:"b",p:"a",root:"a",type:"다음 화",title:"4번 도킹 포트의 손님",genre:"SF",pen:"무명",desc:"문을 연 뒤 실제로 들어온 것은 사람이 아니었다.",body:"문이 열렸다.\n\n산소가 빠져나가는 소리 대신 종이가 바닥에 떨어지는 소리가 났다.\n\n종이에는 단 한 줄만 적혀 있었다.\n\n“너는 세 번째다.”",views:6120,likes:870,date:Date.now()-300000000,comments:[]},
-      {id:"c",p:"a",root:"a",type:"개그화",title:"노크한 놈이 배달기사였다",genre:"코미디",pen:"익명 0044",desc:"궤도상 배달 지연에 화가 난 우주 배달기사.",body:"문을 열자 배달기사가 서 있었다.\n\n“고객님, 공동현관 비밀번호를 안 적으시면 어떡합니까.”\n\n나는 지구를 가리켰다.\n\n“저기 전쟁 났는데요.”\n\n“그건 제 배송평가랑 상관없습니다.”",views:4980,likes:731,date:Date.now()-200000000,comments:[["익명 9901","이딴 전개를 왜 넣은 거임? 개웃기네 ㅋㅋ"]]},
-      {id:"d",p:null,root:"d",type:null,title:"용사가 퇴근했다",genre:"판타지",pen:"구름사탕",desc:"마왕성 앞에서 정시퇴근을 선언한 용사의 이야기.",body:"“오늘은 여기까지.”\n\n용사는 검을 칼집에 넣었다.\n\n마왕이 자리에서 일어났다.\n\n“지금 결전 중인데?”\n\n“제 근무시간은 여섯 시까지입니다.”",views:2230,likes:410,date:Date.now()-400000000,comments:[]}
+      {id:"a",p:null,root:"a",sourceRootId:"a",lineage:"first",format:"short",official:false,type:null,title:"문이 열리지 않는 우주정거장",genre:"과학소설",pen:"익명 1420",desc:"교신이 끊긴 궤도 정거장에서 혼자 깨어난 정비사의 이야기.",body:"경고등은 세 번 깜빡이고 꺼졌다.\n\n지구는 창밖에서 너무 조용했다.\n\n“관제, 들리면 대답해.”\n\n대답 대신 4번 도킹 포트에서 노크 소리가 났다.\n\n세 번. 두 번. 한 번.\n\n나는 렌치를 들고 문 앞에 섰다. 손잡이는 안쪽에서 천천히 돌아가고 있었다.",views:3280,likes:294,date:Date.now()-500000000,comments:[["익명 3912","이거 다음 장면 너무 궁금한데 여기서 끊는 건 반칙 아님?"]],tailPolicy:"commercial",royalty:10},
+      {id:"b",p:"a",root:"a",sourceRootId:"a",lineage:"tail",format:"tail",official:false,type:"다음 화",title:"4번 도킹 포트의 손님",genre:"과학소설",pen:"무명",desc:"문을 연 뒤 실제로 들어온 것은 사람이 아니었다.",body:"문이 열렸다.\n\n산소가 빠져나가는 소리 대신 종이가 바닥에 떨어지는 소리가 났다.\n\n종이에는 단 한 줄만 적혀 있었다.\n\n“너는 세 번째다.”",views:6120,likes:870,date:Date.now()-300000000,comments:[]},
+      {id:"c",p:"a",root:"a",sourceRootId:"a",lineage:"tail",format:"tail",official:false,type:"개그화",title:"노크한 놈이 배달기사였다",genre:"코미디",pen:"익명 0044",desc:"궤도상 배달 지연에 화가 난 우주 배달기사.",body:"문을 열자 배달기사가 서 있었다.\n\n“고객님, 공동현관 비밀번호를 안 적으시면 어떡합니까.”\n\n나는 지구를 가리켰다.\n\n“저기 전쟁 났는데요.”\n\n“그건 제 배송평가랑 상관없습니다.”",views:4980,likes:731,date:Date.now()-200000000,comments:[["익명 9901","이딴 전개를 왜 넣은 거임? 개웃기네 ㅋㅋ"]]},
+      {id:"d",p:null,root:"d",sourceRootId:"d",lineage:"first",format:"short",official:false,type:null,title:"용사가 퇴근했다",genre:"판타지",pen:"구름사탕",desc:"마왕성 앞에서 정시퇴근을 선언한 용사의 이야기.",body:"“오늘은 여기까지.”\n\n용사는 검을 칼집에 넣었다.\n\n마왕이 자리에서 일어났다.\n\n“지금 결전 중인데?”\n\n“제 근무시간은 여섯 시까지입니다.”",views:2230,likes:410,date:Date.now()-400000000,comments:[],tailPolicy:"noncommercial",royalty:0}
     ];
   }
 
@@ -158,7 +173,7 @@ a{color:inherit;text-decoration:none}
   }
 
   var data = loadData();
-  var state = {view:"home", selected:null, query:"", genre:"전체", rank:"최신"};
+  var state = {view:"home", selected:null, query:"", rank:"최신"};
 
   function saveData() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -171,23 +186,8 @@ a{color:inherit;text-decoration:none}
   }
 
   function fmt(n) {
+    n=Number(n||0);
     return n > 999 ? (n/1000).toFixed(1) + "K" : String(n);
-  }
-
-  function childrenOf(id) {
-    var out = [], i;
-    for (i=0;i<data.length;i++) if (data[i].p === id) out.push(data[i]);
-    return out;
-  }
-
-  function descendantCount(id) {
-    var count = 0, queue = [id], cur, kids, i;
-    while (queue.length) {
-      cur = queue.pop();
-      kids = childrenOf(cur);
-      for (i=0;i<kids.length;i++) { count++; queue.push(kids[i].id); }
-    }
-    return count;
   }
 
   function getStory(id) {
@@ -211,6 +211,22 @@ a{color:inherit;text-decoration:none}
     return out;
   }
 
+  function childrenOf(id) {
+    var out = [], i;
+    for (i=0;i<data.length;i++) if (data[i].p === id) out.push(data[i]);
+    return out;
+  }
+
+  function descendantCount(id) {
+    var count = 0, queue = [id], cur, kids, i;
+    while (queue.length) {
+      cur = queue.pop();
+      kids = childrenOf(cur);
+      for (i=0;i<kids.length;i++) { count++; queue.push(kids[i].id); }
+    }
+    return count;
+  }
+
   function mineIds() {
     try { var raw=localStorage.getItem(MINE_KEY); return raw?JSON.parse(raw):[]; } catch(e) { return []; }
   }
@@ -227,139 +243,225 @@ a{color:inherit;text-decoration:none}
     } catch(e) {}
   }
 
-  function ensureDemoSeries() {
-    if(getStory("demo_series_e1")) return;
-    var now=Date.now();
-    var demo=[
-      {id:"demo_series_e1",p:null,root:"demo_series_e1",format:"series",official:true,seriesId:"demo_series",seriesTitle:"막차는 달로 간다",episode:1,type:null,title:"1화. 막차 승강장",genre:"SF",pen:"익명 0721",desc:"달행 막차에 잘못 올라탄 승객.",body:"막차 안내판에는 목적지가 없었다.\n\n문이 닫히자 차창 밖의 서울이 아래로 멀어졌다.\n\n그제야 방송이 나왔다.\n\n“다음 역은 달입니다.”",views:1840,likes:211,date:now-180000000,comments:[]},
-      {id:"demo_series_e2",p:null,root:"demo_series_e1",format:"series",official:true,seriesId:"demo_series",seriesTitle:"막차는 달로 간다",episode:2,type:null,title:"2화. 없는 승객",genre:"SF",pen:"익명 0721",desc:"빈 좌석에 적힌 이름.",body:"내 맞은편 좌석은 비어 있었다.\n\n그런데 좌석표에는 이름이 적혀 있었다.\n\n내 이름이었다.",views:1410,likes:176,date:now-170000000,comments:[]},
-      {id:"demo_series_tail",p:"demo_series_e2",root:"demo_series_e1",format:"tail",official:false,seriesId:"demo_series",type:"IF 분기",title:"좌석에 먼저 앉아 있던 나",genre:"SF",pen:"익명 3310",desc:"2화에서 갈라진 짧은 꼬리.",body:"고개를 들자 빈 좌석에 누군가 앉아 있었다.\n\n나였다.\n\n그가 먼저 말했다.\n\n“이번엔 네가 내리는 차례야.”",views:730,likes:92,date:now-165000000,comments:[]},
-      {id:"demo_series_e3",p:null,root:"demo_series_e1",format:"series",official:true,seriesId:"demo_series",seriesTitle:"막차는 달로 간다",episode:3,type:null,title:"3화. 종착역",genre:"SF",pen:"익명 0721",desc:"열차가 멈춘 곳.",body:"열차는 달에 도착하지 않았다.\n\n문이 열린 곳은 출발하기 전의 승강장이었다.\n\n시계만 하루 전으로 돌아가 있었다.",views:1080,likes:139,date:now-160000000,comments:[]}
-    ];
-    data=demo.concat(data);
+  function sourceRootFor(s) {
+    if(!s) return null;
+    if(s.sourceRootId) {
+      var direct=getStory(s.sourceRootId);
+      if(direct) return direct;
+    }
+    if(s.lineage==="first") {
+      if(isSeriesEpisode(s)) {
+        var eps=seriesEpisodes(s.seriesId);
+        return eps.length?eps[0]:s;
+      }
+      return s;
+    }
+    if(s.p) return sourceRootFor(getStory(s.p));
+    if(s.root) return getStory(s.root) || s;
+    return s;
+  }
+
+  function policyFor(s) {
+    var root=sourceRootFor(s);
+    var policy=root && root.tailPolicy ? root.tailPolicy : "commercial";
+    var royalty=root && root.royalty != null ? Number(root.royalty) : (policy==="commercial"?10:0);
+    return {root:root, policy:policy, royalty:royalty};
+  }
+
+  function migrateData() {
+    var i,s,root;
+    for(i=0;i<data.length;i++) {
+      s=data[i];
+      if(!s.format) s.format=s.p?"tail":"short";
+      if(s.official && s.format!=="series") s.format="series";
+      if(!s.lineage) s.lineage=s.p?"tail":"first";
+    }
+    for(i=0;i<data.length;i++) {
+      s=data[i];
+      if(isSeriesEpisode(s) && s.episode>1) {
+        root=seriesEpisodes(s.seriesId)[0];
+        if(root) s.lineage=root.lineage||"first";
+      }
+      if(!s.sourceRootId) {
+        if(s.lineage==="first") {
+          if(isSeriesEpisode(s)) {
+            root=seriesEpisodes(s.seriesId)[0];
+            s.sourceRootId=root?root.id:s.id;
+          } else s.sourceRootId=s.id;
+        } else if(s.root && getStory(s.root)) s.sourceRootId=s.root;
+      }
+      if(s.lineage==="first" && (s.p==null) && (s.tailPolicy==null)) {
+        s.tailPolicy="commercial";
+        s.royalty=10;
+      }
+    }
     saveData();
   }
 
-  function statText(s) {
-    return '<span>'+esc(s.pen)+'</span><span>'+fmt(s.views)+' views</span><span>'+fmt(s.likes)+' likes</span><span>'+descendantCount(s.id)+' branches</span>';
+  function ensureDemoSeries() {
+    var now=Date.now(),i,oldIndex=-1;
+    for(i=0;i<data.length;i++) if(data[i].id==="demo_series_tail") {oldIndex=i;break;}
+    if(oldIndex!==-1) data.splice(oldIndex,1);
+    var demo=[
+      {id:"demo_series_e1",p:null,root:"demo_series_e1",sourceRootId:"demo_series_e1",lineage:"first",format:"series",official:true,seriesId:"demo_series",seriesTitle:"막차는 달로 간다",episode:1,type:null,title:"1화. 막차 승강장",genre:"과학소설",pen:"익명 0721",desc:"달행 막차에 잘못 올라탄 승객.",body:"막차 안내판에는 목적지가 없었다.\n\n문이 닫히자 차창 밖의 서울이 아래로 멀어졌다.\n\n그제야 방송이 나왔다.\n\n“다음 역은 달입니다.”",views:1840,likes:211,date:now-180000000,comments:[],tailPolicy:"commercial",royalty:10},
+      {id:"demo_series_e2",p:null,root:"demo_series_e1",sourceRootId:"demo_series_e1",lineage:"first",format:"series",official:true,seriesId:"demo_series",seriesTitle:"막차는 달로 간다",episode:2,type:null,title:"2화. 없는 승객",genre:"과학소설",pen:"익명 0721",desc:"빈 좌석에 적힌 이름.",body:"내 맞은편 좌석은 비어 있었다.\n\n그런데 좌석표에는 이름이 적혀 있었다.\n\n내 이름이었다.",views:1410,likes:176,date:now-170000000,comments:[]},
+      {id:"demo_tail_series_e1",p:"demo_series_e2",root:"demo_tail_series_e1",sourceRootId:"demo_series_e1",lineage:"tail",format:"series",official:true,seriesId:"demo_tail_series",seriesTitle:"좌석에 먼저 앉아 있던 나",episode:1,type:"만약 분기",title:"1화. 먼저 도착한 사람",genre:"과학소설",pen:"익명 3310",desc:"2화에서 갈라진 꼬리 시리즈.",body:"고개를 들자 빈 좌석에 누군가 앉아 있었다.\n\n나였다.\n\n그가 먼저 말했다.\n\n“이번엔 네가 내리는 차례야.”",views:730,likes:92,date:now-165000000,comments:[]},
+      {id:"demo_series_e3",p:null,root:"demo_series_e1",sourceRootId:"demo_series_e1",lineage:"first",format:"series",official:true,seriesId:"demo_series",seriesTitle:"막차는 달로 간다",episode:3,type:null,title:"3화. 종착역",genre:"과학소설",pen:"익명 0721",desc:"열차가 멈춘 곳.",body:"열차는 달에 도착하지 않았다.\n\n문이 열린 곳은 출발하기 전의 승강장이었다.\n\n시계만 하루 전으로 돌아가 있었다.",views:1080,likes:139,date:now-160000000,comments:[]}
+    ];
+    for(i=0;i<demo.length;i++) if(!getStory(demo[i].id)) data.unshift(demo[i]);
+    saveData();
   }
 
-  function cardHTML(s, number) {
-    var label=isSeriesRoot(s)?s.seriesTitle:s.title;
+  function originBadge(s) {
+    var lineage=s && s.lineage==="tail" ? "tail" : "first";
+    return '<span class="origin '+lineage+'">'+(lineage==="tail"?'꼬리':'첫')+'</span>';
+  }
+
+  function seriesBadge() {
+    return '<span class="format-tag">시리즈</span>';
+  }
+
+  function displayTitle(s) {
+    return isSeriesRoot(s)?s.seriesTitle:s.title;
+  }
+
+  function displayViews(s) {
+    var eps,i,total=0;
+    if(isSeriesRoot(s)) {
+      eps=seriesEpisodes(s.seriesId);
+      for(i=0;i<eps.length;i++) total+=Number(eps[i].views||0);
+      return total;
+    }
+    return Number(s.views||0);
+  }
+
+  function cardHTML(s) {
     var attr=isSeriesRoot(s)?' data-series="'+esc(s.seriesId)+'"':' data-story="'+esc(s.id)+'"';
-    var prefix=isSeriesRoot(s)?'<span class="muted" style="margin-right:7px">시리즈</span>':'';
-    var views=isSeriesRoot(s)?seriesEpisodes(s.seriesId).reduce(function(sum,x){return sum+x.views;},0):s.views;
-    return '<div class="card"><button type="button"'+attr+'>'+
-      '<div class="card-row"><div class="title">'+prefix+esc(label)+'</div><div class="views">'+fmt(views)+'</div></div>'+
-      '</button></div>';
+    var tags=originBadge(s)+(isSeriesRoot(s)?seriesBadge():'');
+    return '<div class="card"><button type="button"'+attr+'><div class="card-row"><div class="title"><span class="tags">'+tags+'</span>'+esc(displayTitle(s))+'</div><div class="views">'+fmt(displayViews(s))+'</div></div></button></div>';
   }
 
   function homeHTML() {
-    var arr = [], i, s, cards="", rankButtons="";
-    for (i=0;i<data.length;i++) {
+    var arr=[],i,s,cards="",rankButtons="";
+    for(i=0;i<data.length;i++) {
       s=data[i];
-      if (s.p) continue;
-      if (isSeriesEpisode(s) && s.episode !== 1) continue;
+      if(s.lineage==="tail") continue;
+      if(isSeriesEpisode(s) && s.episode!==1) continue;
+      if(!isSeriesEpisode(s) && s.p) continue;
       arr.push(s);
     }
     arr.sort(function(a,b){
-      if (state.rank === "인기") return (b.views+b.likes*3)-(a.views+a.likes*3);
-      return b.date-a.date;
+      if(state.rank==="인기") return (displayViews(b)+Number(b.likes||0)*3)-(displayViews(a)+Number(a.likes||0)*3);
+      return Number(b.date||0)-Number(a.date||0);
     });
-    for(i=0;i<arr.length;i++) cards += cardHTML(arr[i],0);
-    ["최신","인기"].forEach(function(x){
-      rankButtons += '<button class="pill '+(state.rank===x?'on':'')+'" data-rank="'+x+'">'+x+'</button>';
-    });
-    return '<main class="wrap">'+
-      '<section class="sec" style="margin-top:0"><div class="pills" style="margin-bottom:8px">'+rankButtons+'</div><div class="list">'+(cards || '<div class="empty">작품이 없습니다.</div>')+'</div></section></main>';
+    for(i=0;i<arr.length;i++) cards+=cardHTML(arr[i]);
+    ["최신","인기"].forEach(function(x){rankButtons+='<button class="pill '+(state.rank===x?'on':'')+'" data-rank="'+x+'">'+x+'</button>';});
+    return '<main class="wrap"><section class="sec" style="margin-top:0"><div class="pills" style="margin-bottom:8px">'+rankButtons+'</div><div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div></section></main>';
   }
 
   function findHTML() {
-    var arr=data.slice().sort(function(a,b){return b.date-a.date;}), cards="", i;
-    for(i=0;i<arr.length;i++) {
-      if(isSeriesEpisode(arr[i]) && arr[i].episode!==1) continue;
-      cards += cardHTML(arr[i],0);
+    var arr=[],cards="",i,s,q=(state.query||"").toLowerCase();
+    for(i=0;i<data.length;i++) {
+      s=data[i];
+      if(isSeriesEpisode(s) && s.episode!==1) continue;
+      if(q) {
+        var hay=(displayTitle(s)+" "+(s.title||"")+" "+(s.pen||"")+" "+(s.genre||"")).toLowerCase();
+        if(hay.indexOf(q)===-1) continue;
+      }
+      arr.push(s);
     }
-    return '<main class="wrap"><div class="head"><h2>Browse</h2><span class="muted">원작 '+data.filter(function(x){return !x.p;}).length+' · 꼬리 '+data.filter(function(x){return !!x.p;}).length+'</span></div><div class="list">'+cards+'</div></main>';
+    arr.sort(function(a,b){return Number(b.date||0)-Number(a.date||0);});
+    for(i=0;i<arr.length;i++) cards+=cardHTML(arr[i]);
+    return '<main class="wrap"><div class="head"><h2>전체 검색</h2><span class="muted">첫 작품과 꼬리를 함께 검색</span></div><input class="search" id="searchInput" value="'+esc(state.query)+'" placeholder="작품 제목 검색"><div class="list">'+(cards||'<div class="empty">검색 결과가 없습니다.</div>')+'</div></main>';
   }
 
   function treeHTML(id) {
-    var kids=childrenOf(id), html="", i, k, nested;
+    var kids=childrenOf(id),html="",i,k,nested,attr,label;
     for(i=0;i<kids.length;i++) {
       k=kids[i];
-      nested=childrenOf(k.id).length ? '<div class="tree" style="margin-top:8px">'+treeHTML(k.id)+'</div>' : '';
-      html += '<div class="node" data-story="'+esc(k.id)+'"><b>'+esc(k.title)+'</b><div class="meta"><span>'+esc(k.type)+'</span><span>'+fmt(k.likes)+' likes</span><span>'+fmt(k.views)+' views</span></div>'+nested+'</div>';
+      nested=childrenOf(k.id).length?'<div class="tree" style="margin-top:8px">'+treeHTML(k.id)+'</div>':'';
+      attr=isSeriesRoot(k)?' data-series="'+esc(k.seriesId)+'"':' data-story="'+esc(k.id)+'"';
+      label=isSeriesRoot(k)?k.seriesTitle:k.title;
+      html+='<div class="node"'+attr+'><div class="node-title"><span class="origin tail">꼬리</span>'+(isSeriesRoot(k)?seriesBadge():'')+'<b>'+esc(label)+'</b></div><div class="meta"><span>'+fmt(displayViews(k))+' 조회</span></div>'+nested+'</div>';
     }
     return html;
   }
 
   function seriesHTML() {
-    var root=getStory(state.selected), eps=[], rows="", i, total=0;
+    var root=getStory(state.selected),eps=[],rows="",i,total=0,p,royaltyBlock="",back="";
     if(!root || !isSeriesRoot(root)) return homeHTML();
     eps=seriesEpisodes(root.seriesId);
     for(i=0;i<eps.length;i++) {
-      total+=eps[i].views;
-      rows += '<div class="episode"><button type="button" data-story="'+esc(eps[i].id)+'"><div class="episode-title">'+esc(eps[i].title)+'</div><div class="episode-views">'+fmt(eps[i].views)+'</div></button></div>';
+      total+=Number(eps[i].views||0);
+      rows+='<div class="episode"><button type="button" data-story="'+esc(eps[i].id)+'"><div class="episode-title">'+esc(eps[i].title)+'</div><div class="episode-views">'+fmt(eps[i].views)+'</div></button></div>';
     }
-    return '<main class="wrap"><button class="back" data-view="home">←</button>'+
-      '<section class="series-head"><span class="badge">시리즈</span><h1>'+esc(root.seriesTitle)+'</h1><div class="meta"><span>'+esc(root.pen)+'</span><span>'+esc(root.genre)+'</span><span>'+eps.length+'화</span><span>'+fmt(total)+' views</span></div></section>'+
-      '<section class="sec"><div class="head"><h2>회차</h2><span class="muted">공식 연재</span></div><div class="episode-list">'+rows+'</div></section>'+
-      (ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+
-      '</main>';
+    p=policyFor(root);
+    if(root.lineage==="tail") {
+      if(p.policy==="commercial") royaltyBlock='<div class="notice royalty">수익화 시 첫 작품 원작자에게 '+p.royalty+'% 로열티가 배분되는 꼬리 시리즈입니다.</div>';
+      else if(p.policy==="noncommercial") royaltyBlock='<div class="notice">첫 작품 설정에 따라 비상업으로만 운영되는 꼬리 시리즈입니다.</div>';
+    }
+    back=root.p?' data-story="'+esc(root.p)+'"':' data-view="home"';
+    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta"><span>'+esc(root.pen)+'</span><span>'+esc(root.genre)+'</span><span>'+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div></section>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+'</main>';
   }
 
   function seriesEpisodeForm(rootId) {
-    var root=getStory(rootId), eps=root?seriesEpisodes(root.seriesId):[], next=eps.length+1;
+    var root=getStory(rootId),eps=root?seriesEpisodes(root.seriesId):[],next=eps.length+1;
     if(!root || !ownsStory(root.id)) return seriesHTML();
-    return '<main class="wrap"><button class="back" data-series="'+esc(root.seriesId)+'">←</button><form class="form" id="seriesEpisodeForm">'+
-      '<div class="head"><h2>'+next+'화 쓰기</h2><span class="muted">'+esc(root.seriesTitle)+'</span></div>'+
-      '<div class="field"><label>화 제목 *</label><input name="episodeTitle" required maxlength="70" placeholder="예: 새로운 승객"></div>'+
-      '<div class="field"><label>본문 *</label><textarea name="body" required></textarea></div>'+
-      '<button class="btn primary" style="width:100%">공식 '+next+'화 게시</button></form></main>';
+    return '<main class="wrap"><button class="back" data-series="'+esc(root.seriesId)+'">←</button><form class="form" id="seriesEpisodeForm"><div class="head"><h2>'+next+'화 쓰기</h2><span class="muted">'+esc(root.seriesTitle)+'</span></div><div class="field"><label>화 제목 *</label><input name="episodeTitle" required maxlength="70"></div><div class="field"><label>본문 *</label><textarea name="body" required></textarea></div><button class="btn primary" style="width:100%">공식 '+next+'화 게시</button></form></main>';
   }
 
   function storyHTML() {
-    var s=getStory(state.selected), kids, comments="", i;
+    var s=getStory(state.selected),kids,comments="",i,officialNext=null,officialBlock="",eps,backAttr,p,tailButton="",policyNote="";
     if(!s) return homeHTML();
     kids=childrenOf(s.id);
-    for(i=s.comments.length-1;i>=0;i--) comments += '<div class="comment"><small>'+esc(s.comments[i][0])+'</small><div>'+esc(s.comments[i][1])+'</div></div>';
-    var backAttr=isSeriesEpisode(s)?' data-series="'+esc(s.seriesId)+'"':' data-view="home"';
-    return '<main class="wrap"><button class="back"'+backAttr+'>←</button>'+
-      '<article class="reader"><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.genre)+'</span><span>'+esc(s.pen)+'</span><span>'+(isSeriesEpisode(s)?'공식 '+s.episode+'화':(s.p?esc(s.type):'원작'))+'</span></div><div class="body">'+esc(s.body)+'</div></article>'+
-      '<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>Likes</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>Comments</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>Branches</button></div>'+
-      '<section class="sec"><div class="head"><h2>Branches</h2><span class="muted">후손 '+descendantCount(s.id)+'개</span></div>'+
-      (kids.length?'<div class="tree">'+treeHTML(s.id)+'</div>':'<div class="notice">아직 꼬리가 없습니다. 첫 분기를 만들어보세요.</div>')+
-      '<button class="btn primary" style="width:100%;margin-top:12px" data-tail="'+esc(s.id)+'">이 작품 이어쓰기</button></section>'+
-      '<section class="sec" id="comments"><div class="head"><h2>Comments</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+
-      (comments || '<div class="empty">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+    if(isSeriesEpisode(s)) {
+      eps=seriesEpisodes(s.seriesId);
+      for(i=0;i<eps.length;i++) if(eps[i].episode===s.episode+1) {officialNext=eps[i];break;}
+      officialBlock='<section class="sec official-next"><div class="head"><h2>공식 다음 화</h2><span class="canon">정사</span></div>'+(officialNext?'<div class="episode-list"><div class="episode"><button type="button" data-story="'+esc(officialNext.id)+'"><div class="episode-title">'+esc(officialNext.title)+'</div><div class="episode-views">'+fmt(officialNext.views)+'</div></button></div></div>':'<div class="notice">아직 공식 다음 화가 없습니다.</div>')+'</section>';
+    }
+    for(i=s.comments.length-1;i>=0;i--) comments+='<div class="comment"><small>'+esc(s.comments[i][0])+'</small><div>'+esc(s.comments[i][1])+'</div></div>';
+    backAttr=isSeriesEpisode(s)?' data-series="'+esc(s.seriesId)+'"':' data-view="home"';
+    p=policyFor(s);
+    if(p.policy==="deny") policyNote='<div class="notice">첫 작품 원작자가 꼬리 작성을 허용하지 않은 작품입니다.</div>';
+    else if(p.policy==="noncommercial") {
+      policyNote='<div class="notice">이 작품에서 파생되는 꼬리는 비상업으로만 게시됩니다.</div>';
+      tailButton='<button class="btn primary" style="width:100%;margin-top:12px" data-tail="'+esc(s.id)+'">꼬리 쓰기</button>';
+    } else {
+      policyNote='<div class="notice royalty">꼬리 수익화 시 첫 작품 원작자에게 '+p.royalty+'% 로열티가 배분됩니다.</div>';
+      tailButton='<button class="btn primary" style="width:100%;margin-top:12px" data-tail="'+esc(s.id)+'">꼬리 쓰기</button>';
+    }
+    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():'')+'</div><h1>'+esc(s.title)+'</h1><div class="meta"><span>'+esc(s.genre)+'</span><span>'+esc(s.pen)+'</span>'+(isSeriesEpisode(s)?'<span>공식 '+s.episode+'화</span>':'')+'</div><div class="body">'+esc(s.body)+'</div></article><div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">후손 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="tree" style="margin-top:10px">'+treeHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section><section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+  }
+
+  function policyFieldHTML() {
+    return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 첫 원작자 10% 로열티</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">현재 테스트판에서는 권한 규칙만 저장되며 실제 결제·정산은 하지 않습니다.</div></div>';
   }
 
   function formHTML(parentId) {
-    var p=parentId ? getStory(parentId) : null, options="", i, genreOptions="";
-    if(p) for(i=0;i<tailTypes.length;i++) options += '<option>'+esc(tailTypes[i])+'</option>';
-    if(!p) for(i=0;i<genres.length;i++) genreOptions += '<option>'+esc(genres[i])+'</option>';
-    return '<main class="wrap"><button class="back" data-view="'+(p?'story':'home')+'">←</button><form class="form" id="storyForm">'+
-      '<div class="head"><h2>'+(p?'꼬리 소설 쓰기':'새 작품 쓰기')+'</h2><span class="muted">'+(p?esc(p.title):'1분 안에 공개')+'</span></div>'+
-      (p?'<div class="field"><label>꼬리 유형</label><select name="type">'+options+'</select></div>':'<div class="field"><label>작품 형태</label><div class="type-choice"><label><input type="radio" name="format" value="short" checked><span>단편</span></label><label><input type="radio" name="format" value="series"><span>시리즈</span></label></div></div>')+
-      '<div class="field"><label>'+(p?'제목 *':'작품 제목 *')+'</label><input name="title" required maxlength="80"></div>'+
-      (!p?'<div class="field hidden" id="seriesTitleField"><label>1화 제목 *</label><input name="episodeTitle" maxlength="70" placeholder="예: 첫 번째 승객"></div>':'')+
-      (!p?'<div class="field"><label>장르</label><select name="genre">'+genreOptions+'</select></div>':'')+
-      '<div class="field"><label>필명 <span class="muted">선택</span></label><input name="pen" maxlength="30" placeholder="비우면 익명"></div>'+
-      '<div class="field"><label>한 줄 소개</label><input name="desc" maxlength="120"></div>'+
-      '<div class="field"><label>본문 *</label><textarea name="body" required placeholder="생각난 이야기를 바로 적어보세요."></textarea></div>'+
-      '<button class="btn primary" style="width:100%">게시</button></form></main>';
+    var p=parentId?getStory(parentId):null,options="",i,genreOptions="",pol;
+    if(p) {
+      pol=policyFor(p);
+      if(pol.policy==="deny") return '<main class="wrap"><button class="back" data-story="'+esc(p.id)+'">←</button><div class="notice">첫 작품 원작자가 꼬리 작성을 허용하지 않았습니다.</div></main>';
+      for(i=0;i<tailTypes.length;i++) options+='<option>'+esc(tailTypes[i])+'</option>';
+    } else {
+      for(i=0;i<genres.length;i++) genreOptions+='<option>'+esc(genres[i])+'</option>';
+    }
+    var policyNotice="";
+    if(p && pol.policy==="commercial") policyNotice='<div class="notice royalty">수익화될 경우 첫 작품 원작자에게 '+pol.royalty+'% 로열티가 배분됩니다.</div>';
+    if(p && pol.policy==="noncommercial") policyNotice='<div class="notice">이 꼬리는 비상업 작품으로만 게시됩니다.</div>';
+    return '<main class="wrap"><button class="back" '+(p?'data-story="'+esc(p.id)+'"':'data-view="home"')+'>←</button>'+policyNotice+'<form class="form" id="storyForm"><div class="head"><h2>'+(p?'꼬리 쓰기':'새 작품 쓰기')+'</h2><span class="muted">'+(p?esc(displayTitle(p)):'바로 공개')+'</span></div><div class="field"><label>'+(p?'꼬리 형태':'작품 형태')+'</label><div class="type-choice"><label><input type="radio" name="format" value="short" checked><span>단편</span></label><label><input type="radio" name="format" value="series"><span>시리즈</span></label></div></div>'+(p?'<div class="field"><label>꼬리 성격</label><select name="type">'+options+'</select></div>':'')+'<div class="field"><label>작품 제목 *</label><input name="title" required maxlength="80"></div><div class="field hidden" id="seriesTitleField"><label>1화 제목 *</label><input name="episodeTitle" maxlength="70" placeholder="예: 첫 번째 승객"></div>'+(!p?'<div class="field"><label>장르</label><select name="genre">'+genreOptions+'</select></div>'+policyFieldHTML():'')+'<div class="field"><label>필명 <span class="muted">선택</span></label><input name="pen" maxlength="30" placeholder="비우면 익명"></div><div class="field"><label>한 줄 소개</label><input name="desc" maxlength="120"></div><div class="field"><label>본문 *</label><textarea name="body" required placeholder="생각난 이야기를 바로 적어보세요."></textarea></div><button class="btn primary" style="width:100%">게시</button></form></main>';
   }
 
   function mineHTML() {
-    var ids=[], arr=[], cards="", i, raw;
-    try { raw=localStorage.getItem(MINE_KEY); ids=raw?JSON.parse(raw):[]; } catch(e) {}
+    var ids=mineIds(),arr=[],cards="",i;
     for(i=0;i<data.length;i++) {
       if(ids.indexOf(data[i].id)===-1) continue;
       if(isSeriesEpisode(data[i]) && data[i].episode!==1) continue;
       arr.push(data[i]);
     }
-    for(i=0;i<arr.length;i++) cards += cardHTML(arr[i],0);
-    return '<main class="wrap"><div class="head"><h2>My Stories</h2><span class="muted">이 Safari에서 작성</span></div><div class="notice">현재 테스트판은 서버 DB 없이 이 브라우저에 저장됩니다.</div><div class="list sec">'+(cards||'<div class="empty">아직 작성한 작품이 없습니다.</div>')+'</div></main>';
+    arr.sort(function(a,b){return Number(b.date||0)-Number(a.date||0);});
+    for(i=0;i<arr.length;i++) cards+=cardHTML(arr[i]);
+    return '<main class="wrap"><div class="head"><h2>내 작품</h2><span class="muted">이 브라우저에서 작성</span></div><div class="notice">현재 테스트판은 서버 없이 이 브라우저에 저장됩니다.</div><div class="list sec">'+(cards||'<div class="empty">아직 작성한 작품이 없습니다.</div>')+'</div></main>';
   }
 
   function render() {
@@ -392,9 +494,15 @@ a{color:inherit;text-decoration:none}
   }
 
   function randomStory() {
-    if(!data.length) return;
-    var s=data[Math.floor(Math.random()*data.length)];
-    openStory(s.id);
+    var candidates=[],i,s;
+    for(i=0;i<data.length;i++) {
+      s=data[i];
+      if(isSeriesEpisode(s) && s.episode!==1) continue;
+      candidates.push(s);
+    }
+    if(!candidates.length) return;
+    s=candidates[Math.floor(Math.random()*candidates.length)];
+    if(isSeriesRoot(s)) openSeries(s.seriesId); else openStory(s.id);
   }
 
   function openSeries(seriesId) {
@@ -407,7 +515,7 @@ a{color:inherit;text-decoration:none}
   function openStory(id) {
     var s=getStory(id);
     if(!s) return;
-    s.views++;
+    s.views=Number(s.views||0)+1;
     saveData();
     state.selected=id;
     go("story");
@@ -415,63 +523,51 @@ a{color:inherit;text-decoration:none}
 
   function submitStory(form) {
     var p=state.view==="tail"?getStory(state.selected):null;
-    var fd=new FormData(form), id="s"+Date.now()+Math.floor(Math.random()*10000);
-    var title=String(fd.get("title")||"").trim();
-    var body=String(fd.get("body")||"").trim();
+    var fd=new FormData(form),id="s"+Date.now()+Math.floor(Math.random()*10000);
+    var title=String(fd.get("title")||"").trim(),body=String(fd.get("body")||"").trim();
+    var format=String(fd.get("format")||"short"),isTail=!!p,pol=isTail?policyFor(p):null;
     if(!title || !body) return;
-    if(!p && String(fd.get("format")||"short")==="series") {
+    if(isTail && pol.policy==="deny") return;
+    if(format==="series") {
       var epTitle=String(fd.get("episodeTitle")||"").trim();
       if(!epTitle) return;
       var seriesId="series"+Date.now()+Math.floor(Math.random()*1000);
-      var root={
-        id:id,p:null,root:id,format:"series",official:true,seriesId:seriesId,seriesTitle:title,episode:1,type:null,
-        title:"1화. "+epTitle,genre:String(fd.get("genre")||"기타"),
-        pen:String(fd.get("pen")||"").trim() || ("익명 "+Math.floor(1000+Math.random()*9000)),
-        desc:String(fd.get("desc")||"").trim() || "새로운 시리즈",body:body,views:0,likes:0,date:Date.now(),comments:[]
-      };
-      data.unshift(root); saveData(); addMine(id); state.selected=id; go("series"); return;
+      var src=isTail?pol.root:null;
+      var root={id:id,p:isTail?p.id:null,root:id,sourceRootId:isTail&&src?src.id:id,lineage:isTail?"tail":"first",format:"series",official:true,seriesId:seriesId,seriesTitle:title,episode:1,type:isTail?String(fd.get("type")||"다음 화"):null,title:"1화. "+epTitle,genre:isTail?p.genre:String(fd.get("genre")||"기타"),pen:String(fd.get("pen")||"").trim()||("익명 "+Math.floor(1000+Math.random()*9000)),desc:String(fd.get("desc")||"").trim()||"새로운 시리즈",body:body,views:0,likes:0,date:Date.now(),comments:[]};
+      if(!isTail) {root.tailPolicy=String(fd.get("tailPolicy")||"commercial");root.royalty=root.tailPolicy==="commercial"?10:0;}
+      data.unshift(root);saveData();addMine(id);state.selected=id;go("series");return;
     }
-    var story={
-      id:id,p:p?p.id:null,root:p?p.root:id,format:p?"tail":"short",official:false,type:p?String(fd.get("type")||"다음 화"):null,
-      title:title,genre:p?p.genre:String(fd.get("genre")||"기타"),seriesId:p&&p.seriesId?p.seriesId:null,
-      pen:String(fd.get("pen")||"").trim() || ("익명 "+Math.floor(1000+Math.random()*9000)),
-      desc:String(fd.get("desc")||"").trim() || "새로운 이야기",
-      body:body,views:0,likes:0,date:Date.now(),comments:[]
-    };
-    data.unshift(story); saveData(); addMine(id); state.selected=id; go("story");
+    var srcRoot=isTail?pol.root:null;
+    var story={id:id,p:isTail?p.id:null,root:isTail&&srcRoot?srcRoot.id:id,sourceRootId:isTail&&srcRoot?srcRoot.id:id,lineage:isTail?"tail":"first",format:isTail?"tail":"short",official:false,type:isTail?String(fd.get("type")||"다음 화"):null,title:title,genre:isTail?p.genre:String(fd.get("genre")||"기타"),pen:String(fd.get("pen")||"").trim()||("익명 "+Math.floor(1000+Math.random()*9000)),desc:String(fd.get("desc")||"").trim()||"새로운 이야기",body:body,views:0,likes:0,date:Date.now(),comments:[]};
+    if(!isTail) {story.tailPolicy=String(fd.get("tailPolicy")||"commercial");story.royalty=story.tailPolicy==="commercial"?10:0;}
+    data.unshift(story);saveData();addMine(id);state.selected=id;go("story");
   }
 
   function submitSeriesEpisode(form) {
     var root=getStory(state.selected);
     if(!root || !isSeriesRoot(root) || !ownsStory(root.id)) return;
-    var eps=seriesEpisodes(root.seriesId), next=eps.length+1, fd=new FormData(form);
-    var epTitle=String(fd.get("episodeTitle")||"").trim(), body=String(fd.get("body")||"").trim();
+    var eps=seriesEpisodes(root.seriesId),next=eps.length+1,fd=new FormData(form);
+    var epTitle=String(fd.get("episodeTitle")||"").trim(),body=String(fd.get("body")||"").trim();
     if(!epTitle || !body) return;
     var id="s"+Date.now()+Math.floor(Math.random()*10000);
-    var ep={id:id,p:null,root:root.id,format:"series",official:true,seriesId:root.seriesId,seriesTitle:root.seriesTitle,episode:next,type:null,
-      title:next+"화. "+epTitle,genre:root.genre,pen:root.pen,desc:"",body:body,views:0,likes:0,date:Date.now(),comments:[]};
-    data.unshift(ep); saveData(); addMine(id); state.selected=root.id; go("series");
+    var ep={id:id,p:null,root:root.id,sourceRootId:root.sourceRootId||root.id,lineage:root.lineage||"first",format:"series",official:true,seriesId:root.seriesId,seriesTitle:root.seriesTitle,episode:next,type:null,title:next+"화. "+epTitle,genre:root.genre,pen:root.pen,desc:"",body:body,views:0,likes:0,date:Date.now(),comments:[]};
+    data.unshift(ep);saveData();addMine(id);state.selected=root.id;go("series");
   }
 
   document.addEventListener("click", function(e){
     var t=e.target;
     while(t && t!==document.body) {
       if(t.getAttribute) {
-        if(t.getAttribute("data-view")) { go(t.getAttribute("data-view")); return; }
-        if(t.getAttribute("data-series")) { openSeries(t.getAttribute("data-series")); return; }
-        if(t.getAttribute("data-seriesnext")) { state.selected=t.getAttribute("data-seriesnext"); go("serieswrite"); return; }
-        if(t.getAttribute("data-story")) { openStory(t.getAttribute("data-story")); return; }
-        if(t.getAttribute("data-random")) { randomStory(); return; }
-        if(t.getAttribute("data-rank")) { state.rank=t.getAttribute("data-rank"); render(); return; }
-        if(t.getAttribute("data-genre")) { state.genre=t.getAttribute("data-genre"); render(); return; }
-        if(t.getAttribute("data-like")) { var s=getStory(t.getAttribute("data-like")); if(s){s.likes++;saveData();render();} return; }
-        if(t.getAttribute("data-tail")) { state.selected=t.getAttribute("data-tail"); go("tail"); return; }
-        if(t.getAttribute("data-comments")) { var c=document.getElementById("comments"); if(c)c.scrollIntoView(); return; }
-        if(t.getAttribute("data-addcomment")) {
-          var inp=document.getElementById("commentInput"), txt=inp?inp.value.trim():"", cs=getStory(t.getAttribute("data-addcomment"));
-          if(txt && cs){cs.comments.push(["익명 "+Math.floor(1000+Math.random()*9000),txt]);saveData();render();}
-          return;
-        }
+        if(t.getAttribute("data-view")) {go(t.getAttribute("data-view"));return;}
+        if(t.getAttribute("data-series")) {openSeries(t.getAttribute("data-series"));return;}
+        if(t.getAttribute("data-seriesnext")) {state.selected=t.getAttribute("data-seriesnext");go("serieswrite");return;}
+        if(t.getAttribute("data-story")) {openStory(t.getAttribute("data-story"));return;}
+        if(t.getAttribute("data-random")) {randomStory();return;}
+        if(t.getAttribute("data-rank")) {state.rank=t.getAttribute("data-rank");render();return;}
+        if(t.getAttribute("data-like")) {var s=getStory(t.getAttribute("data-like"));if(s){s.likes=Number(s.likes||0)+1;saveData();render();}return;}
+        if(t.getAttribute("data-tail")) {var target=getStory(t.getAttribute("data-tail"));if(target && policyFor(target).policy!=="deny"){state.selected=target.id;go("tail");}return;}
+        if(t.getAttribute("data-comments")) {var c=document.getElementById("comments");if(c)c.scrollIntoView();return;}
+        if(t.getAttribute("data-addcomment")) {var inp=document.getElementById("commentInput"),txt=inp?inp.value.trim():"",cs=getStory(t.getAttribute("data-addcomment"));if(txt&&cs){cs.comments.push(["익명 "+Math.floor(1000+Math.random()*9000),txt]);saveData();render();}return;}
       }
       t=t.parentNode;
     }
@@ -482,19 +578,15 @@ a{color:inherit;text-decoration:none}
       state.query=e.target.value;
       render();
       var input=document.getElementById("searchInput");
-      if(input){input.focus(); input.setSelectionRange(input.value.length,input.value.length);}
+      if(input){input.focus();input.setSelectionRange(input.value.length,input.value.length);}
     }
   });
 
   document.addEventListener("submit", function(e){
-    if(e.target && e.target.id==="storyForm") {
-      e.preventDefault();
-      submitStory(e.target);
-    } else if(e.target && e.target.id==="seriesEpisodeForm") {
-      e.preventDefault();
-      submitSeriesEpisode(e.target);
-    }
+    if(e.target && e.target.id==="storyForm") {e.preventDefault();submitStory(e.target);}
+    else if(e.target && e.target.id==="seriesEpisodeForm") {e.preventDefault();submitSeriesEpisode(e.target);}
   });
+
   document.addEventListener("change", function(e){
     if(e.target && e.target.name==="format") {
       var field=document.getElementById("seriesTitleField");
@@ -505,13 +597,15 @@ a{color:inherit;text-decoration:none}
     }
   });
 
-
   var randomTop=document.getElementById("randomTop");
   if(randomTop) randomTop.addEventListener("click",randomStory);
 
+  migrateData();
   ensureDemoSeries();
+  migrateData();
   render();
 })();
+
 </script>
 </body>
 </html>
