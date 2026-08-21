@@ -167,6 +167,30 @@ a{color:inherit;text-decoration:none}
 .genre-settings-actions{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #ededed;margin-top:6px;padding-top:8px}
 .genre-settings-actions button{appearance:none;border:0;background:transparent;padding:3px 0;font-size:10px;font-weight:700;color:#666}
 
+.home-feed{border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;background:#fff}
+.home-feed .pills{margin-bottom:6px}
+.home-feed .card:first-child{border-top:0}
+.home-feed-more{display:flex;justify-content:center;padding:8px 0 1px}
+.home-expand-btn{border:0;background:transparent;color:#666;font-size:12px;font-weight:750;padding:8px 12px;border-radius:8px}
+.home-expand-btn:active{background:#f4f4f4}
+.home-pager{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:8px;padding:5px 0 9px}
+.home-pager.bottom{padding:10px 0 1px}
+.home-page-btn{height:34px;border:1px solid var(--line-strong);background:#fff;border-radius:8px;font-size:17px;line-height:1}
+.home-page-btn:disabled{color:#c9c9c9;background:#fafafa}
+.home-page-status{text-align:center;font-size:11px;color:#777;font-weight:700}
+.ad-slot{height:108px;margin:26px 0 34px;border-radius:10px;background:#ececec;color:#8b8b8b;display:grid;place-items:center;font-size:12px;font-weight:700;letter-spacing:.02em}
+.project-intro{padding:4px 0 20px}
+.project-kicker{font-size:12px;font-weight:800;color:#777;margin-bottom:10px}
+.project-intro h1{margin:0;font-size:31px;line-height:1.2;letter-spacing:-.045em}
+.project-lead{margin:16px 0 0;font-size:15px;line-height:1.8;color:#3d3d3d;max-width:650px}
+.project-section{padding:28px 0;border-top:1px solid var(--line)}
+.project-section h2{margin:0 0 10px;font-size:19px;letter-spacing:-.025em}
+.project-section p{margin:0;font-size:14px;line-height:1.85;color:#555;max-width:660px}
+.project-highlight{margin-top:12px;font-size:15px!important;font-weight:700;color:#171717!important}
+.project-final{padding:34px 0 8px;border-top:1px solid var(--line)}
+.project-final strong{display:block;font-size:24px;line-height:1.45;letter-spacing:-.035em}
+.project-final span{display:block;margin-top:10px;color:#777;font-size:12px;line-height:1.65}
+
 .info-title{margin:0 0 6px;font-size:27px;letter-spacing:-.035em}
 .info-intro{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
 .info-grid{display:grid;gap:10px;margin-top:22px}
@@ -205,16 +229,31 @@ a{color:inherit;text-decoration:none}
 
 <div id="app">
   <main class="wrap">
-    <section class="sec" style="margin-top:0">
-      <div class="pills" style="margin-bottom:8px">
+    <section class="home-feed">
+      <div class="pills">
         <button class="pill on" type="button">최신</button>
         <button class="pill" type="button">인기</button>
       </div>
+      <div class="home-pager top"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
       <div class="list">
-        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>문이 열리지 않는 우주정거장</div><div class="views">3.3K</div></div></button></div>
-        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>용사가 퇴근했다</div><div class="views">2.2K</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>새벽 세 시의 편의점</div><div class="views">180</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>마왕은 오늘도 지각했다</div><div class="views">527</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>우리는 화성에서 헤어졌다</div><div class="views">874</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>고양이는 범인을 알고 있다</div><div class="views">1.2K</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>검은 우산 아래</div><div class="views">1.6K</div></div></button></div>
       </div>
+      <div class="home-pager bottom"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
     </section>
+    <div class="ad-slot">광고 영역</div>
+    <section class="project-intro">
+      <div class="project-kicker">NOVELTAIL</div>
+      <h1>한 이야기가 끝나는 곳에서,<br>다른 이야기가 시작됩니다.</h1>
+      <p class="project-lead">NovelTail은 누군가의 이야기에 다음 화, 다른 결말, 외전, 재해석을 이어 붙일 수 있는 공동창작 소설 플랫폼입니다. 읽는 사람과 쓰는 사람의 경계를 없애고, 하나의 이야기가 수많은 방향으로 자라게 합니다.</p>
+    </section>
+    <section class="project-section"><h2>첫 이야기에서, 수많은 꼬리로.</h2><p><b>첫</b>은 이야기의 시작점이고, <b>꼬리</b>는 그 이야기에서 파생된 새로운 작품입니다. 꼬리는 또 다른 꼬리의 시작점이 될 수 있습니다. 그래서 NovelTail의 작품은 한 줄로 끝나는 연재물이 아니라, 계속 갈라지고 이어지는 이야기의 계보가 됩니다.</p></section>
+    <section class="project-section"><h2>작가의 정사는 지키고, 가능성은 열어둡니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 유지됩니다. 동시에 각 회차에서 독자들은 자유롭게 꼬리를 만들 수 있습니다.</p><p class="project-highlight">작가가 이어가는 이야기와 독자가 만들어가는 가능성이 같은 작품 안에 공존합니다.</p></section>
+    <section class="project-section"><h2>이야기가 이어지면, 기여도 이어집니다.</h2><p>수익화가 가능한 꼬리에서는 첫 원작자와 앞선 꼬리들의 기여를 계보에 따라 인정합니다. 첫 원작자는 10%, 가까운 꼬리 조상부터 6% → 3% → 1.5%…로 이어지고, 나머지는 현재 작가에게 돌아갑니다.</p></section>
+    <section class="project-final"><strong>누군가 끝낸 이야기에서,<br>당신의 이야기가 시작됩니다.</strong><span>읽기만 해도 좋고, 마음에 들면 그 다음을 직접 써도 됩니다.</span></section>
   </main>
 </div>
 
@@ -278,7 +317,7 @@ a{color:inherit;text-decoration:none}
   }
 
   var data = loadData();
-  var state = {view:"home", selected:null, query:"", rank:"최신", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, genreSettingsOpen:false};
+  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, genreSettingsOpen:false};
 
   function saveData() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -516,6 +555,27 @@ a{color:inherit;text-decoration:none}
     saveData();
   }
 
+  function ensureHomeDemoWorks() {
+    var now=Date.now(),titles=[
+      ["새벽 세 시의 편의점","일상"],["마왕은 오늘도 지각했다","판타지"],["우리는 화성에서 헤어졌다","과학소설"],["고양이는 범인을 알고 있다","미스터리"],["검은 우산 아래","공포"],
+      ["퇴사한 용사의 두 번째 직업","판타지"],["마지막 버스는 돌아오지 않는다","공포"],["오늘부터 무림인","무협"],["내 옆자리의 시간여행자","과학소설"],["연애금지 동아리","로맨스"],
+      ["회귀했는데 시험기간","개그"],["달빛 아래 칼집","무협"],["사라진 404호","미스터리"],["봄이 오기 전에","로맨스"],["우리 동네 작은 마법사","판타지"],
+      ["냉장고 안의 우주","과학소설"],["귀신도 월세를 낸다","개그"],["비 오는 날의 우체국","일상"],["열세 번째 계단","공포"],["왕의 마지막 편지","대체역사"],
+      ["조선에 떨어진 드론","대체역사"],["검객은 카페를 차렸다","무협"],["내일의 나에게","일상"],["별이 멈춘 밤","과학소설"],["첫사랑 사용설명서","로맨스"],
+      ["범인은 독자다","미스터리"],["슬라임 주식회사","개그"],["겨울성의 문지기","판타지"],["왕이 사라진 아침","대체역사"],["아무도 없는 종점","공포"]
+    ],i,id,item;
+    for(i=0;i<titles.length;i++) {
+      id="demo_home_"+String(i+1).padStart(2,"0");
+      if(getStory(id)) continue;
+      item={id:id,p:null,root:id,sourceRootId:id,lineage:"first",format:"short",official:false,type:null,
+        title:titles[i][0],genre:titles[i][1],pen:"익명 "+String(2100+i),desc:"홈 목록 테스트용 짧은 예시 작품입니다.",
+        body:"짧은 예시 작품입니다.\n\n이곳에는 실제 서비스에서 작가가 작성한 본문이 표시됩니다.",
+        views:180+((i*347)%9400),likes:12+((i*43)%760),date:now-(i+1)*1800000,comments:[],tailPolicy:"commercial",royalty:10};
+      data.push(item);
+    }
+    saveData();
+  }
+
   function originBadge(s) {
     var lineage=s && s.lineage==="tail" ? "tail" : "first";
     return '<span class="origin '+lineage+'">'+(lineage==="tail"?'꼬리':'첫')+'</span>';
@@ -613,8 +673,13 @@ a{color:inherit;text-decoration:none}
     return '<div class="card"><button type="button"'+attr+'><div class="card-row"><div class="title"><span class="tags">'+tags+'</span>'+esc(displayTitle(s))+'</div><div class="views">'+fmt(displayViews(s))+'</div></div></button></div>';
   }
 
+  function homePagerHTML(page,totalPages,position) {
+    if(totalPages<=1) return "";
+    return '<div class="home-pager '+(position||'')+'"><button class="home-page-btn" type="button" data-home-page="prev" '+(page<=0?'disabled':'')+'>←</button><div class="home-page-status">'+(page+1)+' / '+totalPages+'</div><button class="home-page-btn" type="button" data-home-page="next" '+(page>=totalPages-1?'disabled':'')+'>→</button></div>';
+  }
+
   function homeHTML() {
-    var arr=[],i,s,cards="",rankButtons="";
+    var arr=[],i,s,cards="",rankButtons="",shown=[],totalPages=1,start=0,end=0,pagerTop="",pagerBottom="";
     for(i=0;i<data.length;i++) {
       s=data[i];
       if(s.lineage==="tail") continue;
@@ -626,9 +691,34 @@ a{color:inherit;text-decoration:none}
       if(state.rank==="인기") return (displayViews(b)+Number(b.likes||0)*3)-(displayViews(a)+Number(a.likes||0)*3);
       return Number(b.date||0)-Number(a.date||0);
     });
-    for(i=0;i<arr.length;i++) cards+=cardHTML(arr[i]);
+    if(state.homeExpanded) {
+      totalPages=Math.max(1,Math.ceil(arr.length/20));
+      if(state.homePage>=totalPages) state.homePage=totalPages-1;
+      if(state.homePage<0) state.homePage=0;
+      start=state.homePage*20;
+      end=Math.min(start+20,arr.length);
+      shown=arr.slice(start,end);
+    } else {
+      totalPages=Math.max(1,Math.ceil(arr.length/5));
+      if(state.homePage>=totalPages) state.homePage=totalPages-1;
+      if(state.homePage<0) state.homePage=0;
+      start=state.homePage*5;
+      end=Math.min(start+5,arr.length);
+      shown=arr.slice(start,end);
+    }
+    pagerTop=homePagerHTML(state.homePage,totalPages,'top');
+    pagerBottom=homePagerHTML(state.homePage,totalPages,'bottom');
+    for(i=0;i<shown.length;i++) cards+=cardHTML(shown[i]);
     ["최신","인기"].forEach(function(x){rankButtons+='<button class="pill '+(state.rank===x?'on':'')+'" data-rank="'+x+'">'+x+'</button>';});
-    return '<main class="wrap"><section class="sec" style="margin-top:0"><div class="pills" style="margin-bottom:8px">'+rankButtons+'</div><div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div></section></main>';
+    return '<main class="wrap">'+
+      '<section class="home-feed"><div class="pills">'+rankButtons+'</div>'+pagerTop+'<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div>'+pagerBottom+'<div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
+      '<div class="ad-slot">광고 영역</div>'+ 
+      '<section class="project-intro"><div class="project-kicker">NOVELTAIL</div><h1>한 이야기가 끝나는 곳에서,<br>다른 이야기가 시작됩니다.</h1><p class="project-lead">NovelTail은 누군가의 이야기에 다음 화, 다른 결말, 외전, 재해석을 이어 붙일 수 있는 공동창작 소설 플랫폼입니다. 읽는 사람과 쓰는 사람의 경계를 없애고, 하나의 이야기가 수많은 방향으로 자라게 합니다.</p></section>'+ 
+      '<section class="project-section"><h2>첫 이야기에서, 수많은 꼬리로.</h2><p><b>첫</b>은 이야기의 시작점이고, <b>꼬리</b>는 그 이야기에서 파생된 새로운 작품입니다. 꼬리는 또 다른 꼬리의 시작점이 될 수 있습니다. 그래서 NovelTail의 작품은 한 줄로 끝나는 연재물이 아니라, 계속 갈라지고 이어지는 이야기의 계보가 됩니다.</p></section>'+ 
+      '<section class="project-section"><h2>작가의 정사는 지키고, 가능성은 열어둡니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 유지됩니다. 동시에 각 회차에서 독자들은 자유롭게 꼬리를 만들 수 있습니다.</p><p class="project-highlight">작가가 이어가는 이야기와 독자가 만들어가는 가능성이 같은 작품 안에 공존합니다.</p></section>'+ 
+      '<section class="project-section"><h2>이야기가 이어지면, 기여도 이어집니다.</h2><p>수익화가 가능한 꼬리에서는 첫 원작자와 앞선 꼬리들의 기여를 계보에 따라 인정합니다. 첫 원작자는 10%, 가까운 꼬리 조상부터 6% → 3% → 1.5%…로 이어지고, 나머지는 현재 작가에게 돌아갑니다.</p></section>'+ 
+      '<section class="project-final"><strong>누군가 끝낸 이야기에서,<br>당신의 이야기가 시작됩니다.</strong><span>읽기만 해도 좋고, 마음에 들면 그 다음을 직접 써도 됩니다.</span></section>'+ 
+      '</main>';
   }
 
   function inheritedGenre(s) {
@@ -907,7 +997,7 @@ a{color:inherit;text-decoration:none}
   var navIndex=0,maxNavIndex=0;
 
   function navSnapshot() {
-    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded};
+    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded};
   }
 
   function updateHistoryButtons() {
@@ -1004,7 +1094,9 @@ a{color:inherit;text-decoration:none}
         if(t.getAttribute("data-seriesnext")) {state.selected=t.getAttribute("data-seriesnext");go("serieswrite");return;}
         if(t.getAttribute("data-story")) {openStory(t.getAttribute("data-story"));return;}
         if(t.getAttribute("data-random")) {randomStory();return;}
-        if(t.getAttribute("data-rank")) {state.rank=t.getAttribute("data-rank");render();return;}
+        if(t.getAttribute("data-home-expand")) {state.homeExpanded=!state.homeExpanded;state.homePage=0;render();return;}
+        if(t.getAttribute("data-home-page")) {var hp=t.getAttribute("data-home-page");state.homePage+=hp==="next"?1:-1;render();return;}
+        if(t.getAttribute("data-rank")) {state.rank=t.getAttribute("data-rank");state.homePage=0;render();return;}
         if(t.getAttribute("data-find-genre")) {state.findGenre=t.getAttribute("data-find-genre");render();return;}
         if(t.getAttribute("data-find-tails")) {state.findShowTails=!state.findShowTails;render();return;}
         if(t.getAttribute("data-find-flat")) {state.findFlat=!state.findFlat;render();return;}
@@ -1055,6 +1147,8 @@ a{color:inherit;text-decoration:none}
       state.selected=h.selected||null;
       state.query=h.query||"";
       state.rank=h.rank||"최신";
+      state.homeExpanded=!!h.homeExpanded;
+      state.homePage=Number(h.homePage||0);
       state.findGenre=h.findGenre||"전체";
       state.findShowTails=!!h.findShowTails;
       state.findFlat=!!h.findFlat;
@@ -1162,6 +1256,7 @@ a{color:inherit;text-decoration:none}
   migrateData();
   ensureDemoSeries();
   ensureDiscoveryDemoTails();
+  ensureHomeDemoWorks();
   migrateData();
   try { history.replaceState(navSnapshot(),"",location.href); } catch(e) {}
   render();
