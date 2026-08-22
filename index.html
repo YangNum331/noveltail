@@ -422,7 +422,7 @@ a{color:inherit;text-decoration:none}
 .swipe-dot.on{width:17px;background:#222}
 .swipe-hint{text-align:center;color:#9a9a9a;font-size:10px;font-weight:650;margin-top:7px}
 .home-list-frame{overflow:hidden!important}
-.home-swipe-zone{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;user-select:none;-webkit-user-select:none;min-height:232px;transform:translateZ(0)}
+.home-swipe-zone{--home-swipe-gap:16px;display:flex;gap:var(--home-swipe-gap);overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:auto;scroll-padding-inline:0;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;user-select:none;-webkit-user-select:none;min-height:232px;transform:translateZ(0);will-change:scroll-position}
 .home-swipe-zone::-webkit-scrollbar{display:none}
 .home-swipe-page{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always}
 .home-swipe-page>.list{width:100%;min-width:0}
@@ -2162,20 +2162,38 @@ a{color:inherit;text-decoration:none}
   });
 
 
-  // 홈 작품 목록은 네이티브 가로 스크롤을 사용한다.
-  // 손가락을 그대로 따라오고, scroll-snap-stop으로 한 페이지씩만 가볍게 걸리도록 한다.
-  var homeClickBlockedUntil=0,homeSnapTimer=null;
+  // 홈 작품 캐러셀은 브라우저 네이티브 스크롤만 사용한다.
+  // JS가 스크롤 위치를 강제로 끌어당기지 않으며 CSS scroll-snap만으로 한 페이지씩 정렬한다.
+  // 페이지 사이에는 실제 여백을 두어 스와이프 경계가 답답하지 않게 보이도록 한다.
+  var homeClickBlockedUntil=0;
 
   function homePageCount(){
     var arr=rootWorks(),pageSize=state.homeExpanded?20:5;
     return Math.max(1,Math.ceil(arr.length/pageSize));
   }
 
+  function homeSwipePages(zone){
+    return zone ? Array.prototype.slice.call(zone.querySelectorAll('.home-swipe-page')) : [];
+  }
+
+  function homePageLeft(zone,pageEl){
+    if(!zone || !pageEl) return 0;
+    return zone.scrollLeft + pageEl.getBoundingClientRect().left - zone.getBoundingClientRect().left;
+  }
+
+  function nearestHomePage(zone){
+    var pages=homeSwipePages(zone),left=zone?zone.scrollLeft:0,best=0,bestDist=Infinity,i,d;
+    for(i=0;i<pages.length;i++) {
+      d=Math.abs(left-homePageLeft(zone,pages[i]));
+      if(d<bestDist){bestDist=d;best=i;}
+    }
+    return best;
+  }
+
   function updateHomeSwipeUI(zone){
     if(!zone) return;
-    var width=Math.max(1,zone.clientWidth),total=homePageCount();
-    var page=Math.max(0,Math.min(total-1,Math.round(zone.scrollLeft/width)));
-    if(page!==state.homePage) state.homePage=page;
+    var total=homePageCount(),page=Math.max(0,Math.min(total-1,nearestHomePage(zone)));
+    state.homePage=page;
     var dots=document.getElementById("homeDots"),status=document.getElementById("homePageStatus");
     if(dots) dots.innerHTML=swipeDotsHTML(page,total,'작품');
     if(status) status.textContent=(page+1)+' / '+total+' · 좌우로 넘기기';
@@ -2185,45 +2203,42 @@ a{color:inherit;text-decoration:none}
     var zone=document.querySelector('[data-home-swipe="1"]');
     if(!zone || zone.dataset.boundSwipe==="1") return;
     zone.dataset.boundSwipe="1";
-    var startX=0,startY=0,moved=false,pointerDown=false;
+    var startX=0,startY=0,moved=false,pointerDown=false,raf=0;
 
     requestAnimationFrame(function(){
-      var width=Math.max(1,zone.clientWidth);
-      zone.scrollLeft=state.homePage*width;
+      var pages=homeSwipePages(zone),page=Math.max(0,Math.min(pages.length-1,state.homePage));
+      if(pages[page]) zone.scrollLeft=homePageLeft(zone,pages[page]);
       updateHomeSwipeUI(zone);
     });
 
     zone.addEventListener("scroll",function(){
-      updateHomeSwipeUI(zone);
-      clearTimeout(homeSnapTimer);
-      homeSnapTimer=setTimeout(function(){
-        if(pointerDown || document.querySelector('[data-home-swipe="1"]')!==zone) return;
-        var width=Math.max(1,zone.clientWidth),page=Math.max(0,Math.min(homePageCount()-1,Math.round(zone.scrollLeft/width)));
-        var target=page*width;
-        if(Math.abs(zone.scrollLeft-target)>1) zone.scrollTo({left:target,behavior:"smooth"});
-      },75);
+      if(raf) return;
+      raf=requestAnimationFrame(function(){
+        raf=0;
+        updateHomeSwipeUI(zone);
+      });
     },{passive:true});
 
     zone.addEventListener("pointerdown",function(e){
-      pointerDown=true;moved=false;startX=e.clientX;startY=e.clientY;clearTimeout(homeSnapTimer);
+      pointerDown=true;moved=false;startX=e.clientX;startY=e.clientY;
     },{passive:true});
     zone.addEventListener("pointermove",function(e){
       if(!pointerDown) return;
       var dx=e.clientX-startX,dy=e.clientY-startY;
-      if(Math.abs(dx)>8 && Math.abs(dx)>Math.abs(dy)*1.08){moved=true;homeClickBlockedUntil=Date.now()+220;}
+      if(Math.abs(dx)>9 && Math.abs(dx)>Math.abs(dy)*1.08){
+        moved=true;
+        homeClickBlockedUntil=Date.now()+240;
+      }
     },{passive:true});
     function end(){
       pointerDown=false;
-      if(moved) homeClickBlockedUntil=Date.now()+220;
-      clearTimeout(homeSnapTimer);
-      homeSnapTimer=setTimeout(function(){
-        if(document.querySelector('[data-home-swipe="1"]')!==zone) return;
-        var width=Math.max(1,zone.clientWidth),page=Math.max(0,Math.min(homePageCount()-1,Math.round(zone.scrollLeft/width)));
-        zone.scrollTo({left:page*width,behavior:"smooth"});
-      },35);
+      if(moved) homeClickBlockedUntil=Date.now()+240;
+      // 위치 보정은 하지 않는다. 네이티브 관성 + CSS scroll-snap이 끝까지 담당한다.
+      requestAnimationFrame(function(){updateHomeSwipeUI(zone);});
     }
     zone.addEventListener("pointerup",end,{passive:true});
     zone.addEventListener("pointercancel",end,{passive:true});
+    if('onscrollend' in zone) zone.addEventListener('scrollend',function(){updateHomeSwipeUI(zone);},{passive:true});
   }
 
   // 시리즈 회차는 별도 전역 감지로 두되 홈/이벤트 영역에서는 시작하지 않는다.
