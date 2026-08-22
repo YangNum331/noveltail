@@ -103,6 +103,8 @@ a{color:inherit;text-decoration:none}
 .write-choice-btn.tail-type .choice-title{font-size:12px}
 .write-choice-hidden{display:none!important}
 .write-choice-note{margin-top:7px;font-size:10px;line-height:1.55;color:var(--muted)}
+.write-choice-note.genre-limit{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.write-choice-note.genre-limit strong{color:#333;font-size:10px}
 @media(min-width:520px){.write-choice-grid.genre{grid-template-columns:repeat(3,minmax(0,1fr))}.write-choice-grid.tail-types{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .hidden{display:none!important}
 .field{margin-bottom:15px}
@@ -391,7 +393,7 @@ a{color:inherit;text-decoration:none}
 
 /* Swipe-first browsing */
 .event-carousel{--event-gap:10px;--event-peek:28px;margin:0 0 18px;user-select:none;-webkit-user-select:none}
-.event-viewport{display:flex;gap:var(--event-gap);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:0;overscroll-behavior-x:contain;padding:0 0 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;box-sizing:border-box}
+.event-viewport{display:flex;gap:var(--event-gap);overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scroll-padding-inline:0;overscroll-behavior-x:contain;padding:0 0 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;box-sizing:border-box}
 .event-viewport::-webkit-scrollbar{display:none}
 .event-banner{display:block;flex:0 0 calc(100% - var(--event-peek));scroll-snap-align:start;scroll-snap-stop:always;padding:0;border:0;background:transparent;border-radius:14px;overflow:hidden;cursor:pointer;text-align:left;transform:translateZ(0);transition:transform .24s cubic-bezier(.2,.8,.25,1),opacity .24s ease}
 .event-banner:last-child{margin-right:var(--event-peek)}
@@ -420,14 +422,17 @@ a{color:inherit;text-decoration:none}
 .swipe-dot.on{width:17px;background:#222}
 .swipe-hint{text-align:center;color:#9a9a9a;font-size:10px;font-weight:650;margin-top:7px}
 .home-list-frame{overflow:hidden!important}
-.home-swipe-zone{touch-action:pan-y;user-select:none;-webkit-user-select:none;min-height:232px;transform:translate3d(0,0,0)}
+.home-swipe-zone{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;user-select:none;-webkit-user-select:none;min-height:232px;transform:translateZ(0)}
+.home-swipe-zone::-webkit-scrollbar{display:none}
+.home-swipe-page{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always}
+.home-swipe-page>.list{width:100%;min-width:0}
 .home-feed .home-pager{display:none!important}
 .home-page-status-swipe{text-align:center;font-size:10px;color:#8d8d8d;font-weight:700;margin-top:3px}
 .reader[data-episode-swipe="1"]{touch-action:pan-y}
 .episode-swipe-status{display:flex;justify-content:center;align-items:center;gap:7px;color:#999;font-size:10px;font-weight:700;padding:9px 0 2px}
 .episode-swipe-status .mini-line{width:18px;height:1px;background:#d8d8d8}
 @media(max-width:420px){.event-banner img{aspect-ratio:15/5}.event-carousel{margin-bottom:15px}}
-@media(prefers-reduced-motion:reduce){.event-banner,.home-swipe-zone,.swipe-dot{transition:none!important}}
+@media(prefers-reduced-motion:reduce){.event-banner,.swipe-dot{transition:none!important}.home-swipe-zone{scroll-behavior:auto}}
 
 </style>
 </head>
@@ -493,7 +498,7 @@ a{color:inherit;text-decoration:none}
 (function () {
   "use strict";
 
-  var APP_BUILD = "20260822-home-swipe-smooth-v5";
+  var APP_BUILD = "20260822-multigenre-native-swipe-v6";
   var STORAGE_KEY = "kkori_mobile_safe_v1";
   var MINE_KEY = "kkori_mine_safe_v1";
   var GENRE_PREF_KEY = "kkori_genre_tabs_v1";
@@ -934,6 +939,13 @@ a{color:inherit;text-decoration:none}
     for(i=0;i<data.length;i++) {
       s=data[i];
       if(s.genre==="코미디") s.genre="개그";
+      if(Array.isArray(s.genres)) {
+        s.genres=storyGenres(s);
+        s.genre=s.genres[0];
+      } else {
+        s.genres=storyGenres(s);
+        s.genre=s.genres[0];
+      }
       if(!s.format) s.format=s.p?"tail":"short";
       if(s.official && s.format!=="series") s.format="series";
       if(!s.lineage) s.lineage=s.p?"tail":"first";
@@ -1302,8 +1314,15 @@ a{color:inherit;text-decoration:none}
     return '<div class="card home-slot-empty" aria-hidden="true"><button type="button" disabled tabindex="-1"><div class="card-row"><div class="title">&nbsp;</div><div class="views">&nbsp;</div></div></button></div>';
   }
 
+  function homePageCardsHTML(arr,page,pageSize) {
+    var start=page*pageSize,shown=arr.slice(start,Math.min(start+pageSize,arr.length)),html="",i;
+    for(i=0;i<shown.length;i++) html+=cardHTML(shown[i]);
+    for(i=shown.length;i<pageSize;i++) html+=homeEmptySlotHTML();
+    return html;
+  }
+
   function homeHTML() {
-    var arr=[],i,s,cards="",rankButtons="",shown=[],totalPages=1,start=0,end=0,pageSize=state.homeExpanded?20:5;
+    var arr=[],i,s,rankButtons="",totalPages=1,pageSize=state.homeExpanded?20:5,pages="";
     for(i=0;i<data.length;i++) {
       s=data[i];
       if(s.lineage==="tail") continue;
@@ -1318,24 +1337,43 @@ a{color:inherit;text-decoration:none}
     totalPages=Math.max(1,Math.ceil(arr.length/pageSize));
     if(state.homePage>=totalPages) state.homePage=totalPages-1;
     if(state.homePage<0) state.homePage=0;
-    start=state.homePage*pageSize;
-    end=Math.min(start+pageSize,arr.length);
-    shown=arr.slice(start,end);
-    for(i=0;i<shown.length;i++) cards+=cardHTML(shown[i]);
-    for(i=shown.length;i<pageSize;i++) cards+=homeEmptySlotHTML();
+    for(i=0;i<totalPages;i++) pages+='<div class="home-swipe-page" data-home-page-index="'+i+'"><div class="list">'+homePageCardsHTML(arr,i,pageSize)+'</div></div>';
     ["최신","인기"].forEach(function(x){rankButtons+='<button class="pill '+(state.rank===x?'on':'')+'" data-rank="'+x+'">'+x+'</button>';});
     return '<main class="wrap">'+
       eventCarouselHTML()+
-      '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame"><div class="home-swipe-zone" data-home-swipe="1"><div class="list">'+cards+'</div></div>'+swipeDotsHTML(state.homePage,totalPages,'작품')+'<div class="home-page-status-swipe">'+(state.homePage+1)+' / '+totalPages+' · 좌우로 넘기기</div></div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
+      '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame"><div class="home-swipe-zone" data-home-swipe="1">'+pages+'</div><div id="homeDots">'+swipeDotsHTML(state.homePage,totalPages,'작품')+'</div><div class="home-page-status-swipe" id="homePageStatus">'+(state.homePage+1)+' / '+totalPages+' · 좌우로 넘기기</div></div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
       '<div class="ad-slot">광고 영역</div>'+ 
       '<section class="home-about" id="projectIntro"><div class="home-about-copy"><div class="home-about-kicker">NOVELTAIL · 노벨테일</div><strong>읽은 이야기를, 다음 이야기로.</strong><p>첫 작품에서 꼬리가 이어지는 공동창작 플랫폼입니다.</p></div><button class="home-about-btn" type="button" data-info-toggle="1">서비스 안내 →</button></section>'+ 
       '</main>';
   }
 
-  function inheritedGenre(s) {
-    var root=sourceRootFor(s);
-    var g=(root&&root.genre)||s.genre||"기타";
+  function normalizedGenreName(g) {
+    g=String(g||"").trim();
     return g==="코미디"?"개그":g;
+  }
+
+  function storyGenres(s) {
+    var src=s&&Array.isArray(s.genres)?s.genres:(s&&s.genre?[s.genre]:[]),out=[],seen={},i,g;
+    for(i=0;i<src.length && out.length<3;i++) {
+      g=normalizedGenreName(src[i]);
+      if(!g || seen[g]) continue;
+      seen[g]=true;out.push(g);
+    }
+    if(!out.length) out.push("기타");
+    return out;
+  }
+
+  function inheritedGenres(s) {
+    var root=sourceRootFor(s);
+    return storyGenres(root||s);
+  }
+
+  function inheritedGenre(s) {
+    return inheritedGenres(s)[0];
+  }
+
+  function genreLabel(s) {
+    return inheritedGenres(s).join(" · ");
   }
 
   function rootWorks() {
@@ -1404,9 +1442,9 @@ a{color:inherit;text-decoration:none}
     normalizeFindGenre();
     for(i=0;i<arr.length;i++) {
       s=arr[i];
-      if(state.findGenre!=="전체" && inheritedGenre(s)!==state.findGenre) continue;
+      if(state.findGenre!=="전체" && inheritedGenres(s).indexOf(state.findGenre)===-1) continue;
       if(q) {
-        var hay=(displayTitle(s)+" "+(s.title||"")+" "+(s.pen||"")+" "+inheritedGenre(s)+" "+(s.type||"")).toLowerCase();
+        var hay=(displayTitle(s)+" "+(s.title||"")+" "+(s.pen||"")+" "+inheritedGenres(s).join(" ")+" "+(s.type||"")).toLowerCase();
         if(hay.indexOf(q)===-1) continue;
       }
       filtered.push(s);
@@ -1565,7 +1603,7 @@ a{color:inherit;text-decoration:none}
     }
     tailDisclosure=tailDisclosureHTML(root);
     back=root.p?' data-story="'+esc(root.p)+'"':' data-view="home"';
-    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="work-topline"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div>'+bookmarkButtonHTML(root)+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta">'+authorLinkHTML(profileForStory(root))+'<span>'+esc(root.genre)+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+workFanartSectionHTML(root)+'</main>';
+    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="work-topline"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div>'+bookmarkButtonHTML(root)+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta">'+authorLinkHTML(profileForStory(root))+'<span>'+esc(genreLabel(root))+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+workFanartSectionHTML(root)+'</main>';
   }
   function seriesEpisodeForm(rootId) {
     var root=getStory(rootId),eps=root?seriesEpisodes(root.seriesId):[],next=eps.length+1;
@@ -1600,7 +1638,7 @@ a{color:inherit;text-decoration:none}
       else if(policyFor(s).policy==="noncommercial") currentRoyalty='<div class="notice">이 꼬리 작품은 비상업 작품입니다.</div>';
     }
     tailDisclosure=tailDisclosureHTML(s);
-    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader" '+(isSeriesEpisode(s)?'data-episode-swipe="1"':'')+'><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(displayEpisodeTitle(s))+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div>'+(isSeriesEpisode(s)?'<div class="episode-swipe-status"><span class="mini-line"></span><span>'+s.episode+' / '+episodeTotal+' · 좌우로 회차 이동</span><span class="mini-line"></span></div>':'')+'</article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader" '+(isSeriesEpisode(s)?'data-episode-swipe="1"':'')+'><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(displayEpisodeTitle(s))+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(genreLabel(s))+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div>'+(isSeriesEpisode(s)?'<div class="episode-swipe-status"><span class="mini-line"></span><span>'+s.episode+' / '+episodeTotal+' · 좌우로 회차 이동</span><span class="mini-line"></span></div>':'')+'</article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
   function workFanartSectionHTML(work) {
     if(!FEATURES.fanart) return "";
@@ -1623,9 +1661,9 @@ a{color:inherit;text-decoration:none}
   }
 
   function genreChoiceHTML() {
-    var html='<input class="write-choice-hidden" type="hidden" name="genre" value="'+esc(genres[0])+'"><div class="write-choice-grid genre">',i;
-    for(i=0;i<genres.length;i++) html+=writeChoiceButton('genre',genres[i],genres[i],'',i===0,'');
-    return html+'</div>';
+    var html='<input class="write-choice-hidden" type="hidden" name="genre" value="'+esc(genres[0])+'"><input class="write-choice-hidden" type="hidden" name="genres" value="'+esc(genres[0])+'"><div class="write-choice-grid genre">',i;
+    for(i=0;i<genres.length;i++) html+='<button class="write-choice-btn '+(i===0?'on':'')+'" type="button" data-genre-choice="'+esc(genres[i])+'" aria-pressed="'+(i===0?'true':'false')+'"><span class="choice-title">'+esc(genres[i])+'</span></button>';
+    return html+'</div><div class="write-choice-note genre-limit"><span>최대 3개 · 다시 누르면 해제</span><strong data-genre-count>1 / 3</strong></div>';
   }
 
   function tailTypeChoiceHTML() {
@@ -1837,6 +1875,8 @@ a{color:inherit;text-decoration:none}
     var fd=new FormData(form),id="s"+Date.now()+Math.floor(Math.random()*10000);
     var title=String(fd.get("title")||"").trim(),body=String(fd.get("body")||"").trim();
     var format=String(fd.get("format")||"short"),isTail=!!p,pol=isTail?policyFor(p):null;
+    var selectedGenres=isTail?inheritedGenres(p):String(fd.get("genres")||fd.get("genre")||"기타").split(",").map(normalizedGenreName).filter(Boolean).slice(0,3);
+    if(!selectedGenres.length) selectedGenres=["기타"];
     if(!title || !body) return;
     if(isTail && pol.policy==="deny") return;
     if(format==="series") {
@@ -1844,13 +1884,13 @@ a{color:inherit;text-decoration:none}
       if(!epTitle) return;
       var seriesId="series"+Date.now()+Math.floor(Math.random()*1000);
       var src=isTail?pol.root:null;
-      var root={id:id,p:isTail?p.id:null,root:id,sourceRootId:isTail&&src?src.id:id,lineage:isTail?"tail":"first",format:"series",official:true,seriesId:seriesId,seriesTitle:title,episode:1,type:isTail?String(fd.get("type")||"다음 화"):null,title:"1화. "+epTitle,genre:isTail?p.genre:String(fd.get("genre")||"기타"),pen:String(fd.get("pen")||"").trim()||("익명 "+Math.floor(1000+Math.random()*9000)),desc:String(fd.get("desc")||"").trim()||"새로운 시리즈",body:body,views:0,likes:0,date:Date.now(),comments:[]};
+      var root={id:id,p:isTail?p.id:null,root:id,sourceRootId:isTail&&src?src.id:id,lineage:isTail?"tail":"first",format:"series",official:true,seriesId:seriesId,seriesTitle:title,episode:1,type:isTail?String(fd.get("type")||"다음 화"):null,title:"1화. "+epTitle,genre:selectedGenres[0],genres:selectedGenres.slice(),pen:String(fd.get("pen")||"").trim()||("익명 "+Math.floor(1000+Math.random()*9000)),desc:String(fd.get("desc")||"").trim()||"새로운 시리즈",body:body,views:0,likes:0,date:Date.now(),comments:[]};
       if(isTail) {var rp=royaltyPlanForNewTail(p);root.revenueRootShare=rp.rootShare;root.revenueParentShare=rp.parentShare;root.revenueCreatorShare=rp.creatorShare;root.revenueParentId=rp.parentShare&&p?p.id:null;}
       if(!isTail) {root.tailPolicy=String(fd.get("tailPolicy")||"commercial");root.royalty=root.tailPolicy==="commercial"?10:0;}
       data.unshift(root);saveData();addMine(id);state.selected=id;go("series");return;
     }
     var srcRoot=isTail?pol.root:null;
-    var story={id:id,p:isTail?p.id:null,root:isTail&&srcRoot?srcRoot.id:id,sourceRootId:isTail&&srcRoot?srcRoot.id:id,lineage:isTail?"tail":"first",format:isTail?"tail":"short",official:false,type:isTail?String(fd.get("type")||"다음 화"):null,title:title,genre:isTail?p.genre:String(fd.get("genre")||"기타"),pen:String(fd.get("pen")||"").trim()||("익명 "+Math.floor(1000+Math.random()*9000)),desc:String(fd.get("desc")||"").trim()||"새로운 이야기",body:body,views:0,likes:0,date:Date.now(),comments:[]};
+    var story={id:id,p:isTail?p.id:null,root:isTail&&srcRoot?srcRoot.id:id,sourceRootId:isTail&&srcRoot?srcRoot.id:id,lineage:isTail?"tail":"first",format:isTail?"tail":"short",official:false,type:isTail?String(fd.get("type")||"다음 화"):null,title:title,genre:selectedGenres[0],genres:selectedGenres.slice(),pen:String(fd.get("pen")||"").trim()||("익명 "+Math.floor(1000+Math.random()*9000)),desc:String(fd.get("desc")||"").trim()||"새로운 이야기",body:body,views:0,likes:0,date:Date.now(),comments:[]};
     if(isTail) {var rp2=royaltyPlanForNewTail(p);story.revenueRootShare=rp2.rootShare;story.revenueParentShare=rp2.parentShare;story.revenueCreatorShare=rp2.creatorShare;story.revenueParentId=rp2.parentShare&&p?p.id:null;}
     if(!isTail) {story.tailPolicy=String(fd.get("tailPolicy")||"commercial");story.royalty=story.tailPolicy==="commercial"?10:0;}
     data.unshift(story);saveData();addMine(id);state.selected=id;go("story");
@@ -1863,7 +1903,7 @@ a{color:inherit;text-decoration:none}
     var epTitle=String(fd.get("episodeTitle")||"").trim(),body=String(fd.get("body")||"").trim();
     if(!epTitle || !body) return;
     var id="s"+Date.now()+Math.floor(Math.random()*10000);
-    var ep={id:id,p:null,root:root.id,sourceRootId:root.sourceRootId||root.id,lineage:root.lineage||"first",format:"series",official:true,seriesId:root.seriesId,seriesTitle:root.seriesTitle,episode:next,type:null,title:next+"화. "+epTitle,genre:root.genre,pen:root.pen,desc:"",body:body,views:0,likes:0,date:Date.now(),comments:[]};
+    var ep={id:id,p:null,root:root.id,sourceRootId:root.sourceRootId||root.id,lineage:root.lineage||"first",format:"series",official:true,seriesId:root.seriesId,seriesTitle:root.seriesTitle,episode:next,type:null,title:next+"화. "+epTitle,genre:storyGenres(root)[0],genres:storyGenres(root),pen:root.pen,desc:"",body:body,views:0,likes:0,date:Date.now(),comments:[]};
     data.unshift(ep);saveData();addMine(id);state.selected=root.id;go("series");
   }
 
@@ -1934,6 +1974,31 @@ a{color:inherit;text-decoration:none}
             if(navIndex>0) history.back();
             else go("home");
           } else go("info");
+          return;
+        }
+        if(t.getAttribute("data-genre-choice")!==null) {
+          var genreValue=t.getAttribute("data-genre-choice"),genreForm=t.closest?t.closest("form"):null;
+          if(genreForm) {
+            var genrePeers=genreForm.querySelectorAll('[data-genre-choice]'),selected=[],gi;
+            for(gi=0;gi<genrePeers.length;gi++) if(genrePeers[gi].classList.contains("on")) selected.push(genrePeers[gi].getAttribute("data-genre-choice"));
+            var already=t.classList.contains("on");
+            if(already) {
+              if(selected.length<=1) return;
+              t.classList.remove("on");t.setAttribute("aria-pressed","false");
+            } else {
+              if(selected.length>=3) {
+                t.animate&&t.animate([{transform:"scale(1)"},{transform:"scale(.97)"},{transform:"scale(1)"}],{duration:160,easing:"ease-out"});
+                return;
+              }
+              t.classList.add("on");t.setAttribute("aria-pressed","true");
+            }
+            selected=[];
+            for(gi=0;gi<genrePeers.length;gi++) if(genrePeers[gi].classList.contains("on")) selected.push(genrePeers[gi].getAttribute("data-genre-choice"));
+            var genresHidden=genreForm.querySelector('input[name="genres"]'),genreHidden=genreForm.querySelector('input[name="genre"]'),counter=genreForm.querySelector('[data-genre-count]');
+            if(genresHidden) genresHidden.value=selected.join(",");
+            if(genreHidden) genreHidden.value=selected[0]||"기타";
+            if(counter) counter.textContent=selected.length+" / 3";
+          }
           return;
         }
         if(t.getAttribute("data-write-choice")) {
@@ -2097,80 +2162,68 @@ a{color:inherit;text-decoration:none}
   });
 
 
-  // 홈 작품 스와이프는 홈 목록 요소에만 직접 바인딩한다.
-  // 이벤트 캐러셀의 네이티브 가로 스크롤과 완전히 분리해 서로 간섭하지 않는다.
-  var homeClickBlockedUntil=0;
+  // 홈 작품 목록은 네이티브 가로 스크롤을 사용한다.
+  // 손가락을 그대로 따라오고, scroll-snap-stop으로 한 페이지씩만 가볍게 걸리도록 한다.
+  var homeClickBlockedUntil=0,homeSnapTimer=null;
 
   function homePageCount(){
     var arr=rootWorks(),pageSize=state.homeExpanded?20:5;
     return Math.max(1,Math.ceil(arr.length/pageSize));
   }
 
-  function animateHomePageChange(zone,direction){
-    var total=homePageCount(),next=state.homePage+direction;
-    if(next<0 || next>=total) return;
-    homeClickBlockedUntil=Date.now()+320;
-
-    var outX=direction>0?-28:28;
-    var inX=direction>0?28:-28;
-    var finish=function(){
-      state.homePage=next;
-      render();
-      requestAnimationFrame(function(){
-        var fresh=document.querySelector('[data-home-swipe="1"]');
-        if(!fresh) return;
-        if(fresh.animate){
-          fresh.animate([
-            {transform:'translate3d('+inX+'px,0,0)',opacity:.82},
-            {transform:'translate3d(0,0,0)',opacity:1}
-          ],{duration:190,easing:'cubic-bezier(.22,.61,.36,1)',fill:'none'});
-        }
-      });
-    };
-
-    if(zone && zone.animate){
-      var anim=zone.animate([
-        {transform:'translate3d(0,0,0)',opacity:1},
-        {transform:'translate3d('+outX+'px,0,0)',opacity:.82}
-      ],{duration:150,easing:'cubic-bezier(.22,.61,.36,1)',fill:'forwards'});
-      anim.onfinish=finish;
-      anim.oncancel=finish;
-    } else {
-      finish();
-    }
+  function updateHomeSwipeUI(zone){
+    if(!zone) return;
+    var width=Math.max(1,zone.clientWidth),total=homePageCount();
+    var page=Math.max(0,Math.min(total-1,Math.round(zone.scrollLeft/width)));
+    if(page!==state.homePage) state.homePage=page;
+    var dots=document.getElementById("homeDots"),status=document.getElementById("homePageStatus");
+    if(dots) dots.innerHTML=swipeDotsHTML(page,total,'작품');
+    if(status) status.textContent=(page+1)+' / '+total+' · 좌우로 넘기기';
   }
 
   function bindHomeSwipeGesture(){
     var zone=document.querySelector('[data-home-swipe="1"]');
     if(!zone || zone.dataset.boundSwipe==="1") return;
     zone.dataset.boundSwipe="1";
-    var drag=null;
+    var startX=0,startY=0,moved=false,pointerDown=false;
+
+    requestAnimationFrame(function(){
+      var width=Math.max(1,zone.clientWidth);
+      zone.scrollLeft=state.homePage*width;
+      updateHomeSwipeUI(zone);
+    });
+
+    zone.addEventListener("scroll",function(){
+      updateHomeSwipeUI(zone);
+      clearTimeout(homeSnapTimer);
+      homeSnapTimer=setTimeout(function(){
+        if(pointerDown || document.querySelector('[data-home-swipe="1"]')!==zone) return;
+        var width=Math.max(1,zone.clientWidth),page=Math.max(0,Math.min(homePageCount()-1,Math.round(zone.scrollLeft/width)));
+        var target=page*width;
+        if(Math.abs(zone.scrollLeft-target)>1) zone.scrollTo({left:target,behavior:"smooth"});
+      },75);
+    },{passive:true});
 
     zone.addEventListener("pointerdown",function(e){
-      if(e.pointerType==="mouse" && e.button!==0) return;
-      drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};
-      try{zone.setPointerCapture(e.pointerId);}catch(err){}
+      pointerDown=true;moved=false;startX=e.clientX;startY=e.clientY;clearTimeout(homeSnapTimer);
     },{passive:true});
-
     zone.addEventListener("pointermove",function(e){
-      if(!drag || e.pointerId!==drag.id) return;
-      var dx=e.clientX-drag.x,dy=e.clientY-drag.y;
-      if(Math.abs(dx)>10 && Math.abs(dx)>Math.abs(dy)*1.15){
-        drag.moved=true;
-        homeClickBlockedUntil=Date.now()+280;
-      }
+      if(!pointerDown) return;
+      var dx=e.clientX-startX,dy=e.clientY-startY;
+      if(Math.abs(dx)>8 && Math.abs(dx)>Math.abs(dy)*1.08){moved=true;homeClickBlockedUntil=Date.now()+220;}
     },{passive:true});
-
-    function finish(e){
-      if(!drag || (e.pointerId!=null && e.pointerId!==drag.id)) return;
-      var dx=e.clientX-drag.x,dy=e.clientY-drag.y,moved=drag.moved;
-      drag=null;
-      if(!moved || Math.abs(dx)<48 || Math.abs(dx)<Math.abs(dy)*1.2) return;
-      animateHomePageChange(zone,dx<0?1:-1);
+    function end(){
+      pointerDown=false;
+      if(moved) homeClickBlockedUntil=Date.now()+220;
+      clearTimeout(homeSnapTimer);
+      homeSnapTimer=setTimeout(function(){
+        if(document.querySelector('[data-home-swipe="1"]')!==zone) return;
+        var width=Math.max(1,zone.clientWidth),page=Math.max(0,Math.min(homePageCount()-1,Math.round(zone.scrollLeft/width)));
+        zone.scrollTo({left:page*width,behavior:"smooth"});
+      },35);
     }
-
-    zone.addEventListener("pointerup",finish,{passive:true});
-    zone.addEventListener("pointercancel",function(){drag=null;},{passive:true});
+    zone.addEventListener("pointerup",end,{passive:true});
+    zone.addEventListener("pointercancel",end,{passive:true});
   }
 
   // 시리즈 회차는 별도 전역 감지로 두되 홈/이벤트 영역에서는 시작하지 않는다.
