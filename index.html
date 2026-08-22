@@ -1403,7 +1403,7 @@ a{color:inherit;text-decoration:none}
       if(state.rank==="인기") return (displayViews(b)+Number(b.likes||0)*3)-(displayViews(a)+Number(a.likes||0)*3);
       return Number(b.date||0)-Number(a.date||0);
     });
-    totalPages=Math.max(1,Math.ceil(arr.length/pageSize));
+    totalPages=Math.min(10,Math.max(1,Math.ceil(arr.length/pageSize)));
     if(state.homePage>=totalPages) state.homePage=totalPages-1;
     if(state.homePage<0) state.homePage=0;
     for(i=0;i<totalPages;i++) pages+='<div class="home-swipe-page" data-home-page-index="'+i+'"><div class="list">'+homePageCardsHTML(arr,i,pageSize)+'</div></div>';
@@ -2373,7 +2373,7 @@ a{color:inherit;text-decoration:none}
 
   function homePageCount(){
     var arr=rootWorks(),pageSize=state.homeExpanded?20:5;
-    return Math.max(1,Math.ceil(arr.length/pageSize));
+    return Math.min(10,Math.max(1,Math.ceil(arr.length/pageSize)));
   }
 
   function homeSwipePages(zone){
