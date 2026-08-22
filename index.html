@@ -351,7 +351,43 @@ a{color:inherit;text-decoration:none}
 .email-signup-error{display:none;margin:0 0 12px;padding:10px 12px;border-radius:9px;background:#fff3f3;border:1px solid #f1d0d0;color:#a13a3a;font-size:11px;line-height:1.55}
 .email-signup-error.show{display:block}
 .email-signup-note{margin:12px 2px 0;color:#999;font-size:9px;line-height:1.6;text-align:center}
-
+.inline-legal-links{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;margin-top:8px}
+.inline-legal-link{appearance:none;border:0;background:transparent;color:#666;font-size:10px;font-weight:750;padding:4px 3px;text-decoration:underline;text-underline-offset:3px}
+.work-actions{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.report-btn{appearance:none;border:1px solid var(--line-strong);background:#fff;border-radius:8px;padding:6px 9px;font-size:11px;font-weight:750;color:#777;white-space:nowrap}
+.report-btn:active{background:#f5f5f5}
+.report-page-head{margin:6px 0 20px}
+.report-page-head h1{margin:0;font-size:28px;letter-spacing:-.04em}
+.report-page-head p{margin:8px 0 0;color:#777;font-size:12px;line-height:1.65}
+.report-target{border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:18px;background:#fafafa}
+.report-target-label{font-size:9px;color:#999;font-weight:800;letter-spacing:.08em;margin-bottom:5px}
+.report-target-title{font-size:14px;font-weight:850;line-height:1.45}
+.report-target-meta{margin-top:5px;font-size:10px;color:#888}
+.report-reasons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.report-reason{appearance:none;border:1px solid var(--line-strong);background:#fff;border-radius:10px;min-height:48px;padding:10px 8px;font-size:11px;font-weight:800;text-align:center;line-height:1.35}
+.report-reason.on{background:#111;color:#fff;border-color:#111}
+.report-help{margin-top:7px;color:#999;font-size:9px;line-height:1.55}
+.report-form textarea{min-height:110px}
+.report-submit{width:100%;margin-top:4px}
+.report-success{padding:32px 0 8px;text-align:center}
+.report-success-mark{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 14px;background:#111;color:#fff;font-size:20px;font-weight:900}
+.report-success h1{margin:0;font-size:25px;letter-spacing:-.035em}
+.report-success p{margin:10px auto 20px;max-width:520px;color:#666;font-size:12px;line-height:1.7}
+.legal-head{margin:6px 0 22px}
+.legal-head h1{margin:0;font-size:30px;letter-spacing:-.045em}
+.legal-head p{margin:8px 0 0;color:#777;font-size:11px;line-height:1.65}
+.legal-draft{margin:0 0 18px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fafafa;color:#666;font-size:10px;line-height:1.65}
+.legal-section{padding:19px 0;border-top:1px solid var(--line)}
+.legal-section h2{margin:0 0 8px;font-size:15px;letter-spacing:-.02em}
+.legal-section p,.legal-section li{font-size:12px;color:#555;line-height:1.8}
+.legal-section p{margin:0}
+.legal-section ul{margin:8px 0 0;padding-left:20px}
+.legal-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0 2px}
+.legal-nav button{appearance:none;border:1px solid var(--line-strong);background:#fff;border-radius:10px;padding:11px;font-size:11px;font-weight:800}
+.legal-nav button.on{background:#111;color:#fff;border-color:#111}
+.info-legal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.info-legal-actions button{appearance:none;border:1px solid var(--line-strong);background:#fff;border-radius:9px;padding:10px;font-size:11px;font-weight:800}
+@media(max-width:360px){.report-reasons{grid-template-columns:1fr}}
 
 .profile-member-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px}
 .profile-member-badge{font-size:11px;font-weight:750;color:#555;border:1px solid var(--line-strong);border-radius:999px;padding:5px 8px}
@@ -541,6 +577,7 @@ a{color:inherit;text-decoration:none}
   var PROFILE_KEY = "noveltail_profile_v1";
   var CHAT_KEY = "noveltail_fake_chats_v1";
   var PAGE_TOOLS_OPEN_KEY = "noveltail_page_tools_open_v1";
+  var REPORT_KEY = "noveltail_reports_v1";
 
   // 기능 보관 스위치. 코드는 삭제하지 않고 UI/진입만 숨긴다.
   // 나중에 true로 바꾸면 팬아트/채팅 기능을 다시 노출할 수 있다.
@@ -577,7 +614,7 @@ a{color:inherit;text-decoration:none}
 
   var data = loadData();
   var fanarts = loadFanarts();
-  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, eventPage:0, eventSelected:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, findFilterOpen:false, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null, fanQuery:"", profileUser:null, profileTab:"works", chatUser:null};
+  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, eventPage:0, eventSelected:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, findFilterOpen:false, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null, fanQuery:"", profileUser:null, profileTab:"works", chatUser:null, reportTarget:null, reportDone:false};
 
   function saveData() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -1619,6 +1656,26 @@ a{color:inherit;text-decoration:none}
     if(!count) return "";
     return '<details class="tail-disclosure"><summary><span>꼬리보기</span><span class="tail-disclosure-count">하위 꼬리 '+count+'개</span></summary><div class="tail-disclosure-body">'+html+'</div></details>';
   }
+  function reportButtonHTML(s) {
+    if(!s || ownsStory(s.id)) return "";
+    return '<button class="report-btn" type="button" data-report-story="'+esc(s.id)+'">신고</button>';
+  }
+
+  function loadReports() {
+    try {
+      var raw=localStorage.getItem(REPORT_KEY),arr=raw?JSON.parse(raw):[];
+      return Array.isArray(arr)?arr:[];
+    } catch(e) { return []; }
+  }
+
+  function saveReport(record) {
+    try {
+      var arr=loadReports();
+      arr.push(record);
+      localStorage.setItem(REPORT_KEY,JSON.stringify(arr.slice(-100)));
+    } catch(e) {}
+  }
+
   function seriesHTML() {
     var root=getStory(state.selected),eps=[],rows="",i,total=0,p,royaltyBlock="",back="",tailDisclosure="";
     if(!root || !isSeriesRoot(root)) return homeHTML();
@@ -1634,7 +1691,7 @@ a{color:inherit;text-decoration:none}
     }
     tailDisclosure=tailDisclosureHTML(root);
     back=root.p?' data-story="'+esc(root.p)+'"':' data-view="home"';
-    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="work-topline"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div>'+bookmarkButtonHTML(root)+'</div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta">'+authorLinkHTML(profileForStory(root))+'<span>'+esc(genreLabel(root))+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+workFanartSectionHTML(root)+'</main>';
+    return '<main class="wrap"><button class="back"'+back+'>←</button><section class="series-head"><div class="work-topline"><div class="series-tags">'+originBadge(root)+seriesBadge()+'</div><div class="work-actions">'+bookmarkButtonHTML(root)+reportButtonHTML(root)+'</div></div><h1>'+esc(root.seriesTitle)+'</h1><div class="meta">'+authorLinkHTML(profileForStory(root))+'<span>'+esc(genreLabel(root))+'</span><span>총 '+eps.length+'화</span><span>'+fmt(total)+' 조회</span></div>'+tailDisclosure+'</section><div class="ad-slot work-ad-slot">광고 영역</div>'+royaltyBlock+'<section class="sec"><div class="head"><h2>공식 회차</h2><span class="muted">정사</span></div><div class="episode-list">'+rows+'</div></section>'+(ownsStory(root.id)?'<button class="btn primary" style="width:100%;margin-top:18px" data-seriesnext="'+esc(root.id)+'">공식 다음 화 추가</button>':'')+workFanartSectionHTML(root)+'</main>';
   }
   function seriesEpisodeForm(rootId) {
     var root=getStory(rootId),eps=root?seriesEpisodes(root.seriesId):[],next=eps.length+1;
@@ -1669,7 +1726,7 @@ a{color:inherit;text-decoration:none}
       else if(policyFor(s).policy==="noncommercial") currentRoyalty='<div class="notice">이 꼬리 작품은 비상업 작품입니다.</div>';
     }
     tailDisclosure=tailDisclosureHTML(s);
-    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader" '+(isSeriesEpisode(s)?'data-episode-swipe="1"':'')+'><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(displayEpisodeTitle(s))+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(genreLabel(s))+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div>'+(isSeriesEpisode(s)?'<div class="episode-swipe-status"><span class="mini-line"></span><span>'+s.episode+' / '+episodeTotal+' · 좌우로 회차 이동</span><span class="mini-line"></span></div>':'')+'</article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader" '+(isSeriesEpisode(s)?'data-episode-swipe="1"':'')+'><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div><div class="work-actions">'+bookmarkButtonHTML(s)+reportButtonHTML(s)+'</div></div><h1>'+esc(displayEpisodeTitle(s))+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(genreLabel(s))+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div>'+(isSeriesEpisode(s)?'<div class="episode-swipe-status"><span class="mini-line"></span><span>'+s.episode+' / '+episodeTotal+' · 좌우로 회차 이동</span><span class="mini-line"></span></div>':'')+'</article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
   function workFanartSectionHTML(work) {
     if(!FEATURES.fanart) return "";
@@ -1745,9 +1802,68 @@ a{color:inherit;text-decoration:none}
       '<section class="info-card"><h2>첫 · 꼬리 · 시리즈</h2><p><b>첫</b>은 이야기의 시작점, <b>꼬리</b>는 다른 작품에서 파생된 작품입니다. 첫과 꼬리 모두 단편 또는 시리즈가 될 수 있으며, 시리즈의 공식 회차는 꼬리와 별개인 정사 라인으로 유지됩니다.</p></section>'+ 
       '<section class="info-card"><h2>꼬리 작성 권한</h2><p>첫 작품 작성자는 다른 이용자의 꼬리 작성을 허용하거나 금지할 수 있습니다. 파생 작품은 첫 작품의 허용 여부를 계보 전체에서 따릅니다.</p></section>'+ 
       settlementInfo+
+      '<section class="info-card"><h2>신고와 운영</h2><p>작품 상세 화면의 <b>신고</b>에서 저작권 침해, 개인정보 노출, 불법·위험 콘텐츠, 혐오·괴롭힘, 도배 등을 신고할 수 있습니다. 신고된 콘텐츠는 운영정책에 따라 검토하는 구조를 준비하고 있습니다.</p></section>'+
+      '<section class="info-card"><h2>약관 및 정책</h2><p>서비스 이용과 꼬리 창작의 기본 권리관계, 금지 콘텐츠와 신고·제재 원칙을 별도 문서로 정리했습니다.</p><div class="info-legal-actions"><button type="button" data-legal-view="terms">이용약관</button><button type="button" data-legal-view="policy">운영정책</button></div></section>'+
       '<section class="info-card"><h2>앱처럼 사용하기</h2><p>상단의 <b>앱 설치</b>를 누르거나 브라우저 공유 메뉴에서 <b>홈 화면에 추가</b>를 선택하면 독립된 앱 화면으로 실행할 수 있습니다. 설치 후에는 일반 브라우저 주소창과 하단 도구막대가 표시되지 않습니다.</p></section>'+ 
       '<section class="info-card"><h2>현재 테스트판</h2><p>지금 버전은 브라우저 저장 기반 MVP입니다. 일부 기능은 실제 서비스 준비 단계에 맞춰 순차적으로 연결합니다.</p></section>'+ 
       '</div></main>';
+  }
+
+  function legalNavHTML(active) {
+    return '<div class="legal-nav"><button type="button" class="'+(active==="terms"?"on":"")+'" data-legal-view="terms">이용약관</button><button type="button" class="'+(active==="policy"?"on":"")+'" data-legal-view="policy">운영정책</button></div>';
+  }
+
+  function termsHTML() {
+    return '<main class="wrap"><button class="back" type="button" data-history-back="1">←</button>'+
+      '<div class="legal-head"><h1>이용약관</h1><p>NovelTail 서비스 이용과 창작물 게시에 관한 기본 조건</p></div>'+
+      '<div class="legal-draft"><b>서비스 준비용 초안 · 2026.08.22</b><br>실제 공개 런칭 전 운영 주체 정보, 개인정보 처리, 미성년자 이용, 분쟁 관할 등은 별도 법률 검토를 거쳐 확정해야 합니다.</div>'+
+      legalNavHTML("terms")+
+      '<section class="legal-section"><h2>1. 목적과 적용</h2><p>본 약관은 NovelTail에서 작품을 읽고, 게시하고, 다른 작품에 꼬리를 작성하는 등 서비스를 이용할 때 이용자와 운영자 사이의 기본 권리와 의무를 정하는 것을 목적으로 합니다.</p></section>'+
+      '<section class="legal-section"><h2>2. 계정</h2><ul><li>읽기와 일부 탐색 기능은 계정 없이 이용할 수 있습니다.</li><li>회원 전용 기능은 본인 계정으로 이용해야 하며, 계정의 안전한 관리 책임은 이용자에게 있습니다.</li><li>타인을 사칭하거나 다른 사람의 계정을 무단으로 이용해서는 안 됩니다.</li></ul></section>'+
+      '<section class="legal-section"><h2>3. 게시물과 저작권</h2><ul><li>이용자가 직접 창작한 작품의 저작권은 원칙적으로 해당 창작자에게 남습니다.</li><li>이용자는 자신이 게시할 권리를 가진 콘텐츠만 업로드해야 합니다.</li><li>서비스 제공에 필요한 범위에서 NovelTail이 게시물을 저장·복제·전송·화면에 표시하는 비독점적 이용을 허락합니다.</li></ul></section>'+
+      '<section class="legal-section"><h2>4. 꼬리 창작</h2><ul><li>첫 작품 작성자가 <b>꼬리 작성 허용</b>을 선택한 경우, 다른 이용자가 해당 작품을 바탕으로 NovelTail 안에서 꼬리 작품을 작성·게시할 수 있도록 허용한 것으로 봅니다.</li><li>꼬리 창작 허용은 원작의 저작권 자체를 이전하는 것이 아니며, NovelTail 밖에서의 이용이나 별도 상업 이용까지 자동으로 허용하는 것은 아닙니다.</li><li>꼬리 작성자가 새롭게 창작한 표현에 대한 권리는 해당 작성자에게 귀속될 수 있으나, 원작의 권리와 이용 조건을 침해해서는 안 됩니다.</li><li>원작의 꼬리 허용이 중단되면 이후 새로운 꼬리 작성은 제한될 수 있습니다.</li></ul></section>'+
+      '<section class="legal-section"><h2>5. 금지 행위</h2><ul><li>불법 콘텐츠, 타인의 저작권·초상권·개인정보 등 권리를 침해하는 게시</li><li>실질적인 협박, 괴롭힘, 혐오 조장, 성적 착취 또는 미성년자에게 부적절한 불법 콘텐츠</li><li>도배, 자동화된 스팸, 악성 광고, 서비스 장애를 유발하는 행위</li><li>신고 기능을 악의적으로 반복 이용하거나 운영 조치를 회피하는 행위</li></ul></section>'+
+      '<section class="legal-section"><h2>6. 신고와 콘텐츠 조치</h2><p>운영자는 신고, 권리자의 요청, 법적 의무 또는 자체 확인에 따라 게시물을 임시 제한·숨김·삭제하거나 계정 기능을 제한할 수 있습니다. 구체적인 판단 기준은 운영정책을 따릅니다.</p></section>'+
+      '<section class="legal-section"><h2>7. 삭제와 탈퇴</h2><p>이용자는 자신의 게시물 삭제 또는 회원 탈퇴를 요청할 수 있습니다. 다만 분쟁 처리, 법적 의무 이행, 부정 이용 방지를 위해 필요한 최소 기록은 일정 기간 보관될 수 있습니다. 원작이 삭제되거나 권리 분쟁 상태가 되면 새로운 꼬리 작성은 우선 중단하고 기존 파생작의 처리는 운영정책과 권리관계에 따라 판단합니다.</p></section>'+
+      '<section class="legal-section"><h2>8. 서비스 변경과 중단</h2><p>기능 개선, 보안, 법적 요구, 운영상 필요에 따라 일부 기능이 변경되거나 중단될 수 있습니다. 이용자에게 중대한 영향을 주는 변경은 가능한 범위에서 사전에 안내합니다.</p></section>'+
+      '<section class="legal-section"><h2>9. 약관 변경</h2><p>약관이 변경될 경우 적용일과 주요 변경 내용을 서비스 내에서 안내합니다. 실제 런칭 시 고지 기간과 동의 절차는 관련 법령에 맞춰 확정합니다.</p></section>'+
+      '</main>';
+  }
+
+  function policyHTML() {
+    return '<main class="wrap"><button class="back" type="button" data-history-back="1">←</button>'+
+      '<div class="legal-head"><h1>운영정책</h1><p>콘텐츠 신고, 검토, 제한과 계정 제재의 기본 원칙</p></div>'+
+      '<div class="legal-draft"><b>서비스 준비용 초안 · 2026.08.22</b><br>초기 운영 기준을 화면에 구현한 버전입니다. 실제 집행 기준과 이의제기 절차는 런칭 전 더 구체화해야 합니다.</div>'+
+      legalNavHTML("policy")+
+      '<section class="legal-section"><h2>1. 기본 원칙</h2><p>NovelTail은 창작의 자유를 넓게 보장하되, 다른 사람의 권리와 안전을 침해하거나 서비스의 정상적인 이용을 방해하는 콘텐츠에는 개입합니다. 작품의 취향이나 완성도가 낮다는 이유만으로 제재하지 않습니다.</p></section>'+
+      '<section class="legal-section"><h2>2. 우선 제한 대상</h2><ul><li>명백한 불법 정보, 범죄 실행을 직접적으로 돕는 콘텐츠</li><li>미성년자의 성적 착취·학대 콘텐츠</li><li>타인의 주소, 연락처, 신분정보 등 민감한 개인정보를 동의 없이 노출하는 콘텐츠</li><li>특정 개인에 대한 구체적이고 신뢰할 수 있는 폭력 위협</li><li>법적 권리자의 명확한 요청이 확인된 저작권 침해 게시물</li></ul></section>'+
+      '<section class="legal-section"><h2>3. 저작권·표절 신고</h2><p>단순한 소재·장르·아이디어의 유사성만으로 즉시 표절로 판단하지 않습니다. 구체적인 표현의 복제, 무단 전재, 원작자 사칭 등 확인 가능한 정황을 중심으로 검토합니다. 꼬리 작성이 허용된 작품이라도 허용 범위를 벗어난 외부 이용까지 자동으로 정당화되지는 않습니다.</p></section>'+
+      '<section class="legal-section"><h2>4. 혐오·괴롭힘·성적 콘텐츠</h2><p>창작물 속 허구적 묘사와 실제 이용자를 겨냥한 공격은 구분하여 판단합니다. 특정 이용자에 대한 반복적 괴롭힘, 현실의 폭력 선동, 비동의 성적 대상화나 불법 성적 콘텐츠는 제한될 수 있습니다.</p></section>'+
+      '<section class="legal-section"><h2>5. 스팸과 서비스 악용</h2><ul><li>동일·유사 작품이나 댓글의 대량 반복 게시</li><li>검색 노출을 조작하기 위한 무의미한 키워드 삽입</li><li>악성 광고, 피싱, 외부 사기 링크</li><li>자동화 도구를 사용한 비정상적인 좋아요·조회·신고 조작</li></ul></section>'+
+      '<section class="legal-section"><h2>6. 신고 처리 흐름</h2><ul><li><b>접수</b> — 신고 사유와 추가 설명을 기록합니다.</li><li><b>우선순위 분류</b> — 안전·불법·개인정보 관련 신고를 우선 확인합니다.</li><li><b>검토</b> — 신고된 작품 자체와 필요한 경우 계보·댓글·작성 기록을 함께 확인합니다.</li><li><b>조치</b> — 문제 없음, 노출 제한, 수정 요청, 삭제, 계정 제한 등으로 처리합니다.</li></ul></section>'+
+      '<section class="legal-section"><h2>7. 꼬리 계보의 분쟁 처리</h2><p>원작이 신고되거나 권리 분쟁 상태가 되면 우선 해당 원작에서 새로운 꼬리를 만드는 기능을 중단할 수 있습니다. 기존 꼬리는 자동으로 일괄 삭제하지 않고, 각 작품의 독립적인 위반 여부와 원작 권리관계를 확인한 뒤 처리하는 것을 기본 원칙으로 합니다.</p></section>'+
+      '<section class="legal-section"><h2>8. 제재 단계</h2><p>위반의 심각성과 반복 여부에 따라 경고, 해당 게시물 제한, 일정 기간 작성 제한, 계정 정지 또는 이용 종료까지 단계적으로 적용할 수 있습니다. 중대한 불법·안전 문제는 사전 경고 없이 즉시 제한할 수 있습니다.</p></section>'+
+      '<section class="legal-section"><h2>9. 이의제기</h2><p>실제 서비스에서는 삭제·정지 등 중대한 조치에 대해 작성자가 재검토를 요청할 수 있는 절차를 마련하는 것을 원칙으로 합니다. 신고자와 피신고자의 개인정보는 필요한 범위 이상으로 서로 공개하지 않습니다.</p></section>'+
+      '</main>';
+  }
+
+  function reportHTML() {
+    var target=getStory(state.reportTarget),reasons=["저작권·표절","불법·위험","개인정보 노출","성적 콘텐츠","혐오·괴롭힘","도배·광고","기타"],i,buttons="";
+    if(!target) return '<main class="wrap"><button class="back" type="button" data-history-back="1">←</button><div class="empty">신고할 작품을 찾을 수 없습니다.</div></main>';
+    if(state.reportDone) {
+      return '<main class="wrap"><button class="back" type="button" data-history-back="1">←</button><section class="report-success"><div class="report-success-mark">✓</div><h1>신고가 접수되었습니다.</h1><p>테스트판에서는 이 브라우저에 신고 기록을 저장합니다. 실제 서비스에서는 운영 검토 대기열로 전송될 예정입니다.</p><button class="btn primary" type="button" data-history-back="1">작품으로 돌아가기</button><div class="inline-legal-links"><button class="inline-legal-link" type="button" data-legal-view="policy">운영정책 보기</button></div></section></main>';
+    }
+    for(i=0;i<reasons.length;i++) buttons+='<button class="report-reason" type="button" data-report-reason="'+esc(reasons[i])+'">'+esc(reasons[i])+'</button>';
+    return '<main class="wrap"><button class="back" type="button" data-history-back="1">←</button>'+
+      '<div class="report-page-head"><h1>작품 신고</h1><p>신고 사유를 선택하고 필요한 경우 상황을 설명해주세요.</p></div>'+
+      '<div class="report-target"><div class="report-target-label">REPORTING</div><div class="report-target-title">'+esc(displayTitle(seriesRootForStory(target)))+'</div><div class="report-target-meta">'+esc(target.pen||"익명")+' · '+esc(genreLabel(target))+'</div></div>'+
+      '<form class="form report-form" id="reportForm"><input type="hidden" id="reportReasonInput" name="reason" value="">'+
+      '<div class="field"><label>신고 사유 *</label><div class="report-reasons">'+buttons+'</div><div class="report-help">작품이 마음에 들지 않는다는 이유만으로는 신고 대상이 아닙니다.</div></div>'+
+      '<div class="field"><label>추가 설명 <span class="muted">선택</span></label><textarea name="detail" maxlength="800" placeholder="문제가 되는 부분이나 확인이 필요한 내용을 적어주세요."></textarea></div>'+
+      '<div class="notice">긴급한 신체 위험이나 범죄 상황을 신고하는 기능은 아닙니다. 실제 서비스 런칭 시 신고 처리와 권리자 요청 절차를 별도로 연결할 예정입니다.</div>'+
+      '<button class="btn primary report-submit" type="submit">신고 제출</button>'+
+      '<div class="inline-legal-links"><button class="inline-legal-link" type="button" data-legal-view="policy">운영정책</button><span>·</span><button class="inline-legal-link" type="button" data-legal-view="terms">이용약관</button></div>'+
+      '</form></main>';
   }
 
   function profileChatListHTML() {
@@ -1769,7 +1885,7 @@ a{color:inherit;text-decoration:none}
       '<div class="field"><label for="signupPasswordConfirm">비밀번호 확인</label><input id="signupPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="8" placeholder="비밀번호를 한 번 더 입력" required></div>'+
       '<div class="email-signup-error" id="emailSignupError" role="alert"></div>'+
       '<button class="btn primary email-signup-submit" type="submit">회원가입</button>'+
-      '<p class="email-signup-note">현재 테스트판에서는 실제 이메일 인증이나 계정 생성은 하지 않습니다.</p>'+
+      '<p class="email-signup-note">현재 테스트판에서는 실제 이메일 인증이나 계정 생성은 하지 않습니다.</p><div class="inline-legal-links"><button class="inline-legal-link" type="button" data-legal-view="terms">이용약관</button><span>·</span><button class="inline-legal-link" type="button" data-legal-view="policy">운영정책</button></div>'+
       '</form></section></main>';
   }
 
@@ -1778,12 +1894,12 @@ a{color:inherit;text-decoration:none}
     if(!isMember()) {
       return '<main class="wrap"><section class="profile-guest"><h1>프로필</h1><div class="profile-guest-lead">계정을 만들고<br>내 이야기를 이어가세요.</div><p class="profile-guest-copy">읽기와 둘러보기는 계정 없이도 가능합니다. 작품 관리, 북마크, 회원 프로필이 필요할 때 원하는 방식으로 가입할 수 있습니다.</p><div class="signup-panel"><div class="signup-title">간편 회원가입</div><div class="signup-social-grid">'+
         '<button class="signup-provider" type="button" data-signup-provider="google"><span class="signup-provider-mark">G</span><span class="signup-provider-copy"><b>Google로 계속하기</b><span>Google 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
-        '<button class="signup-provider" type="button" data-signup-provider="apple"><span class="signup-provider-mark">A</span><span class="signup-provider-copy"><b>Apple로 계속하기</b><span>Apple 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
         '<button class="signup-provider" type="button" data-signup-provider="kakao"><span class="signup-provider-mark">K</span><span class="signup-provider-copy"><b>카카오로 계속하기</b><span>카카오 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
         '<button class="signup-provider" type="button" data-signup-provider="discord"><span class="signup-provider-mark">D</span><span class="signup-provider-copy"><b>Discord로 계속하기</b><span>Discord 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
+        '<button class="signup-provider" type="button" data-signup-provider="apple"><span class="signup-provider-mark">A</span><span class="signup-provider-copy"><b>Apple로 계속하기</b><span>Apple 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
       '</div><div class="signup-divider"><span>또는</span></div>'+ 
       '<button class="signup-provider signup-email" type="button" data-signup-provider="email"><span class="signup-provider-mark">@</span><span class="signup-provider-copy"><b>이메일로 회원가입</b><span>이메일과 비밀번호로 계정 만들기</span></span><span class="signup-provider-arrow">→</span></button>'+ 
-      '<p class="signup-terms">현재는 회원가입 방식의 UI 영역만 구현한 테스트판입니다. 실제 Google · Apple · 카카오 · Discord · 이메일 인증은 아직 연결되지 않았습니다.</p></div></section></main>';
+      '<p class="signup-terms">현재는 회원가입 방식의 UI 영역만 구현한 테스트판입니다. 실제 Google · 카카오 · Discord · Apple · 이메일 인증은 아직 연결되지 않았습니다.</p><div class="inline-legal-links"><button class="inline-legal-link" type="button" data-legal-view="terms">이용약관</button><span>·</span><button class="inline-legal-link" type="button" data-legal-view="policy">운영정책</button></div></div></section></main>';
     }
     ids=mineIds();
     for(i=0;i<data.length;i++) {if(ids.indexOf(data[i].id)===-1) continue;if(isSeriesEpisode(data[i])&&data[i].episode!==1) continue;arr.push(data[i]);}
@@ -1846,6 +1962,9 @@ a{color:inherit;text-decoration:none}
     else if(state.view==="fanart") { if(!FEATURES.fanart){state.view="find";app.innerHTML=findHTML();} else app.innerHTML=fanartDetailHTML(); }
     else if(state.view==="fanartwrite") { if(!FEATURES.fanart){state.view="find";app.innerHTML=findHTML();} else app.innerHTML=fanartFormHTML(); }
     else if(state.view==="event") app.innerHTML=eventDetailHTML();
+    else if(state.view==="report") app.innerHTML=reportHTML();
+    else if(state.view==="terms") app.innerHTML=termsHTML();
+    else if(state.view==="policy") app.innerHTML=policyHTML();
     else if(state.view==="info") app.innerHTML=infoHTML();
     updateNav();
     if(state.view==="home") {
@@ -1859,7 +1978,7 @@ a{color:inherit;text-decoration:none}
 
   function updateNav() {
     var buttons=document.querySelectorAll("#bottomNav .nav"),i;
-    var activeView=state.view==="event"?"home":((state.view==="emailsignup")?"profile":state.view);
+    var activeView=state.view==="event"?"home":((state.view==="emailsignup")?"profile":((state.view==="report"||state.view==="terms"||state.view==="policy")?"":state.view));
     for(i=0;i<buttons.length;i++) {
       if(buttons[i].getAttribute("data-view")===activeView) buttons[i].classList.add("on");
       else buttons[i].classList.remove("on");
@@ -1869,7 +1988,7 @@ a{color:inherit;text-decoration:none}
   var navIndex=0,maxNavIndex=0;
 
   function navSnapshot() {
-    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,eventPage:state.eventPage,eventSelected:state.eventSelected,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,findFilterOpen:state.findFilterOpen,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter,fanQuery:state.fanQuery,profileUser:state.profileUser,profileTab:state.profileTab,chatUser:state.chatUser};
+    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,eventPage:state.eventPage,eventSelected:state.eventSelected,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,findFilterOpen:state.findFilterOpen,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter,fanQuery:state.fanQuery,profileUser:state.profileUser,profileTab:state.profileTab,chatUser:state.chatUser,reportTarget:state.reportTarget,reportDone:state.reportDone};
   }
 
   function updateHistoryButtons() {
@@ -2072,6 +2191,14 @@ a{color:inherit;text-decoration:none}
           }
           return;
         }
+        if(t.getAttribute("data-report-story")) {state.reportTarget=t.getAttribute("data-report-story");state.reportDone=false;go("report");return;}
+        if(t.getAttribute("data-report-reason")) {
+          var rr=t.getAttribute("data-report-reason"),ri=document.getElementById("reportReasonInput"),rbs=document.querySelectorAll("[data-report-reason]"),rbi;
+          if(ri) ri.value=rr;
+          for(rbi=0;rbi<rbs.length;rbi++) rbs[rbi].classList.toggle("on",rbs[rbi].getAttribute("data-report-reason")===rr);
+          return;
+        }
+        if(t.getAttribute("data-legal-view")) {go(t.getAttribute("data-legal-view"));return;}
         if(t.getAttribute("data-signup-provider")) {var signupProvider=t.getAttribute("data-signup-provider");if(signupProvider==="email"){go("emailsignup");return;}try{localStorage.setItem("noveltail_test_signup_provider_v1",signupProvider);}catch(err){}setMember(true);render();return;}
         if(t.getAttribute("data-signup")) {setMember(true);render();return;}
         if(t.getAttribute("data-withdraw")) {setMember(false);try{localStorage.removeItem(BOOKMARK_KEY);localStorage.removeItem(FANART_FAVORITE_KEY);}catch(err){}render();return;}
@@ -2196,7 +2323,19 @@ a{color:inherit;text-decoration:none}
   }
 
   document.addEventListener("submit", function(e){
-    if(e.target && e.target.id==="emailSignupForm") {
+    if(e.target && e.target.id==="reportForm") {
+      e.preventDefault();
+      var rf=new FormData(e.target),reason=String(rf.get("reason")||"").trim(),detail=String(rf.get("detail")||"").trim(),target=getStory(state.reportTarget);
+      if(!reason) {
+        var reasonGrid=e.target.querySelector(".report-reasons");
+        if(reasonGrid){reasonGrid.style.outline="1px solid #a13a3a";reasonGrid.style.borderRadius="10px";}
+        return;
+      }
+      if(target) saveReport({id:"report_"+Date.now()+"_"+Math.floor(Math.random()*10000),storyId:target.id,title:displayTitle(seriesRootForStory(target)),reason:reason,detail:detail,date:Date.now(),member:isMember()});
+      state.reportDone=true;
+      render();
+    }
+    else if(e.target && e.target.id==="emailSignupForm") {
       e.preventDefault();
       var sf=new FormData(e.target),email=String(sf.get("email")||"").trim(),pw=String(sf.get("password")||""),pw2=String(sf.get("passwordConfirm")||""),errBox=document.getElementById("emailSignupError");
       function signupError(msg){if(errBox){errBox.textContent=msg;errBox.classList.add("show");}}
@@ -2372,6 +2511,8 @@ a{color:inherit;text-decoration:none}
       state.profileUser=h.profileUser||null;
       state.profileTab=h.profileTab||"works";
       state.chatUser=h.chatUser||null;
+      state.reportTarget=h.reportTarget||null;
+      state.reportDone=!!h.reportDone;
       window.scrollTo(0,0);
       render();
       updateHistoryButtons();
