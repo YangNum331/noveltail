@@ -370,6 +370,26 @@ a{color:inherit;text-decoration:none}
   .reader{padding-top:6px}
   .form{padding:22px}
 }
+
+
+/* Swipe-first browsing */
+.event-carousel{margin:0 0 18px;user-select:none;-webkit-user-select:none}
+.event-viewport{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;padding:0 26px 2px 0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.event-viewport::-webkit-scrollbar{display:none}
+.event-banner{display:block;flex:0 0 calc(100% - 26px);scroll-snap-align:start;scroll-snap-stop:always;padding:0;border:0;background:transparent;border-radius:14px;overflow:hidden;cursor:pointer;text-align:left}
+.event-banner img{display:block;width:100%;aspect-ratio:16/5;object-fit:cover;border-radius:14px;background:#eee;border:1px solid var(--line)}
+.swipe-dots{display:flex;align-items:center;justify-content:center;gap:6px;margin:9px 0 0;min-height:10px}
+.swipe-dot{width:5px;height:5px;border:0;padding:0;border-radius:999px;background:#d5d5d5;transition:width .16s ease,background .16s ease}
+.swipe-dot.on{width:17px;background:#222}
+.swipe-hint{text-align:center;color:#9a9a9a;font-size:10px;font-weight:650;margin-top:7px}
+.home-swipe-zone{touch-action:pan-y;user-select:none;-webkit-user-select:none;min-height:232px}
+.home-feed .home-pager{display:none!important}
+.home-page-status-swipe{text-align:center;font-size:10px;color:#8d8d8d;font-weight:700;margin-top:3px}
+.reader[data-episode-swipe="1"]{touch-action:pan-y}
+.episode-swipe-status{display:flex;justify-content:center;align-items:center;gap:7px;color:#999;font-size:10px;font-weight:700;padding:9px 0 2px}
+.episode-swipe-status .mini-line{width:18px;height:1px;background:#d8d8d8}
+@media(max-width:420px){.event-banner img{aspect-ratio:15/5}.event-carousel{margin-bottom:15px}}
+
 </style>
 </head>
 <body>
@@ -382,22 +402,17 @@ a{color:inherit;text-decoration:none}
 
 <div id="app">
   <main class="wrap">
+    <section class="event-carousel" aria-label="이벤트 배너"><div class="event-viewport" id="eventViewport"><button class="event-banner" type="button" data-event-action="info" data-event-index="0"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23f3f4f6%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23dfe3e8%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23dfe3e8%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23111111%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3EOPEN%20BETA%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23111111%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%98%A4%ED%94%88%20%EB%B2%A0%ED%83%80%20%EC%8B%9C%EC%9E%91%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%23666666%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%A7%80%EA%B8%88%20%EC%B2%AB%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EB%A5%BC%20%EC%98%AC%EB%A0%A4%EB%B3%B4%EC%84%B8%EC%9A%94%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23111111%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%23666666%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="오픈 베타 시작 · 지금 첫 이야기를 올려보세요"></button><button class="event-banner" type="button" data-event-action="random" data-event-index="1"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23151515%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23313131%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23313131%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3EWEEKLY%20EVENT%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EB%9E%9C%EB%8D%A4%20%EB%B2%84%EC%8A%A4%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%23cfcfcf%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EB%8B%A4%EC%84%AF%20%EC%9E%91%ED%92%88%EC%9D%84%20%ED%83%80%EA%B3%A0%20%EB%82%AF%EC%84%A0%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EB%A1%9C%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23ffffff%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%23cfcfcf%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="랜덤 버스 · 다섯 작품을 타고 낯선 이야기로"></button><button class="event-banner" type="button" data-event-action="find" data-event-index="2"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23fff2e5%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23ffd7ad%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23ffd7ad%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23d66a00%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23d66a00%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ETAIL%20CHALLENGE%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%236d3100%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EA%BC%AC%EB%A6%AC%20%EC%9D%B4%EC%96%B4%EC%93%B0%EA%B8%B0%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%239a5b2c%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EB%A7%88%EC%9D%8C%EC%97%90%20%EB%93%A0%20%EC%9E%91%ED%92%88%EC%97%90%EC%84%9C%20%EB%8B%A4%EB%A5%B8%20%EA%B0%80%EB%8A%A5%EC%84%B1%EC%9C%BC%EB%A1%9C%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23d66a00%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%239a5b2c%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="꼬리 이어쓰기 · 마음에 든 작품에서 다른 가능성으로"></button><button class="event-banner" type="button" data-event-action="find" data-event-index="3"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23eaf2ff%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23c9dcf5%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23c9dcf5%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%232f65a7%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%232f65a7%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ENEW%20STORIES%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%2316335f%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%8B%A0%EC%9E%91%20%EB%B0%9C%EA%B2%AC%20%EC%A3%BC%EA%B0%84%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%2358708f%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%83%88%EB%A1%9C%20%EC%98%AC%EB%9D%BC%EC%98%A8%20%EC%B2%AB%20%EC%9E%91%ED%92%88%EC%9D%84%20%EB%A7%8C%EB%82%98%EB%B3%B4%EC%84%B8%EC%9A%94%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%232f65a7%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%2358708f%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="신작 발견 주간 · 새로 올라온 첫 작품을 만나보세요"></button><button class="event-banner" type="button" data-event-action="write" data-event-index="4"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23eef7ef%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23cce7d2%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23cce7d2%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%232d7a45%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%232d7a45%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ECREATOR%20EVENT%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23194f29%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%B2%AB%20%EC%9E%91%ED%92%88%20%EB%AA%A8%EC%A7%91%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%235f7b65%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%A7%A7%EC%9D%80%20%ED%95%9C%20%ED%8E%B8%EB%8F%84%20NovelTail%EC%9D%98%20%EC%8B%9C%EC%9E%91%EC%9E%85%EB%8B%88%EB%8B%A4%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%232d7a45%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%235f7b65%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="첫 작품 모집 · 짧은 한 편도 NovelTail의 시작입니다"></button></div><div id="eventDots"><div class="swipe-dots" aria-label="이벤트 1 / 5"><span class="swipe-dot on" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span></div></div></section>
     <section class="home-feed">
-      <div class="pills">
-        <button class="pill on" type="button">최신</button>
-        <button class="pill" type="button">인기</button>
-      </div>
-      <div class="home-list-frame">
-        <div class="home-pager pager-top"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
-        <div class="list">
-          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>새벽 세 시의 편의점</div><div class="views">180</div></div></button></div>
-          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>마왕은 오늘도 지각했다</div><div class="views">527</div></div></button></div>
-          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>우리는 화성에서 헤어졌다</div><div class="views">874</div></div></button></div>
-          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>고양이는 범인을 알고 있다</div><div class="views">1.2K</div></div></button></div>
-          <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>검은 우산 아래</div><div class="views">1.6K</div></div></button></div>
-        </div>
-        <div class="home-pager pager-bottom"><button class="home-page-btn" type="button" data-home-page="prev" disabled>←</button><div class="home-page-status">1 / 7</div><button class="home-page-btn" type="button" data-home-page="next">→</button></div>
-      </div>
+      <div class="pills"><button class="pill on" type="button">최신</button><button class="pill" type="button">인기</button></div>
+      <div class="home-list-frame"><div class="home-swipe-zone" data-home-swipe="1"><div class="list">
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>새벽 세 시의 편의점</div><div class="views">180</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>마왕은 오늘도 지각했다</div><div class="views">527</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>우리는 화성에서 헤어졌다</div><div class="views">874</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>고양이는 범인을 알고 있다</div><div class="views">1.2K</div></div></button></div>
+        <div class="card"><button type="button"><div class="card-row"><div class="title"><span class="origin first">첫</span>검은 우산 아래</div><div class="views">1.6K</div></div></button></div>
+      </div></div><div class="swipe-dots" aria-label="작품 1 / 7"><span class="swipe-dot on"></span><span class="swipe-dot"></span><span class="swipe-dot"></span><span class="swipe-dot"></span><span class="swipe-dot"></span><span class="swipe-dot"></span><span class="swipe-dot"></span></div><div class="home-page-status-swipe">1 / 7 · 좌우로 넘기기</div></div>
+      <div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">펼치기</button></div>
     </section>
     <div class="ad-slot">광고 영역</div>
     <section class="home-about" id="projectIntro"><div class="home-about-copy"><div class="home-about-kicker">NOVELTAIL · 노벨테일</div><strong>읽은 이야기를, 다음 이야기로.</strong><p>첫 작품에서 꼬리가 이어지는 공동창작 플랫폼입니다.</p></div><button class="home-about-btn" type="button" data-info-toggle="1">서비스 안내 →</button></section>
@@ -439,6 +454,7 @@ a{color:inherit;text-decoration:none}
 (function () {
   "use strict";
 
+  var APP_BUILD = "20260822-event-carousel-v2";
   var STORAGE_KEY = "kkori_mobile_safe_v1";
   var MINE_KEY = "kkori_mine_safe_v1";
   var GENRE_PREF_KEY = "kkori_genre_tabs_v1";
@@ -449,12 +465,14 @@ a{color:inherit;text-decoration:none}
   var FANART_MINE_KEY = "noveltail_mine_fanarts_v1";
   var PROFILE_KEY = "noveltail_profile_v1";
   var CHAT_KEY = "noveltail_fake_chats_v1";
+  var PAGE_TOOLS_OPEN_KEY = "noveltail_page_tools_open_v1";
 
   // 기능 보관 스위치. 코드는 삭제하지 않고 UI/진입만 숨긴다.
   // 나중에 true로 바꾸면 팬아트/채팅 기능을 다시 노출할 수 있다.
   var FEATURES = {
     fanart:false,
-    chat:false
+    chat:false,
+    settlement:false
   };
 
   // 테스트판의 "가입된 다른 회원" 목록.
@@ -484,7 +502,7 @@ a{color:inherit;text-decoration:none}
 
   var data = loadData();
   var fanarts = loadFanarts();
-  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, findFilterOpen:false, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null, fanQuery:"", profileUser:null, profileTab:"works", chatUser:null};
+  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, eventPage:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, findFilterOpen:false, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null, fanQuery:"", profileUser:null, profileTab:"works", chatUser:null};
 
   function saveData() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -1110,8 +1128,56 @@ a{color:inherit;text-decoration:none}
     return '<div class="card"><button type="button"'+attr+'><div class="card-row"><div class="title"><span class="tags">'+tags+'</span>'+esc(displayTitle(s))+'</div><div class="views">'+fmt(displayViews(s))+'</div></div></button></div>';
   }
 
-  function homePagerHTML(page,totalPages,position) {
-    return '<div class="home-pager '+(position||'')+'"><button class="home-page-btn" type="button" data-home-page="prev" '+(page<=0?'disabled':'')+'>←</button><div class="home-page-status">'+(page+1)+' / '+totalPages+'</div><button class="home-page-btn" type="button" data-home-page="next" '+(page>=totalPages-1?'disabled':'')+'>→</button></div>';
+  function swipeDotsHTML(page,total,kind) {
+    var html="",i;
+    for(i=0;i<total;i++) html+='<span class="swipe-dot '+(i===page?'on':'')+'" aria-hidden="true"></span>';
+    return '<div class="swipe-dots" aria-label="'+esc(kind||'페이지')+' '+(page+1)+' / '+total+'">'+html+'</div>';
+  }
+
+  function eventBannerData(title,subtitle,tone,label) {
+    var palette=[
+      {bg:'#f3f4f6',fg:'#111111',sub:'#666666',accent:'#111111',orb:'#dfe3e8'},
+      {bg:'#151515',fg:'#ffffff',sub:'#cfcfcf',accent:'#ffffff',orb:'#313131'},
+      {bg:'#fff2e5',fg:'#6d3100',sub:'#9a5b2c',accent:'#d66a00',orb:'#ffd7ad'},
+      {bg:'#eaf2ff',fg:'#16335f',sub:'#58708f',accent:'#2f65a7',orb:'#c9dcf5'},
+      {bg:'#eef7ef',fg:'#194f29',sub:'#5f7b65',accent:'#2d7a45',orb:'#cce7d2'}
+    ],c=palette[(Number(tone||1)-1)%palette.length];
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400">'+
+      '<rect width="1280" height="400" rx="34" fill="'+c.bg+'"/>'+
+      '<circle cx="1120" cy="92" r="145" fill="'+c.orb+'"/>'+
+      '<circle cx="1180" cy="318" r="196" fill="'+c.orb+'" opacity=".62"/>'+
+      '<path d="M1010 300 C1080 220 1170 210 1270 250" fill="none" stroke="'+c.accent+'" stroke-width="15" stroke-linecap="round" opacity=".24"/>'+
+      '<text x="72" y="105" fill="'+c.accent+'" font-family="Arial,sans-serif" font-size="23" font-weight="800" letter-spacing="3">'+esc(label||'NOVELTAIL EVENT')+'</text>'+
+      '<text x="72" y="184" fill="'+c.fg+'" font-family="Arial,sans-serif" font-size="58" font-weight="800">'+esc(title)+'</text>'+
+      '<text x="74" y="245" fill="'+c.sub+'" font-family="Arial,sans-serif" font-size="29" font-weight="600">'+esc(subtitle)+'</text>'+
+      '<rect x="74" y="292" width="122" height="8" rx="4" fill="'+c.accent+'" opacity=".9"/>'+
+      '<text x="1038" y="344" fill="'+c.sub+'" font-family="Arial,sans-serif" font-size="21" font-weight="700">NOVELTAIL</text>'+
+      '</svg>';
+    return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+  }
+
+  function eventItems() {
+    return [
+      {title:'오픈 베타 시작',sub:'지금 첫 이야기를 올려보세요',tone:1,label:'OPEN BETA',action:'info'},
+      {title:'랜덤 버스',sub:'다섯 작품을 타고 낯선 이야기로',tone:2,label:'WEEKLY EVENT',action:'random'},
+      {title:'꼬리 이어쓰기',sub:'마음에 든 작품에서 다른 가능성으로',tone:3,label:'TAIL CHALLENGE',action:'find'},
+      {title:'신작 발견 주간',sub:'새로 올라온 첫 작품을 만나보세요',tone:4,label:'NEW STORIES',action:'find'},
+      {title:'첫 작품 모집',sub:'짧은 한 편도 NovelTail의 시작입니다',tone:5,label:'CREATOR EVENT',action:'write'}
+    ];
+  }
+
+  function eventCarouselHTML() {
+    var items=eventItems(),slides='',i;
+    if(state.eventPage<0) state.eventPage=0;
+    if(state.eventPage>=items.length) state.eventPage=items.length-1;
+    for(i=0;i<items.length;i++) {
+      var x=items[i];
+      slides+='<button class="event-banner" type="button" data-event-action="'+x.action+'" data-event-index="'+i+'"><img src="'+eventBannerData(x.title,x.sub,x.tone,x.label)+'" alt="'+esc(x.title)+' · '+esc(x.sub)+'"></button>';
+    }
+    return '<section class="event-carousel" aria-label="이벤트 배너">'+
+      '<div class="event-viewport" id="eventViewport">'+slides+'</div>'+
+      '<div id="eventDots">'+swipeDotsHTML(state.eventPage,items.length,'이벤트')+'</div>'+
+      '</section>';
   }
 
   function homeEmptySlotHTML() {
@@ -1119,7 +1185,7 @@ a{color:inherit;text-decoration:none}
   }
 
   function homeHTML() {
-    var arr=[],i,s,cards="",rankButtons="",shown=[],totalPages=1,start=0,end=0,pagerTop="",pagerBottom="",pageSize=state.homeExpanded?20:5;
+    var arr=[],i,s,cards="",rankButtons="",shown=[],totalPages=1,start=0,end=0,pageSize=state.homeExpanded?20:5;
     for(i=0;i<data.length;i++) {
       s=data[i];
       if(s.lineage==="tail") continue;
@@ -1137,13 +1203,12 @@ a{color:inherit;text-decoration:none}
     start=state.homePage*pageSize;
     end=Math.min(start+pageSize,arr.length);
     shown=arr.slice(start,end);
-    pagerTop=homePagerHTML(state.homePage,totalPages,'pager-top');
-    pagerBottom=homePagerHTML(state.homePage,totalPages,'pager-bottom');
     for(i=0;i<shown.length;i++) cards+=cardHTML(shown[i]);
     for(i=shown.length;i<pageSize;i++) cards+=homeEmptySlotHTML();
     ["최신","인기"].forEach(function(x){rankButtons+='<button class="pill '+(state.rank===x?'on':'')+'" data-rank="'+x+'">'+x+'</button>';});
     return '<main class="wrap">'+
-      '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame">'+pagerTop+'<div class="list">'+cards+'</div>'+pagerBottom+'</div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
+      eventCarouselHTML()+
+      '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame"><div class="home-swipe-zone" data-home-swipe="1"><div class="list">'+cards+'</div></div>'+swipeDotsHTML(state.homePage,totalPages,'작품')+'<div class="home-page-status-swipe">'+(state.homePage+1)+' / '+totalPages+' · 좌우로 넘기기</div></div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
       '<div class="ad-slot">광고 영역</div>'+ 
       '<section class="home-about" id="projectIntro"><div class="home-about-copy"><div class="home-about-kicker">NOVELTAIL · 노벨테일</div><strong>읽은 이야기를, 다음 이야기로.</strong><p>첫 작품에서 꼬리가 이어지는 공동창작 플랫폼입니다.</p></div><button class="home-about-btn" type="button" data-info-toggle="1">서비스 안내 →</button></section>'+ 
       '</main>';
@@ -1217,7 +1282,7 @@ a{color:inherit;text-decoration:none}
   }
 
   function workDiscoveryHTML() {
-    var arr=state.findFlat?flatDiscoverWorks():rootWorks(),cards="",genresHtml="",i,s,q=(state.query||"").toLowerCase(),filtered=[],visibleGenres;
+    var arr=rootWorks(),cards="",genresHtml="",i,s,q=(state.query||"").toLowerCase(),filtered=[],visibleGenres;
     normalizeFindGenre();
     for(i=0;i<arr.length;i++) {
       s=arr[i];
@@ -1235,8 +1300,8 @@ a{color:inherit;text-decoration:none}
       var g=visibleGenres[i];
       genresHtml+='<button class="pill '+(state.findGenre===g?'on':'')+'" type="button" data-find-genre="'+esc(g)+'">'+esc(g)+'</button>';
     }
-    var activeFilters=(state.findShowTails?1:0)+(state.findFlat?1:0);
-    var filterPanel=state.findFilterOpen?'<div class="find-filter-panel"><div class="find-controls"><button class="find-toggle '+(state.findShowTails?'on':'')+'" type="button" data-find-tails="1">꼬리작품도 보기</button><button class="find-toggle '+(state.findFlat?'on':'')+'" type="button" data-find-flat="1">장르만 보기</button></div><div class="genre-setting-row"><button class="genre-setting-btn" type="button" data-genre-settings="1">장르 탭 순서·숨김 설정</button></div>'+genreSettingsHTML()+'<div class="find-note">장르 분류는 첫 작품을 기준으로 합니다. 장르만 보기는 첫 작품과 꼬리를 한 목록에서 보여줍니다.</div></div>':'';
+    var activeFilters=state.findShowTails?1:0;
+    var filterPanel=state.findFilterOpen?'<div class="find-filter-panel"><div class="find-controls"><button class="find-toggle '+(state.findShowTails?'on':'')+'" type="button" data-find-tails="1">꼬리작품도 보기</button></div></div>':'';
     return '<input class="search" id="searchInput" value="'+esc(state.query)+'" placeholder="작품 제목 검색">'+
       '<div class="pills">'+genresHtml+'</div>'+
       '<div class="find-filter-bar"><button class="find-filter-btn '+(state.findFilterOpen?'on':'')+'" type="button" data-find-filter="1">필터'+(activeFilters?' · '+activeFilters:'')+'</button></div>'+filterPanel+
@@ -1376,7 +1441,7 @@ a{color:inherit;text-decoration:none}
       rows+='<div class="episode"><button type="button" data-story="'+esc(eps[i].id)+'"><div class="episode-title">'+esc(eps[i].title)+'</div><div class="episode-views">'+fmt(eps[i].views)+'</div></button></div>';
     }
     p=policyFor(root);
-    if(root.lineage==="tail") {
+    if(FEATURES.settlement && root.lineage==="tail") {
       if(p.policy==="commercial") royaltyBlock=royaltyPlanHTML(royaltyPlanForWork(root),'이 꼬리 시리즈의 수익화 배분');
       else if(p.policy==="noncommercial") royaltyBlock='<div class="notice">첫 작품 설정에 따라 비상업으로만 운영되는 꼬리 시리즈입니다.</div>';
     }
@@ -1405,19 +1470,19 @@ a{color:inherit;text-decoration:none}
     backAttr=isSeriesEpisode(s)?' data-series="'+esc(s.seriesId)+'"':' data-view="home"';
     p=policyFor(s);
     if(p.policy==="deny") policyNote='<div class="notice">첫 작품 원작자가 꼬리 작성을 허용하지 않은 작품입니다.</div>';
-    else if(p.policy==="noncommercial") {
-      policyNote='<div class="notice">이 작품에서 파생되는 꼬리는 비상업으로만 게시됩니다.</div>';
-      tailButton='<button class="btn primary" style="width:100%;margin-top:12px" data-tail="'+esc(s.id)+'">꼬리 쓰기</button>';
-    } else {
-      policyNote=royaltyPlanHTML(royaltyPlanForNewTail(s),'여기서 새 꼬리가 수익화될 때');
+    else {
+      if(FEATURES.settlement) {
+        if(p.policy==="noncommercial") policyNote='<div class="notice">이 작품에서 파생되는 꼬리는 비상업으로만 게시됩니다.</div>';
+        else policyNote=royaltyPlanHTML(royaltyPlanForNewTail(s),'여기서 새 꼬리가 수익화될 때');
+      }
       tailButton='<button class="btn primary" style="width:100%;margin-top:12px" data-tail="'+esc(s.id)+'">꼬리 쓰기</button>';
     }
-    if(s.lineage==="tail") {
+    if(FEATURES.settlement && s.lineage==="tail") {
       if(policyFor(s).policy==="commercial") currentRoyalty=royaltyPlanHTML(royaltyPlanForWork(s),'이 꼬리 작품의 수익화 배분');
       else if(policyFor(s).policy==="noncommercial") currentRoyalty='<div class="notice">이 꼬리 작품은 비상업 작품입니다.</div>';
     }
     tailDisclosure=tailDisclosureHTML(s);
-    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(s.title)+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader" '+(isSeriesEpisode(s)?'data-episode-swipe="1"':'')+'><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(s.title)+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div>'+(isSeriesEpisode(s)?'<div class="episode-swipe-status"><span class="mini-line"></span><span>'+s.episode+' / '+episodeTotal+' · 좌우로 회차 이동</span><span class="mini-line"></span></div>':'')+'</article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
   function workFanartSectionHTML(work) {
     if(!FEATURES.fanart) return "";
@@ -1428,6 +1493,7 @@ a{color:inherit;text-decoration:none}
   }
 
   function policyFieldHTML() {
+    if(!FEATURES.settlement) return '<div class="field"><label>꼬리 작성</label><select name="tailPolicy"><option value="commercial">꼬리 작성 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">다른 이용자가 이 작품에서 새로운 꼬리 작품을 만들 수 있는지 정합니다.</div></div>';
     return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 플랫폼 10% · 계보 로열티</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">수익화 시 플랫폼 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자 10% 고정, 가까운 꼬리 조상부터 6% → 3% → 1.5% → 0.75%…로 배분하고 나머지는 현재 작가가 받습니다. 실제 결제·정산은 아직 하지 않습니다.</div></div>';
   }
 
@@ -1441,27 +1507,22 @@ a{color:inherit;text-decoration:none}
       for(i=0;i<genres.length;i++) genreOptions+='<option>'+esc(genres[i])+'</option>';
     }
     var policyNotice="";
-    if(p && pol.policy==="commercial") policyNotice=royaltyPlanHTML(royaltyPlanForNewTail(p),'이 꼬리가 수익화될 경우');
-    if(p && pol.policy==="noncommercial") policyNotice='<div class="notice">이 꼬리는 비상업 작품으로만 게시됩니다.</div>';
+    if(FEATURES.settlement && p && pol.policy==="commercial") policyNotice=royaltyPlanHTML(royaltyPlanForNewTail(p),'이 꼬리가 수익화될 경우');
+    if(FEATURES.settlement && p && pol.policy==="noncommercial") policyNotice='<div class="notice">이 꼬리는 비상업 작품으로만 게시됩니다.</div>';
     return '<main class="wrap"><button class="back" '+(p?'data-story="'+esc(p.id)+'"':'data-view="home"')+'>←</button>'+policyNotice+'<form class="form" id="storyForm"><div class="head"><h2>'+(p?'꼬리 쓰기':'새 작품 쓰기')+'</h2><span class="muted">'+(p?esc(displayTitle(p)):'바로 공개')+'</span></div><div class="field"><label>'+(p?'꼬리 형태':'작품 형태')+'</label><div class="type-choice"><label><input type="radio" name="format" value="short" checked><span>단편</span></label><label><input type="radio" name="format" value="series"><span>시리즈</span></label></div></div>'+(p?'<div class="field"><label>꼬리 성격</label><select name="type">'+options+'</select></div>':'')+'<div class="field"><label>작품 제목 *</label><input name="title" required maxlength="80"></div><div class="field hidden" id="seriesTitleField"><label>1화 제목 *</label><input name="episodeTitle" maxlength="70" placeholder="예: 첫 번째 승객"></div>'+(!p?'<div class="field"><label>장르</label><select name="genre">'+genreOptions+'</select></div>'+policyFieldHTML():'')+'<div class="field"><label>필명 <span class="muted">선택</span></label><input name="pen" maxlength="30" placeholder="비우면 익명"></div><div class="field"><label>한 줄 소개</label><input name="desc" maxlength="120"></div><div class="field"><label>본문 *</label><textarea name="body" required placeholder="생각난 이야기를 바로 적어보세요."></textarea></div><button class="btn primary" style="width:100%">게시</button></form></main>';
   }
 
   function infoHTML() {
+    var settlementInfo=FEATURES.settlement ?
+      '<section class="info-card"><h2>수익 배분</h2><p>작품 수익화와 창작자 정산 정책은 운영 단계에 맞춰 안내합니다.</p></section>' : '';
     return '<main class="wrap"><h1 class="info-title">NovelTail(노벨테일) 안내</h1><p class="info-intro">처음 보는 사람도 핵심 규칙만 빠르게 이해할 수 있게 정리했습니다.</p>'+ 
       '<div class="info-grid">'+
       '<section class="info-card"><h2>NovelTail(노벨테일)이란?</h2><p><b>첫</b> 작품에서 다른 이용자가 이야기를 이어 쓰고, 그 꼬리에서 다시 새로운 꼬리가 갈라지는 공동창작 플랫폼입니다.</p></section>'+ 
       '<section class="info-card"><h2>첫 · 꼬리 · 시리즈</h2><p><b>첫</b>은 이야기의 시작점, <b>꼬리</b>는 다른 작품에서 파생된 작품입니다. 첫과 꼬리 모두 단편 또는 시리즈가 될 수 있으며, 시리즈의 공식 회차는 꼬리와 별개인 정사 라인으로 유지됩니다.</p></section>'+ 
-      '<section class="info-card"><h2>수익 배분</h2><p><b>각 작품에서 발생한 수익을 100%라고 볼 때</b>, NovelTail은 플랫폼 수수료 10%만 가져갑니다. 남은 90%가 창작자 배분금입니다. 첫 작품 작가는 꼬리 작품이 수익화될 때 창작자 배분금의 10%, 즉 전체 작품 수익의 9%를 받습니다. 꼬리 조상은 현재 작품에서 가까운 순서대로 창작자 배분금의 6% → 3% → 1.5% → 0.75%…를 받으며, 남은 금액은 현재 작품 작가에게 돌아갑니다.</p>'+ 
-      '<div class="info-example">'+
-      '<div class="info-row"><span>첫 작품</span><span>플랫폼 수수료 10% · 첫 작품 작가 90%</span></div>'+
-      '<div class="info-row"><span>1차 꼬리작품</span><span>플랫폼 수수료 10% · 첫 작품 작가 9% · 1차 꼬리작가 81%</span></div>'+
-      '<div class="info-row"><span>2차 꼬리작품</span><span>플랫폼 수수료 10% · 첫 작품 작가 9% · 1차 꼬리작가 5.4% · 2차 꼬리작가 75.6%</span></div>'+
-      '<div class="info-row"><span>3차 꼬리작품</span><span>플랫폼 수수료 10% · 첫 작품 작가 9% · 1차 꼬리작가 2.7% · 2차 꼬리작가 5.4% · 3차 꼬리작가 72.9%</span></div>'+
-      '<div class="info-row"><span>4차 꼬리작품</span><span>플랫폼 수수료 10% · 첫 작품 작가 9% · 1차 꼬리작가 1.35% · 2차 꼬리작가 2.7% · 3차 꼬리작가 5.4% · 4차 꼬리작가 71.55%</span></div>'+
-      '</div></section>'+ 
-      '<section class="info-card"><h2>꼬리 이용 권한</h2><p>첫 작품 작성자는 수익화 가능한 꼬리 허용, 비상업 꼬리만 허용, 꼬리 금지 중 하나를 선택합니다. 파생 작품은 첫 작품의 조건을 계보 전체에서 따릅니다.</p></section>'+ 
+      '<section class="info-card"><h2>꼬리 작성 권한</h2><p>첫 작품 작성자는 다른 이용자의 꼬리 작성을 허용하거나 금지할 수 있습니다. 파생 작품은 첫 작품의 허용 여부를 계보 전체에서 따릅니다.</p></section>'+ 
+      settlementInfo+
       '<section class="info-card"><h2>앱처럼 사용하기</h2><p>상단의 <b>앱 설치</b>를 누르거나 브라우저 공유 메뉴에서 <b>홈 화면에 추가</b>를 선택하면 독립된 앱 화면으로 실행할 수 있습니다. 설치 후에는 일반 브라우저 주소창과 하단 도구막대가 표시되지 않습니다.</p></section>'+ 
-      '<section class="info-card"><h2>현재 테스트판</h2><p>지금 버전은 브라우저 저장 기반 MVP입니다. 실제 결제·정산·법적 권리 처리는 아직 연결하지 않았습니다.</p></section>'+ 
+      '<section class="info-card"><h2>현재 테스트판</h2><p>지금 버전은 브라우저 저장 기반 MVP입니다. 일부 기능은 실제 서비스 준비 단계에 맞춰 순차적으로 연결합니다.</p></section>'+ 
       '</div></main>';
   }
 
@@ -1540,6 +1601,12 @@ a{color:inherit;text-decoration:none}
     else if(state.view==="fanartwrite") { if(!FEATURES.fanart){state.view="find";app.innerHTML=findHTML();} else app.innerHTML=fanartFormHTML(); }
     else if(state.view==="info") app.innerHTML=infoHTML();
     updateNav();
+    if(state.view==="home") {
+      requestAnimationFrame(function(){
+        var vp=document.getElementById("eventViewport"),first=vp&&vp.querySelector(".event-banner");
+        if(vp&&first){vp.scrollLeft=state.eventPage*(first.getBoundingClientRect().width+10);}
+      });
+    }
   }
 
   function updateNav() {
@@ -1553,7 +1620,7 @@ a{color:inherit;text-decoration:none}
   var navIndex=0,maxNavIndex=0;
 
   function navSnapshot() {
-    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,findFilterOpen:state.findFilterOpen,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter,fanQuery:state.fanQuery,profileUser:state.profileUser,profileTab:state.profileTab,chatUser:state.chatUser};
+    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,eventPage:state.eventPage,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,findFilterOpen:state.findFilterOpen,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter,fanQuery:state.fanQuery,profileUser:state.profileUser,profileTab:state.profileTab,chatUser:state.chatUser};
   }
 
   function updateHistoryButtons() {
@@ -1697,6 +1764,14 @@ a{color:inherit;text-decoration:none}
     var t=e.target;
     while(t && t!==document.body) {
       if(t.getAttribute) {
+        if(t.getAttribute("data-event-action")) {
+          var ea=t.getAttribute("data-event-action");
+          if(ea==="random") randomStory();
+          else if(ea==="find") go("find");
+          else if(ea==="write") go("write");
+          else go("info");
+          return;
+        }
         if(t.getAttribute("data-info-toggle")) {
           if(state.view==="info") {
             if(navIndex>0) history.back();
@@ -1736,7 +1811,6 @@ a{color:inherit;text-decoration:none}
           }
           return;
         }
-        if(t.getAttribute("data-home-page")) {var hp=t.getAttribute("data-home-page");state.homePage+=hp==="next"?1:-1;render();return;}
         if(t.getAttribute("data-rank")) {state.rank=t.getAttribute("data-rank");state.homePage=0;render();return;}
         if(t.getAttribute("data-find-genre")) {state.findGenre=t.getAttribute("data-find-genre");render();return;}
         if(t.getAttribute("data-find-filter")) {state.findFilterOpen=!state.findFilterOpen;if(!state.findFilterOpen)state.genreSettingsOpen=false;render();return;}
@@ -1772,6 +1846,20 @@ a{color:inherit;text-decoration:none}
     }
   });
 
+  document.addEventListener("scroll", function(e){
+    var vp=e.target;
+    if(!vp || vp.id!=="eventViewport") return;
+    var first=vp.querySelector(".event-banner");
+    if(!first) return;
+    var step=first.getBoundingClientRect().width+10;
+    if(step<=0) return;
+    var page=Math.max(0,Math.min(eventItems().length-1,Math.round(vp.scrollLeft/step)));
+    if(page===state.eventPage) return;
+    state.eventPage=page;
+    var dots=document.getElementById("eventDots");
+    if(dots) dots.innerHTML=swipeDotsHTML(state.eventPage,eventItems().length,'이벤트');
+  },true);
+
   document.addEventListener("submit", function(e){
     if(e.target && e.target.id==="storyForm") {e.preventDefault();submitStory(e.target);}
     else if(e.target && e.target.id==="seriesEpisodeForm") {e.preventDefault();submitSeriesEpisode(e.target);}
@@ -1791,6 +1879,45 @@ a{color:inherit;text-decoration:none}
       }
     }
   });
+
+
+  // 좌우 스와이프는 홈 작품/시리즈 회차 전용 영역에서만 작동한다.
+  // 세로 스크롤과 충돌하지 않도록 충분한 수평 이동일 때만 판정한다.
+  var swipeGesture=null;
+  document.addEventListener("touchstart",function(e){
+    if(!e.touches || e.touches.length!==1) return;
+    var target=e.target && e.target.closest ? e.target.closest('[data-home-swipe="1"],[data-episode-swipe="1"]') : null;
+    if(!target) { swipeGesture=null; return; }
+    var t=e.touches[0];
+    swipeGesture={target:target,x:t.clientX,y:t.clientY,time:Date.now()};
+  },{passive:true});
+
+  document.addEventListener("touchend",function(e){
+    if(!swipeGesture || !e.changedTouches || e.changedTouches.length!==1) { swipeGesture=null; return; }
+    var t=e.changedTouches[0],dx=t.clientX-swipeGesture.x,dy=t.clientY-swipeGesture.y,absX=Math.abs(dx),absY=Math.abs(dy),target=swipeGesture.target;
+    swipeGesture=null;
+    if(absX<58 || absX<absY*1.35) return;
+
+
+    if(target.getAttribute("data-home-swipe")) {
+      var arr=rootWorks(),pageSize=state.homeExpanded?20:5,total=Math.max(1,Math.ceil(arr.length/pageSize));
+      if(dx<0 && state.homePage<total-1) state.homePage++;
+      else if(dx>0 && state.homePage>0) state.homePage--;
+      else return;
+      render();
+      return;
+    }
+
+    if(target.getAttribute("data-episode-swipe")) {
+      var cur=getStory(state.selected);
+      if(!cur || !isSeriesEpisode(cur)) return;
+      var eps=seriesEpisodes(cur.seriesId),idx=-1,i;
+      for(i=0;i<eps.length;i++) if(eps[i].id===cur.id) {idx=i;break;}
+      if(idx<0) return;
+      if(dx<0 && idx<eps.length-1) openStory(eps[idx+1].id);
+      else if(dx>0 && idx>0) openStory(eps[idx-1].id);
+    }
+  },{passive:true});
 
   document.addEventListener("change", function(e){
     if(e.target && e.target.id==="avatarFile") {
@@ -1824,10 +1951,11 @@ a{color:inherit;text-decoration:none}
       state.rank=h.rank||"최신";
       state.homeExpanded=!!h.homeExpanded;
       state.homePage=Number(h.homePage||0);
+      state.eventPage=Number(h.eventPage||0);
       state.findKind=h.findKind||"works";
       state.findGenre=h.findGenre||"전체";
       state.findShowTails=!!h.findShowTails;
-      state.findFlat=!!h.findFlat;
+      state.findFlat=false;
       state.findExpanded=h.findExpanded||{};
       state.findFilterOpen=!!h.findFilterOpen;
       state.fanRank=h.fanRank||"최신";
@@ -1862,11 +1990,18 @@ a{color:inherit;text-decoration:none}
     if(!bottomTools||!pageToolsToggle)return;
     bottomTools.classList.toggle("open",!!open);
     pageToolsToggle.setAttribute("aria-expanded",open?"true":"false");
+    try { localStorage.setItem(PAGE_TOOLS_OPEN_KEY,open?"1":"0"); } catch(e) {}
+  }
+  function restorePageToolsOpen(){
+    var open=false;
+    try { open=localStorage.getItem(PAGE_TOOLS_OPEN_KEY)==="1"; } catch(e) {}
+    setPageToolsOpen(open);
   }
   if(pageToolsToggle) pageToolsToggle.addEventListener("click",function(){setPageToolsOpen(!(bottomTools&&bottomTools.classList.contains("open")));});
-  if(siteBack) siteBack.addEventListener("click",function(){setPageToolsOpen(false);if(navIndex>0) history.back();});
-  if(siteForward) siteForward.addEventListener("click",function(){setPageToolsOpen(false);if(navIndex<maxNavIndex) history.forward();});
-  if(siteRefresh) siteRefresh.addEventListener("click",function(){setPageToolsOpen(false);location.reload();});
+  if(siteBack) siteBack.addEventListener("click",function(){if(navIndex>0) history.back();});
+  if(siteForward) siteForward.addEventListener("click",function(){if(navIndex<maxNavIndex) history.forward();});
+  if(siteRefresh) siteRefresh.addEventListener("click",function(){location.reload();});
+  restorePageToolsOpen();
 
   // iOS Safari의 더블탭 스마트 확대를 막되, 일반 스크롤과 핀치 확대는 유지한다.
   (function preventDoubleTapZoom(){
@@ -1976,7 +2111,7 @@ a{color:inherit;text-decoration:none}
   // 탐색은 네트워크 우선으로 처리해 새 index.html 배포가 오래 캐시되는 문제를 줄인다.
   if("serviceWorker" in navigator) {
     window.addEventListener("load",function(){
-      navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){});
+      navigator.serviceWorker.register("./sw.js?v=20260822-event-v2",{scope:"./",updateViaCache:"none"}).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){});
     });
   }
 
