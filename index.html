@@ -310,6 +310,7 @@ a{color:inherit;text-decoration:none}
 .avatar-upload-label input{display:none}
 .author-link{all:unset;display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:#444;font-weight:750}
 .author-link:hover{text-decoration:underline;text-underline-offset:2px}
+.author-name-plain{display:inline-flex;align-items:center;color:#666;font-weight:650}
 .public-profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0 6px}
 .public-profile-actions .btn{width:100%}
 .profile-tabs{display:flex;gap:16px;border-bottom:1px solid var(--line);margin:16px 0 6px}
@@ -445,6 +446,18 @@ a{color:inherit;text-decoration:none}
   var FANART_MINE_KEY = "noveltail_mine_fanarts_v1";
   var PROFILE_KEY = "noveltail_profile_v1";
   var CHAT_KEY = "noveltail_fake_chats_v1";
+
+  // 기능 보관 스위치. 코드는 삭제하지 않고 UI/진입만 숨긴다.
+  // 나중에 true로 바꾸면 팬아트/채팅 기능을 다시 노출할 수 있다.
+  var FEATURES = {
+    fanart:false,
+    chat:false
+  };
+
+  // 테스트판의 "가입된 다른 회원" 목록.
+  // 실제 서비스에서는 서버의 회원 ID/작성자 ID를 기준으로 판정하면 된다.
+  var DEMO_MEMBER_NAMES = ["구름사탕"];
+
   var genres = ["판타지","과학소설","로맨스","공포","무협","미스터리","대체역사","일상","개그","기타"];
   var tailTypes = ["다음 화","다른 결말","IF분기","패러디","개그화","외전","다른 등장인물 시점","재해석","세계관 확장","기타"];
 
@@ -503,8 +516,8 @@ a{color:inherit;text-decoration:none}
   function currentProfile() {
     var fallback={id:"me",name:"테스트 사용자",bio:"NovelTail 테스트 회원",avatar:""},raw,obj;
     try { raw=localStorage.getItem(PROFILE_KEY); obj=raw?JSON.parse(raw):null; } catch(e) { obj=null; }
-    if(!obj || typeof obj!=="object") return fallback;
-    return {id:"me",name:String(obj.name||fallback.name),bio:String(obj.bio||fallback.bio),avatar:String(obj.avatar||"")};
+    if(!obj || typeof obj!=="object") { fallback.member=true; return fallback; }
+    return {id:"me",name:String(obj.name||fallback.name),bio:String(obj.bio||fallback.bio),avatar:String(obj.avatar||""),member:true};
   }
 
   function saveCurrentProfile(profile) {
@@ -520,6 +533,11 @@ a{color:inherit;text-decoration:none}
     return n?Array.from(n)[0]:"?";
   }
 
+  function isRegisteredAuthorName(name) {
+    var n=String(name||"").trim();
+    return DEMO_MEMBER_NAMES.indexOf(n)!==-1;
+  }
+
   function demoProfileByName(name) {
     var n=String(name||"익명").trim(),bios={
       "구름사탕":"판타지와 가벼운 반전을 좋아합니다.",
@@ -529,7 +547,7 @@ a{color:inherit;text-decoration:none}
       "익명 1420":"SF 단편을 주로 씁니다.",
       "익명 0721":"달과 막차에 관한 이야기를 씁니다."
     };
-    return {id:userKeyFromName(n),name:n||"익명",bio:bios[n]||"NovelTail에서 작품과 팬아트를 만드는 창작자입니다.",avatar:""};
+    return {id:userKeyFromName(n),name:n||"익명",bio:bios[n]||"NovelTail에서 작품을 만드는 창작자입니다.",avatar:"",member:isRegisteredAuthorName(n)};
   }
 
   function profileForStory(s) {
@@ -549,9 +567,10 @@ a{color:inherit;text-decoration:none}
     if(String(key||"").indexOf("user:")===0) {
       var name=String(key).slice(5);
       // 복원용: 실제 표기는 작품/팬아트 데이터에서 우선 찾는다.
-      for(var i=0;i<data.length;i++) if(userKeyFromName(data[i].pen||"")===key) return demoProfileByName(data[i].pen);
-      for(i=0;i<fanarts.length;i++) if(userKeyFromName(fanarts[i].artist||"")===key) return demoProfileByName(fanarts[i].artist);
-      return demoProfileByName(name);
+      for(var i=0;i<data.length;i++) if(userKeyFromName(data[i].pen||"")===key) { var dp=demoProfileByName(data[i].pen); return dp.member?dp:null; }
+      for(i=0;i<fanarts.length;i++) if(userKeyFromName(fanarts[i].artist||"")===key) { var fp=demoProfileByName(fanarts[i].artist); return fp.member?fp:null; }
+      var unknown=demoProfileByName(name);
+      return unknown.member?unknown:null;
     }
     return demoProfileByName("익명");
   }
@@ -564,6 +583,8 @@ a{color:inherit;text-decoration:none}
 
   function authorLinkHTML(profile) {
     if(!profile) return "";
+    // 프로필은 회원만 가진다. 비회원/익명 작성자는 이름만 표시하고 이동 기능은 주지 않는다.
+    if(profile.id!=="me" && !profile.member) return '<span class="author-name-plain">'+esc(profile.name)+'</span>';
     return '<button class="author-link" type="button" data-user-profile="'+esc(profile.id)+'">'+avatarHTML(profile,"sm")+'<span>'+esc(profile.name)+'</span></button>';
   }
 
@@ -578,6 +599,7 @@ a{color:inherit;text-decoration:none}
     if(!Array.isArray(chats[key])) chats[key]=[];
     if(!chats[key].length) {
       var p=profileByKey(key);
+      if(!p) return [];
       chats[key].push({from:"them",text:"안녕하세요. 테스트용 대화방입니다. 편하게 메시지를 보내보세요.",time:Date.now()-60000,name:p.name});
       saveChats(chats);
     }
@@ -1258,9 +1280,10 @@ a{color:inherit;text-decoration:none}
   }
 
   function findHTML() {
-    return '<main class="wrap"><div class="head"><h2>발견</h2><span class="muted">작품과 팬아트 탐색</span></div>'+
-      '<div class="find-kind-tabs"><button class="find-kind-tab '+(state.findKind==='works'?'on':'')+'" type="button" data-find-kind="works">작품</button><button class="find-kind-tab '+(state.findKind==='fanart'?'on':'')+'" type="button" data-find-kind="fanart">팬아트</button></div>'+
-      (state.findKind==='fanart'?fanartDiscoveryHTML():workDiscoveryHTML())+'</main>';
+    if(!FEATURES.fanart) state.findKind="works";
+    var kindTabs=FEATURES.fanart?'<div class="find-kind-tabs"><button class="find-kind-tab '+(state.findKind==='works'?'on':'')+'" type="button" data-find-kind="works">작품</button><button class="find-kind-tab '+(state.findKind==='fanart'?'on':'')+'" type="button" data-find-kind="fanart">팬아트</button></div>':'';
+    return '<main class="wrap"><div class="head"><h2>발견</h2><span class="muted">'+(FEATURES.fanart?'작품과 팬아트 탐색':'작품 탐색')+'</span></div>'+
+      kindTabs+(FEATURES.fanart && state.findKind==='fanart'?fanartDiscoveryHTML():workDiscoveryHTML())+'</main>';
   }
 
   function fanartDetailHTML() {
@@ -1401,6 +1424,7 @@ a{color:inherit;text-decoration:none}
     return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader"><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(s.title)+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div></article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
   function workFanartSectionHTML(work) {
+    if(!FEATURES.fanart) return "";
     var arr=fanartsForWork(work),html="",i;
     if(!arr.length) return '<section class="work-fanarts"><div class="head"><h2>팬아트</h2><span class="muted">0개</span></div><div class="empty compact">아직 이 작품의 팬아트가 없습니다.</div></section>';
     for(i=0;i<Math.min(3,arr.length);i++) html+='<div class="work-fanart-thumb"><button type="button" data-fanart="'+esc(arr[i].id)+'">'+fanartImageHTML(arr[i],true)+'</button></div>';
@@ -1448,7 +1472,7 @@ a{color:inherit;text-decoration:none}
   function profileChatListHTML() {
     var keys=chatKeys(),html="",i,key,p,arr,last;
     for(i=0;i<keys.length;i++) {
-      key=keys[i];p=profileByKey(key);arr=chatThread(key);last=arr[arr.length-1]||{};
+      key=keys[i];p=profileByKey(key);if(!p) continue;arr=chatThread(key);last=arr[arr.length-1]||{};
       html+='<button class="chat-row" type="button" data-chat-user="'+esc(key)+'">'+avatarHTML(p,"sm")+'<span class="chat-row-main"><span class="chat-row-name">'+esc(p.name)+'</span><span class="chat-row-last">'+esc(last.text||"")+'</span></span><span class="chat-row-time">'+formatChatTime(last.time)+'</span></button>';
     }
     return html||'<div class="empty">아직 대화가 없습니다.<br>작가 프로필에서 채팅을 시작할 수 있습니다.</div>';
@@ -1457,7 +1481,7 @@ a{color:inherit;text-decoration:none}
   function profileHTML() {
     var ids,arr=[],cards="",i,bids,barr=[],bcards="",seen={},work,fids,farr=[],fcards="",fa,me=currentProfile();
     if(!isMember()) {
-      return '<main class="wrap"><section class="profile-guest"><h1>프로필</h1><div class="profile-guest-lead">회원가입하면<br>이야기를 모아둘 수 있습니다.</div><p class="profile-guest-copy">읽기와 둘러보기는 가볍게 시작하고, 내 작품과 마음에 든 작품을 계속 관리하고 싶을 때 계정을 만들 수 있습니다.</p><div class="profile-benefits"><div class="profile-benefit"><div class="profile-benefit-num">1</div><div><b>내 작품을 한곳에서</b><span>내가 작성한 첫 작품과 꼬리 작품, 시리즈를 프로필에서 모아볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">2</div><div><b>북마크와 즐겨찾기</b><span>마음에 든 소설은 북마크에, 팬아트는 즐겨찾기에 저장해 다시 볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">3</div><div><b>프로필과 팬아트</b><span>프로필 사진을 설정하고, 내 작품과 팬아트를 다른 이용자에게 보여줄 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">4</div><div><b>작가와 채팅</b><span>작가 프로필에서 1:1 대화를 시작할 수 있습니다. 현재는 테스트용 가짜 채팅입니다.</span></div></div></div><button class="btn primary profile-signup" type="button" data-signup="1">회원가입</button><p class="profile-test-note">현재 테스트판에서는 개인정보 입력 없이 버튼을 누르면 바로 회원 상태가 됩니다.</p></section></main>';
+      return '<main class="wrap"><section class="profile-guest"><h1>프로필</h1><div class="profile-guest-lead">회원가입하면<br>이야기를 모아둘 수 있습니다.</div><p class="profile-guest-copy">읽기와 둘러보기는 가볍게 시작하고, 내 작품과 마음에 든 작품을 계속 관리하고 싶을 때 계정을 만들 수 있습니다.</p><div class="profile-benefits"><div class="profile-benefit"><div class="profile-benefit-num">1</div><div><b>내 작품을 한곳에서</b><span>내가 작성한 첫 작품과 꼬리 작품, 시리즈를 프로필에서 모아볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">2</div><div><b>북마크</b><span>마음에 든 소설을 북마크에 저장해 다시 볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">3</div><div><b>회원 프로필</b><span>회원만 프로필을 가지며, 회원이 작성한 작품에서만 작성자 프로필로 이동할 수 있습니다.</span></div></div></div><button class="btn primary profile-signup" type="button" data-signup="1">회원가입</button><p class="profile-test-note">현재 테스트판에서는 개인정보 입력 없이 버튼을 누르면 바로 회원 상태가 됩니다.</p></section></main>';
     }
     ids=mineIds();
     for(i=0;i<data.length;i++) {if(ids.indexOf(data[i].id)===-1) continue;if(isSeriesEpisode(data[i])&&data[i].episode!==1) continue;arr.push(data[i]);}
@@ -1469,31 +1493,31 @@ a{color:inherit;text-decoration:none}
     fids=mineFanartIds();for(i=0;i<fids.length;i++){fa=getFanart(fids[i]);if(fa)farr.push(fa);}farr.sort(function(a,b){return Number(b.date||0)-Number(a.date||0);});for(i=0;i<farr.length;i++)fcards+=fanartCardHTML(farr[i]);
     return '<main class="wrap"><div class="profile-member-head"><h1>프로필</h1><span class="profile-member-badge">회원</span></div>'+ 
       '<div class="profile-identity">'+avatarHTML(me,"lg")+'<div><div class="profile-name">'+esc(me.name)+'</div><div class="profile-bio">'+esc(me.bio)+'</div><div class="profile-avatar-actions"><label class="avatar-upload-label">프사 변경<input id="avatarFile" type="file" accept="image/*"></label></div></div></div>'+ 
-      '<div class="notice">현재 테스트판은 계정 상태·프사·내 작품·북마크·즐겨찾기·팬아트·채팅을 이 브라우저에 저장합니다.</div>'+ 
-      '<section class="profile-section"><div class="head"><h2>채팅</h2><span class="muted">테스트</span></div><div class="chat-list">'+profileChatListHTML()+'</div></section>'+ 
+      '<div class="notice">현재 테스트판은 계정 상태·프사·내 작품·북마크를 이 브라우저에 저장합니다.</div>'+ 
+      (FEATURES.chat?'<section class="profile-section"><div class="head"><h2>채팅</h2><span class="muted">테스트</span></div><div class="chat-list">'+profileChatListHTML()+'</div></section>':'')+ 
       '<section class="profile-section"><div class="head"><h2>내 작품</h2><span class="muted">'+arr.length+'개</span></div><div class="list">'+(cards||'<div class="empty">아직 작성한 작품이 없습니다.</div>')+'</div></section>'+ 
-      '<section class="profile-section"><div class="head"><h2>내 팬아트</h2><span class="muted">'+farr.length+'개</span></div>'+(fcards?'<div class="fanart-grid">'+fcards+'</div>':'<div class="empty">아직 올린 팬아트가 없습니다.</div>')+'</section>'+ 
+      (FEATURES.fanart?'<section class="profile-section"><div class="head"><h2>내 팬아트</h2><span class="muted">'+farr.length+'개</span></div>'+(fcards?'<div class="fanart-grid">'+fcards+'</div>':'<div class="empty">아직 올린 팬아트가 없습니다.</div>')+'</section>':'')+ 
       '<section class="profile-section"><div class="head"><h2>북마크</h2><span class="muted">'+barr.length+'개</span></div><div class="list">'+(bcards||'<div class="empty">아직 북마크한 작품이 없습니다.<br>마음에 든 소설 작품을 북마크해보세요.</div>')+'</div></section>'+ 
-      '<section class="profile-section"><div class="head"><h2>즐겨찾기</h2><span class="muted">'+favArr.length+'개</span></div>'+(favCards?'<div class="fanart-grid">'+favCards+'</div>':'<div class="empty">아직 즐겨찾기한 팬아트가 없습니다.</div>')+'</section>'+ 
+      (FEATURES.fanart?'<section class="profile-section"><div class="head"><h2>즐겨찾기</h2><span class="muted">'+favArr.length+'개</span></div>'+(favCards?'<div class="fanart-grid">'+favCards+'</div>':'<div class="empty">아직 즐겨찾기한 팬아트가 없습니다.</div>')+'</section>':'')+ 
       '<div class="profile-logout-wrap"><button class="profile-withdraw" type="button" data-withdraw="1">탈퇴</button></div></main>';
   }
 
   function publicProfileHTML() {
     var p=profileByKey(state.profileUser),works=[],fas=[],wc="",fc="",i,s,fa;
-    if(!p) return '<main class="wrap"><div class="empty">프로필을 찾을 수 없습니다.</div></main>';
+    if(!p || (p.id!=="me" && !p.member)) return '<main class="wrap"><button class="back" data-history-back="1">←</button><div class="empty">회원 프로필이 아닙니다.</div></main>';
     if(p.id==="me") return profileHTML();
     for(i=0;i<data.length;i++) {s=data[i];if(userKeyFromName(s.pen||"")!==p.id)continue;if(isSeriesEpisode(s)&&s.episode!==1)continue;works.push(s);}
     for(i=0;i<works.length;i++) wc+=cardHTML(works[i]);
     for(i=0;i<fanarts.length;i++){fa=fanarts[i];if(userKeyFromName(fa.artist||"")===p.id)fas.push(fa);}for(i=0;i<fas.length;i++)fc+=fanartCardHTML(fas[i]);
     return '<main class="wrap"><button class="back" data-history-back="1">←</button>'+ 
       '<div class="profile-identity">'+avatarHTML(p,"lg")+'<div><div class="profile-name">'+esc(p.name)+'</div><div class="profile-bio">'+esc(p.bio)+'</div></div></div>'+ 
-      '<div class="public-profile-actions"><button class="btn primary" type="button" data-chat-user="'+esc(p.id)+'">채팅하기</button><button class="btn" type="button" data-commission-user="'+esc(p.id)+'">커미션 요청하기</button></div>'+ 
-      '<div class="commission-box"><b>테스트용 커미션</b><p>현재는 실제 결제 없이 커미션 요청 문구를 채팅으로 보내는 흐름만 시험할 수 있습니다.</p></div>'+ 
+      (FEATURES.chat?'<div class="public-profile-actions"><button class="btn primary" type="button" data-chat-user="'+esc(p.id)+'">채팅하기</button><button class="btn" type="button" data-commission-user="'+esc(p.id)+'">커미션 요청하기</button></div><div class="commission-box"><b>테스트용 커미션</b><p>현재는 실제 결제 없이 커미션 요청 문구를 채팅으로 보내는 흐름만 시험할 수 있습니다.</p></div>':'')+ 
       '<section class="profile-section"><div class="head"><h2>작품</h2><span class="muted">'+works.length+'개</span></div><div class="list">'+(wc||'<div class="empty">공개 작품이 없습니다.</div>')+'</div></section>'+ 
-      '<section class="profile-section"><div class="head"><h2>팬아트</h2><span class="muted">'+fas.length+'개</span></div>'+(fc?'<div class="fanart-grid">'+fc+'</div>':'<div class="empty">공개 팬아트가 없습니다.</div>')+'</section></main>';
+      (FEATURES.fanart?'<section class="profile-section"><div class="head"><h2>팬아트</h2><span class="muted">'+fas.length+'개</span></div>'+(fc?'<div class="fanart-grid">'+fc+'</div>':'<div class="empty">공개 팬아트가 없습니다.</div>')+'</section>':'')+'</main>';
   }
 
   function chatHTML() {
+    if(!FEATURES.chat) return '<main class="wrap"><button class="back" data-history-back="1">←</button><div class="empty">채팅 기능은 현재 숨김 상태입니다.</div></main>';
     var key=state.chatUser,p=profileByKey(key),arr=key?chatThread(key):[],html="",i,m;
     if(!isMember()) return '<main class="wrap"><div class="notice">채팅하려면 회원가입이 필요합니다.</div><button class="btn primary" type="button" data-view="profile" style="width:100%;margin-top:10px">회원가입</button></main>';
     if(!key||!p) return '<main class="wrap"><button class="back" data-view="profile">←</button><div class="empty">대화 상대를 찾을 수 없습니다.</div></main>';
@@ -1515,9 +1539,9 @@ a{color:inherit;text-decoration:none}
     else if(state.view==="tail") app.innerHTML=formHTML(state.selected);
     else if(state.view==="profile") app.innerHTML=profileHTML();
     else if(state.view==="publicprofile") app.innerHTML=publicProfileHTML();
-    else if(state.view==="chat") app.innerHTML=chatHTML();
-    else if(state.view==="fanart") app.innerHTML=fanartDetailHTML();
-    else if(state.view==="fanartwrite") app.innerHTML=fanartFormHTML();
+    else if(state.view==="chat") { if(!FEATURES.chat){state.view="profile";app.innerHTML=profileHTML();} else app.innerHTML=chatHTML(); }
+    else if(state.view==="fanart") { if(!FEATURES.fanart){state.view="find";app.innerHTML=findHTML();} else app.innerHTML=fanartDetailHTML(); }
+    else if(state.view==="fanartwrite") { if(!FEATURES.fanart){state.view="find";app.innerHTML=findHTML();} else app.innerHTML=fanartFormHTML(); }
     else if(state.view==="info") app.innerHTML=infoHTML();
     updateNav();
   }
@@ -1658,6 +1682,7 @@ a{color:inherit;text-decoration:none}
   }
 
   function submitFanart(form) {
+    if(!FEATURES.fanart) return;
     if(!isMember()) {go("profile");return;}
     var fd=new FormData(form),file=form.querySelector('input[name="image"]')&&form.querySelector('input[name="image"]').files[0];
     var workId=String(fd.get("workId")||""),work=getStory(workId);
@@ -1687,19 +1712,19 @@ a{color:inherit;text-decoration:none}
         if(t.getAttribute("data-withdraw")) {setMember(false);try{localStorage.removeItem(BOOKMARK_KEY);localStorage.removeItem(FANART_FAVORITE_KEY);}catch(err){}render();return;}
         if(t.getAttribute("data-bookmark")) {toggleBookmark(t.getAttribute("data-bookmark"));render();return;}
         if(t.getAttribute("data-fanart-favorite")) {toggleFanartFavorite(t.getAttribute("data-fanart-favorite"));render();return;}
-        if(t.getAttribute("data-user-profile")) {state.profileUser=t.getAttribute("data-user-profile");go(state.profileUser==="me"?"profile":"publicprofile");return;}
-        if(t.getAttribute("data-chat-user")) {if(!isMember()){go("profile");return;}state.chatUser=t.getAttribute("data-chat-user");chatThread(state.chatUser);go("chat");return;}
-        if(t.getAttribute("data-commission-user")) {if(!isMember()){go("profile");return;}state.chatUser=t.getAttribute("data-commission-user");chatThread(state.chatUser);addChatMessage(state.chatUser,"me","커미션을 요청하고 싶습니다. 작업 가능 여부와 조건을 알려주세요.");go("chat");return;}
-        if(t.getAttribute("data-find-kind")) {state.findKind=t.getAttribute("data-find-kind");state.fanWorkFilter=null;render();return;}
-        if(t.getAttribute("data-fan-rank")) {state.fanRank=t.getAttribute("data-fan-rank");render();return;}
-        if(t.getAttribute("data-fan-genre")) {state.fanGenre=t.getAttribute("data-fan-genre");render();return;}
-        if(t.getAttribute("data-fanart-write")) {if(isMember())go("fanartwrite");else go("profile");return;}
-        if(t.getAttribute("data-fanart")) {state.selected=t.getAttribute("data-fanart");go("fanart");return;}
-        if(t.getAttribute("data-fanart-like")) {var faLike=getFanart(t.getAttribute("data-fanart-like"));if(faLike){faLike.likes=Number(faLike.likes||0)+1;saveFanarts();render();}return;}
-        if(t.getAttribute("data-fanart-comments")) {var fc=document.getElementById("fanartComments");if(fc)fc.scrollIntoView();return;}
-        if(t.getAttribute("data-add-fanart-comment")) {var fi=document.getElementById("fanartCommentInput"),ft=fi?fi.value.trim():"",fao=getFanart(t.getAttribute("data-add-fanart-comment"));if(ft&&fao){fao.comments=fao.comments||[];fao.comments.push(["익명 "+Math.floor(1000+Math.random()*9000),ft]);saveFanarts();render();}return;}
-        if(t.getAttribute("data-work-fanarts")) {state.findKind="fanart";state.fanWorkFilter=t.getAttribute("data-work-fanarts");state.fanGenre="전체";go("find");return;}
-        if(t.getAttribute("data-clear-fan-work")) {state.fanWorkFilter=null;render();return;}
+        if(t.getAttribute("data-user-profile")) {var pk=t.getAttribute("data-user-profile"),pp=profileByKey(pk);if(pk!=="me" && (!pp || !pp.member)) return;state.profileUser=pk;go(state.profileUser==="me"?"profile":"publicprofile");return;}
+        if(t.getAttribute("data-chat-user")) {if(!FEATURES.chat)return;if(!isMember()){go("profile");return;}state.chatUser=t.getAttribute("data-chat-user");chatThread(state.chatUser);go("chat");return;}
+        if(t.getAttribute("data-commission-user")) {if(!FEATURES.chat)return;if(!isMember()){go("profile");return;}state.chatUser=t.getAttribute("data-commission-user");chatThread(state.chatUser);addChatMessage(state.chatUser,"me","커미션을 요청하고 싶습니다. 작업 가능 여부와 조건을 알려주세요.");go("chat");return;}
+        if(t.getAttribute("data-find-kind")) {var fk=t.getAttribute("data-find-kind");if(fk==="fanart"&&!FEATURES.fanart)return;state.findKind=fk;state.fanWorkFilter=null;render();return;}
+        if(t.getAttribute("data-fan-rank")) {if(!FEATURES.fanart)return;state.fanRank=t.getAttribute("data-fan-rank");render();return;}
+        if(t.getAttribute("data-fan-genre")) {if(!FEATURES.fanart)return;state.fanGenre=t.getAttribute("data-fan-genre");render();return;}
+        if(t.getAttribute("data-fanart-write")) {if(!FEATURES.fanart)return;if(isMember())go("fanartwrite");else go("profile");return;}
+        if(t.getAttribute("data-fanart")) {if(!FEATURES.fanart)return;state.selected=t.getAttribute("data-fanart");go("fanart");return;}
+        if(t.getAttribute("data-fanart-like")) {if(!FEATURES.fanart)return;var faLike=getFanart(t.getAttribute("data-fanart-like"));if(faLike){faLike.likes=Number(faLike.likes||0)+1;saveFanarts();render();}return;}
+        if(t.getAttribute("data-fanart-comments")) {if(!FEATURES.fanart)return;var fc=document.getElementById("fanartComments");if(fc)fc.scrollIntoView();return;}
+        if(t.getAttribute("data-add-fanart-comment")) {if(!FEATURES.fanart)return;var fi=document.getElementById("fanartCommentInput"),ft=fi?fi.value.trim():"",fao=getFanart(t.getAttribute("data-add-fanart-comment"));if(ft&&fao){fao.comments=fao.comments||[];fao.comments.push(["익명 "+Math.floor(1000+Math.random()*9000),ft]);saveFanarts();render();}return;}
+        if(t.getAttribute("data-work-fanarts")) {if(!FEATURES.fanart)return;state.findKind="fanart";state.fanWorkFilter=t.getAttribute("data-work-fanarts");state.fanGenre="전체";go("find");return;}
+        if(t.getAttribute("data-clear-fan-work")) {if(!FEATURES.fanart)return;state.fanWorkFilter=null;render();return;}
         if(t.getAttribute("data-history-back")) {if(navIndex>0)history.back();else go("profile");return;}
         if(t.getAttribute("data-view")) {go(t.getAttribute("data-view"));return;}
         if(t.getAttribute("data-series")) {openSeries(t.getAttribute("data-series"));return;}
@@ -1756,6 +1781,7 @@ a{color:inherit;text-decoration:none}
     else if(e.target && e.target.id==="fanartForm") {e.preventDefault();submitFanart(e.target);}
     else if(e.target && e.target.id==="chatForm") {
       e.preventDefault();
+      if(!FEATURES.chat) return;
       var ci=document.getElementById("chatInput"),ct=ci?ci.value.trim():"",key=state.chatUser;
       if(ct&&key){
         addChatMessage(key,"me",ct);render();
@@ -1953,7 +1979,7 @@ a{color:inherit;text-decoration:none}
   ensureDemoSeries();
   ensureDiscoveryDemoTails();
   ensureHomeDemoWorks();
-  ensureDemoFanarts();
+  if(FEATURES.fanart) ensureDemoFanarts();
   migrateData();
   try { history.replaceState(navSnapshot(),"",location.href); } catch(e) {}
   render();
