@@ -87,6 +87,23 @@ a{color:inherit;text-decoration:none}
 .type-choice input{position:absolute;opacity:0;pointer-events:none}
 .type-choice span{display:block;text-align:center;border:1px solid var(--line-strong);border-radius:10px;padding:11px 8px;font-size:13px;font-weight:700}
 .type-choice input:checked+span{background:#111;color:#fff;border-color:#111}
+
+/* NovelTail 전용 쓰기 선택 UI */
+.write-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.write-choice-grid.compact{grid-template-columns:repeat(2,minmax(0,1fr))}
+.write-choice-grid.genre{grid-template-columns:repeat(2,minmax(0,1fr))}
+.write-choice-btn{appearance:none;-webkit-appearance:none;width:100%;min-height:46px;border:1px solid var(--line-strong);background:#fff;border-radius:11px;padding:11px 12px;text-align:left;display:flex;flex-direction:column;justify-content:center;gap:3px;transition:background .15s ease,border-color .15s ease,transform .08s ease;color:#222}
+.write-choice-btn:active{transform:scale(.985)}
+.write-choice-btn .choice-title{font-size:13px;font-weight:800;line-height:1.35}
+.write-choice-btn .choice-sub{font-size:10px;color:#888;line-height:1.45;font-weight:550}
+.write-choice-btn.on{background:#111;border-color:#111;color:#fff}
+.write-choice-btn.on .choice-sub{color:#bdbdbd}
+.write-choice-btn.policy{min-height:62px}
+.write-choice-btn.tail-type{min-height:42px;padding:9px 11px}
+.write-choice-btn.tail-type .choice-title{font-size:12px}
+.write-choice-hidden{display:none!important}
+.write-choice-note{margin-top:7px;font-size:10px;line-height:1.55;color:var(--muted)}
+@media(min-width:520px){.write-choice-grid.genre{grid-template-columns:repeat(3,minmax(0,1fr))}.write-choice-grid.tail-types{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .hidden{display:none!important}
 .field{margin-bottom:15px}
 .field label{display:block;font-weight:700;font-size:13px;margin-bottom:7px}
@@ -403,8 +420,7 @@ a{color:inherit;text-decoration:none}
 .swipe-dot.on{width:17px;background:#222}
 .swipe-hint{text-align:center;color:#9a9a9a;font-size:10px;font-weight:650;margin-top:7px}
 .home-list-frame{overflow:hidden!important}
-.home-swipe-zone{touch-action:pan-y;user-select:none;-webkit-user-select:none;min-height:232px;will-change:transform,opacity;transform:translate3d(0,0,0);transition:transform .28s cubic-bezier(.18,.9,.28,1.12),opacity .22s ease}
-.home-swipe-zone.is-dragging{transition:none}
+.home-swipe-zone{touch-action:pan-y;user-select:none;-webkit-user-select:none;min-height:232px;transform:translate3d(0,0,0)}
 .home-feed .home-pager{display:none!important}
 .home-page-status-swipe{text-align:center;font-size:10px;color:#8d8d8d;font-weight:700;margin-top:3px}
 .reader[data-episode-swipe="1"]{touch-action:pan-y}
@@ -477,7 +493,7 @@ a{color:inherit;text-decoration:none}
 (function () {
   "use strict";
 
-  var APP_BUILD = "20260822-swipe-isolated-v4";
+  var APP_BUILD = "20260822-home-swipe-smooth-v5";
   var STORAGE_KEY = "kkori_mobile_safe_v1";
   var MINE_KEY = "kkori_mine_safe_v1";
   var GENRE_PREF_KEY = "kkori_genre_tabs_v1";
@@ -1066,8 +1082,47 @@ a{color:inherit;text-decoration:none}
     return '<span class="tail-type-tag">'+esc(normalizedTailType(s.type))+'</span>';
   }
 
+  function isNextTail(s) {
+    return !!(s && s.lineage==="tail" && normalizedTailType(s.type)==="다음 화");
+  }
+
+  // "다음 화" 성격의 꼬리만 원래 시리즈의 화수를 이어받는다.
+  // 예: 공식 2화 -> 다음 화 꼬리 = 3화 -> 그 꼬리의 다음 화 = 4화.
+  function displayEpisodeNumber(s) {
+    if(!s) return null;
+    if(isSeriesEpisode(s)) {
+      var root=seriesRootForStory(s);
+      if(root && isNextTail(root) && root.p) {
+        var parentBase=displayEpisodeNumber(getStory(root.p));
+        if(parentBase!=null) return parentBase+Number(s.episode||1);
+      }
+      return Number(s.episode||0)||null;
+    }
+    if(isNextTail(s) && s.p) {
+      var parentNo=displayEpisodeNumber(getStory(s.p));
+      return parentNo==null?null:parentNo+1;
+    }
+    return null;
+  }
+
+  function stripEpisodePrefix(title) {
+    return String(title||"").replace(/^\s*\d+\s*화\s*[.．·:-]?\s*/,"");
+  }
+
+  function displayEpisodeTitle(s) {
+    if(!s) return "";
+    var n=displayEpisodeNumber(s);
+    if(n!=null && (isSeriesEpisode(s) || isNextTail(s))) return n+"화. "+stripEpisodePrefix(s.title);
+    return s.title;
+  }
+
   function displayTitle(s) {
-    return isSeriesRoot(s)?s.seriesTitle:s.title;
+    if(!s) return "";
+    if(isSeriesRoot(s)) {
+      var startNo=isNextTail(s)?displayEpisodeNumber(s):null;
+      return startNo!=null ? startNo+"화부터 · "+s.seriesTitle : s.seriesTitle;
+    }
+    return displayEpisodeTitle(s);
   }
 
   function displayViews(s) {
@@ -1447,7 +1502,7 @@ a{color:inherit;text-decoration:none}
     if(isSeriesRoot(k)) {
       eps=seriesEpisodes(k.seriesId);
       for(i=0;i<eps.length;i++) {
-        if(childrenOf(eps[i].id).length) html+='<div class="tailtree-episode"><div class="tailtree-episode-title">'+esc(eps[i].title)+'</div><div class="tree">'+treeHTML(eps[i].id)+'</div></div>';
+        if(childrenOf(eps[i].id).length) html+='<div class="tailtree-episode"><div class="tailtree-episode-title">'+esc(displayEpisodeTitle(eps[i]))+'</div><div class="tree">'+treeHTML(eps[i].id)+'</div></div>';
       }
       return html;
     }
@@ -1460,7 +1515,7 @@ a{color:inherit;text-decoration:none}
       k=kids[i];
       nested=nestedTreeForNode(k);
       attr=isSeriesRoot(k)?' data-series="'+esc(k.seriesId)+'"':' data-story="'+esc(k.id)+'"';
-      label=isSeriesRoot(k)?k.seriesTitle:k.title;
+      label=displayTitle(k);
       html+='<div class="node"'+attr+'><div class="node-title">'+treeNodeTags(k)+'<b>'+esc(label)+'</b></div><div class="meta"><span>'+fmt(displayViews(k))+' 조회</span></div>'+nested+'</div>';
     }
     return html;
@@ -1471,7 +1526,7 @@ a{color:inherit;text-decoration:none}
     for(i=0;i<kids.length;i++) {
       k=kids[i];
       attr=isSeriesRoot(k)?' data-series="'+esc(k.seriesId)+'"':' data-story="'+esc(k.id)+'"';
-      label=isSeriesRoot(k)?k.seriesTitle:k.title;
+      label=displayTitle(k);
       html+='<div class="episode"><button type="button"'+attr+'><div class="episode-title"><span class="tags">'+treeNodeTags(k)+'</span>'+esc(label)+'</div><div class="episode-views">'+fmt(displayViews(k))+'</div></button></div>';
     }
     return html;
@@ -1485,7 +1540,7 @@ a{color:inherit;text-decoration:none}
       for(i=0;i<eps.length;i++) {
         if(descendantCount(eps[i].id)>0) {
           count+=descendantCount(eps[i].id);
-          html+='<section class="tailtree-episode"><div class="tailtree-episode-title">'+esc(eps[i].title)+'</div><div class="tree">'+treeHTML(eps[i].id)+'</div></section>';
+          html+='<section class="tailtree-episode"><div class="tailtree-episode-title">'+esc(displayEpisodeTitle(eps[i]))+'</div><div class="tree">'+treeHTML(eps[i].id)+'</div></section>';
         }
       }
     } else {
@@ -1501,7 +1556,7 @@ a{color:inherit;text-decoration:none}
     eps=seriesEpisodes(root.seriesId);
     for(i=0;i<eps.length;i++) {
       total+=Number(eps[i].views||0);
-      rows+='<div class="episode"><button type="button" data-story="'+esc(eps[i].id)+'"><div class="episode-title">'+esc(eps[i].title)+'</div><div class="episode-views">'+fmt(eps[i].views)+'</div></button></div>';
+      rows+='<div class="episode"><button type="button" data-story="'+esc(eps[i].id)+'"><div class="episode-title">'+esc(displayEpisodeTitle(eps[i]))+'</div><div class="episode-views">'+fmt(eps[i].views)+'</div></button></div>';
     }
     p=policyFor(root);
     if(FEATURES.settlement && root.lineage==="tail") {
@@ -1526,7 +1581,7 @@ a{color:inherit;text-decoration:none}
       eps=seriesEpisodes(s.seriesId);
       episodeTotal=eps.length;
       for(i=0;i<eps.length;i++) if(eps[i].episode===s.episode+1) {officialNext=eps[i];break;}
-      officialBlock='<section class="sec official-next"><div class="head"><h2>공식 다음 화</h2><span class="canon">정사</span></div>'+(officialNext?'<div class="episode-list"><div class="episode"><button type="button" data-story="'+esc(officialNext.id)+'"><div class="episode-title">'+esc(officialNext.title)+'</div><div class="episode-views">'+fmt(officialNext.views)+'</div></button></div></div>':'<div class="notice">아직 공식 다음 화가 없습니다.</div>')+'</section>';
+      officialBlock='<section class="sec official-next"><div class="head"><h2>공식 다음 화</h2><span class="canon">정사</span></div>'+(officialNext?'<div class="episode-list"><div class="episode"><button type="button" data-story="'+esc(officialNext.id)+'"><div class="episode-title">'+esc(displayEpisodeTitle(officialNext))+'</div><div class="episode-views">'+fmt(officialNext.views)+'</div></button></div></div>':'<div class="notice">아직 공식 다음 화가 없습니다.</div>')+'</section>';
       metaExtra='<span>총 '+episodeTotal+'화</span><span>공식 '+s.episode+'화</span>';
     }
     for(i=s.comments.length-1;i>=0;i--) comments+='<div class="comment"><small>'+esc(s.comments[i][0])+'</small><div>'+esc(s.comments[i][1])+'</div></div>';
@@ -1545,7 +1600,7 @@ a{color:inherit;text-decoration:none}
       else if(policyFor(s).policy==="noncommercial") currentRoyalty='<div class="notice">이 꼬리 작품은 비상업 작품입니다.</div>';
     }
     tailDisclosure=tailDisclosureHTML(s);
-    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader" '+(isSeriesEpisode(s)?'data-episode-swipe="1"':'')+'><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(s.title)+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div>'+(isSeriesEpisode(s)?'<div class="episode-swipe-status"><span class="mini-line"></span><span>'+s.episode+' / '+episodeTotal+' · 좌우로 회차 이동</span><span class="mini-line"></span></div>':'')+'</article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
+    return '<main class="wrap"><button class="back"'+backAttr+'>←</button><article class="reader" '+(isSeriesEpisode(s)?'data-episode-swipe="1"':'')+'><div class="work-topline"><div class="reader-tags">'+originBadge(s)+(isSeriesEpisode(s)?seriesBadge():tailTypeBadge(s))+'</div>'+bookmarkButtonHTML(s)+'</div><h1>'+esc(displayEpisodeTitle(s))+'</h1><div class="meta">'+authorLinkHTML(profileForStory(s))+'<span>'+esc(s.genre)+'</span>'+metaExtra+'<span>'+fmt(Number(s.views||0))+' 조회</span></div>'+tailDisclosure+'<div class="body">'+esc(s.body)+'</div>'+(isSeriesEpisode(s)?'<div class="episode-swipe-status"><span class="mini-line"></span><span>'+s.episode+' / '+episodeTotal+' · 좌우로 회차 이동</span><span class="mini-line"></span></div>':'')+'</article>'+currentRoyalty+'<div class="triple"><button class="act" data-like="'+esc(s.id)+'"><b>'+fmt(s.likes)+'</b>좋아요</button><button class="act" data-comments="1"><b>'+s.comments.length+'</b>댓글</button><button class="act" data-tail="'+esc(s.id)+'"><b>'+kids.length+'</b>꼬리</button></div><div class="ad-slot work-ad-slot">광고 영역</div>'+officialBlock+'<section class="sec tails-section"><div class="head"><h2>꼬리들</h2><span class="muted">직접 '+kids.length+'개 · 전체 '+descendantCount(s.id)+'개</span></div>'+policyNote+(kids.length?'<div class="episode-list" style="margin-top:10px">'+directTailListHTML(s.id)+'</div>':'<div class="empty compact">아직 꼬리가 없습니다.</div>')+(p.policy!=="deny"?tailButton:'')+'</section>'+workFanartSectionHTML(s)+'<section class="sec" id="comments"><div class="head"><h2>댓글</h2><span class="muted">익명</span></div><div class="commentbox"><input id="commentInput" maxlength="240" placeholder="가볍게 한마디"><button class="btn primary" data-addcomment="'+esc(s.id)+'">등록</button></div>'+(comments||'<div class="empty compact">첫 댓글을 남겨보세요.</div>')+'</section></main>';
   }
   function workFanartSectionHTML(work) {
     if(!FEATURES.fanart) return "";
@@ -1555,24 +1610,61 @@ a{color:inherit;text-decoration:none}
     return '<section class="work-fanarts"><div class="head"><h2>팬아트</h2><span class="muted">'+arr.length+'개</span></div><div class="work-fanart-grid">'+html+'</div><button class="work-fanarts-all" type="button" data-work-fanarts="'+esc(seriesRootForStory(work).id)+'">이 작품의 팬아트 모두 보기 →</button></section>';
   }
 
+  function writeChoiceButton(name,value,title,sub,on,extraClass) {
+    return '<button class="write-choice-btn '+(extraClass||'')+' '+(on?'on':'')+'" type="button" data-write-choice="'+esc(name)+'" data-write-value="'+esc(value)+'" aria-pressed="'+(on?'true':'false')+'"><span class="choice-title">'+esc(title)+'</span>'+(sub?'<span class="choice-sub">'+esc(sub)+'</span>':'')+'</button>';
+  }
+
+  function formatChoiceHTML() {
+    return '<input class="write-choice-hidden" type="hidden" name="format" value="short">'+
+      '<div class="write-choice-grid">'+
+      writeChoiceButton('format','short','단편','한 편으로 완결되는 작품',true,'')+
+      writeChoiceButton('format','series','시리즈','여러 회차로 이어지는 작품',false,'')+
+      '</div>';
+  }
+
+  function genreChoiceHTML() {
+    var html='<input class="write-choice-hidden" type="hidden" name="genre" value="'+esc(genres[0])+'"><div class="write-choice-grid genre">',i;
+    for(i=0;i<genres.length;i++) html+=writeChoiceButton('genre',genres[i],genres[i],'',i===0,'');
+    return html+'</div>';
+  }
+
+  function tailTypeChoiceHTML() {
+    var html='<input class="write-choice-hidden" type="hidden" name="type" value="'+esc(tailTypes[0])+'"><div class="write-choice-grid tail-types">',i;
+    for(i=0;i<tailTypes.length;i++) html+=writeChoiceButton('type',tailTypes[i],tailTypes[i],'',i===0,'tail-type');
+    return html+'</div>';
+  }
+
   function policyFieldHTML() {
-    if(!FEATURES.settlement) return '<div class="field"><label>꼬리 작성</label><select name="tailPolicy"><option value="commercial">꼬리 작성 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">다른 이용자가 이 작품에서 새로운 꼬리 작품을 만들 수 있는지 정합니다.</div></div>';
-    return '<div class="field"><label>꼬리 이용 조건</label><select name="tailPolicy"><option value="commercial">수익화 허용 · 플랫폼 10% · 계보 로열티</option><option value="noncommercial">비상업 꼬리만 허용</option><option value="deny">꼬리 작성 금지</option></select><div class="hint">수익화 시 플랫폼 수수료 10%를 먼저 제외합니다. 남은 창작자 배분금 90% 안에서 첫 원작자 10% 고정, 가까운 꼬리 조상부터 6% → 3% → 1.5% → 0.75%…로 배분하고 나머지는 현재 작가가 받습니다. 실제 결제·정산은 아직 하지 않습니다.</div></div>';
+    if(!FEATURES.settlement) return '<div class="field"><label>꼬리 작성</label><input class="write-choice-hidden" type="hidden" name="tailPolicy" value="commercial"><div class="write-choice-grid">'+
+      writeChoiceButton('tailPolicy','commercial','허용','다른 이용자가 이 작품에서 꼬리를 만들 수 있습니다.',true,'policy')+
+      writeChoiceButton('tailPolicy','deny','금지','이 작품에서는 새로운 꼬리를 만들 수 없습니다.',false,'policy')+
+      '</div></div>';
+    return '<div class="field"><label>꼬리 이용 조건</label><input class="write-choice-hidden" type="hidden" name="tailPolicy" value="commercial"><div class="write-choice-grid">'+
+      writeChoiceButton('tailPolicy','commercial','수익화 허용','플랫폼 정산 정책에 따라 꼬리 수익화를 허용합니다.',true,'policy')+
+      writeChoiceButton('tailPolicy','noncommercial','비상업만','꼬리 작성은 가능하지만 수익화는 허용하지 않습니다.',false,'policy')+
+      writeChoiceButton('tailPolicy','deny','작성 금지','이 작품에서는 새로운 꼬리를 만들 수 없습니다.',false,'policy')+
+      '</div></div>';
   }
 
   function formHTML(parentId) {
-    var p=parentId?getStory(parentId):null,options="",i,genreOptions="",pol;
+    var p=parentId?getStory(parentId):null,pol;
     if(p) {
       pol=policyFor(p);
       if(pol.policy==="deny") return '<main class="wrap"><button class="back" data-story="'+esc(p.id)+'">←</button><div class="notice">첫 작품 원작자가 꼬리 작성을 허용하지 않았습니다.</div></main>';
-      for(i=0;i<tailTypes.length;i++) options+='<option>'+esc(tailTypes[i])+'</option>';
-    } else {
-      for(i=0;i<genres.length;i++) genreOptions+='<option>'+esc(genres[i])+'</option>';
     }
     var policyNotice="";
     if(FEATURES.settlement && p && pol.policy==="commercial") policyNotice=royaltyPlanHTML(royaltyPlanForNewTail(p),'이 꼬리가 수익화될 경우');
     if(FEATURES.settlement && p && pol.policy==="noncommercial") policyNotice='<div class="notice">이 꼬리는 비상업 작품으로만 게시됩니다.</div>';
-    return '<main class="wrap"><button class="back" '+(p?'data-story="'+esc(p.id)+'"':'data-view="home"')+'>←</button>'+policyNotice+'<form class="form" id="storyForm"><div class="head"><h2>'+(p?'꼬리 쓰기':'새 작품 쓰기')+'</h2><span class="muted">'+(p?esc(displayTitle(p)):'바로 공개')+'</span></div><div class="field"><label>'+(p?'꼬리 형태':'작품 형태')+'</label><div class="type-choice"><label><input type="radio" name="format" value="short" checked><span>단편</span></label><label><input type="radio" name="format" value="series"><span>시리즈</span></label></div></div>'+(p?'<div class="field"><label>꼬리 성격</label><select name="type">'+options+'</select></div>':'')+'<div class="field"><label>작품 제목 *</label><input name="title" required maxlength="80"></div><div class="field hidden" id="seriesTitleField"><label>1화 제목 *</label><input name="episodeTitle" maxlength="70" placeholder="예: 첫 번째 승객"></div>'+(!p?'<div class="field"><label>장르</label><select name="genre">'+genreOptions+'</select></div>'+policyFieldHTML():'')+'<div class="field"><label>필명 <span class="muted">선택</span></label><input name="pen" maxlength="30" placeholder="비우면 익명"></div><div class="field"><label>한 줄 소개</label><input name="desc" maxlength="120"></div><div class="field"><label>본문 *</label><textarea name="body" required placeholder="생각난 이야기를 바로 적어보세요."></textarea></div><button class="btn primary" style="width:100%">게시</button></form></main>';
+    return '<main class="wrap"><button class="back" '+(p?'data-story="'+esc(p.id)+'"':'data-view="home"')+'>←</button>'+policyNotice+'<form class="form" id="storyForm"><div class="head"><h2>'+(p?'꼬리 쓰기':'새 작품 쓰기')+'</h2><span class="muted">'+(p?esc(displayTitle(p)):'바로 공개')+'</span></div>'+ 
+      '<div class="field"><label>'+(p?'꼬리 형태':'작품 형태')+'</label>'+formatChoiceHTML()+'</div>'+ 
+      (p?'<div class="field"><label>꼬리 성격</label>'+tailTypeChoiceHTML()+'</div>':'')+
+      '<div class="field"><label>작품 제목 *</label><input name="title" required maxlength="80"></div>'+ 
+      '<div class="field hidden" id="seriesTitleField"><label>1화 제목 *</label><input name="episodeTitle" maxlength="70" placeholder="예: 첫 번째 승객"></div>'+ 
+      (!p?'<div class="field"><label>장르</label>'+genreChoiceHTML()+'</div>'+policyFieldHTML():'')+
+      '<div class="field"><label>필명 <span class="muted">선택</span></label><input name="pen" maxlength="30" placeholder="비우면 익명"></div>'+ 
+      '<div class="field"><label>한 줄 소개</label><input name="desc" maxlength="120"></div>'+ 
+      '<div class="field"><label>본문 *</label><textarea name="body" required placeholder="생각난 이야기를 바로 적어보세요."></textarea></div>'+ 
+      '<button class="btn primary" style="width:100%">게시</button></form></main>';
   }
 
   function infoHTML() {
@@ -1844,6 +1936,24 @@ a{color:inherit;text-decoration:none}
           } else go("info");
           return;
         }
+        if(t.getAttribute("data-write-choice")) {
+          var choiceName=t.getAttribute("data-write-choice"),choiceValue=t.getAttribute("data-write-value"),form=t.closest?t.closest("form"):null;
+          if(form) {
+            var hidden=form.querySelector('input.write-choice-hidden[name="'+choiceName+'"]');
+            if(hidden) hidden.value=choiceValue;
+            var peers=form.querySelectorAll('[data-write-choice="'+choiceName+'"]'),wi;
+            for(wi=0;wi<peers.length;wi++) {
+              var selected=peers[wi]===t;
+              peers[wi].classList.toggle("on",selected);
+              peers[wi].setAttribute("aria-pressed",selected?"true":"false");
+            }
+            if(choiceName==="format") {
+              var seriesField=document.getElementById("seriesTitleField");
+              if(seriesField) seriesField.classList.toggle("hidden",choiceValue!=="series");
+            }
+          }
+          return;
+        }
         if(t.getAttribute("data-signup")) {setMember(true);render();return;}
         if(t.getAttribute("data-withdraw")) {setMember(false);try{localStorage.removeItem(BOOKMARK_KEY);localStorage.removeItem(FANART_FAVORITE_KEY);}catch(err){}render();return;}
         if(t.getAttribute("data-bookmark")) {toggleBookmark(t.getAttribute("data-bookmark"));render();return;}
@@ -1996,38 +2106,38 @@ a{color:inherit;text-decoration:none}
     return Math.max(1,Math.ceil(arr.length/pageSize));
   }
 
-  function settleHomeZone(zone){
-    if(!zone) return;
-    zone.classList.remove("is-dragging");
-    zone.style.transform="translate3d(0,0,0)";
-    zone.style.opacity="1";
-  }
-
   function animateHomePageChange(zone,direction){
     var total=homePageCount(),next=state.homePage+direction;
-    if(next<0 || next>=total){
-      settleHomeZone(zone);
-      return;
-    }
-    zone.classList.remove("is-dragging");
-    zone.style.transform="translate3d("+(direction>0?"-18%":"18%")+",0,0)";
-    zone.style.opacity=".72";
-    setTimeout(function(){
+    if(next<0 || next>=total) return;
+    homeClickBlockedUntil=Date.now()+320;
+
+    var outX=direction>0?-28:28;
+    var inX=direction>0?28:-28;
+    var finish=function(){
       state.homePage=next;
       render();
       requestAnimationFrame(function(){
         var fresh=document.querySelector('[data-home-swipe="1"]');
         if(!fresh) return;
-        fresh.classList.add("is-dragging");
-        fresh.style.transform="translate3d("+(direction>0?"16%":"-16%")+",0,0)";
-        fresh.style.opacity=".76";
-        requestAnimationFrame(function(){
-          fresh.classList.remove("is-dragging");
-          fresh.style.transform="translate3d(0,0,0)";
-          fresh.style.opacity="1";
-        });
+        if(fresh.animate){
+          fresh.animate([
+            {transform:'translate3d('+inX+'px,0,0)',opacity:.82},
+            {transform:'translate3d(0,0,0)',opacity:1}
+          ],{duration:190,easing:'cubic-bezier(.22,.61,.36,1)',fill:'none'});
+        }
       });
-    },135);
+    };
+
+    if(zone && zone.animate){
+      var anim=zone.animate([
+        {transform:'translate3d(0,0,0)',opacity:1},
+        {transform:'translate3d('+outX+'px,0,0)',opacity:.82}
+      ],{duration:150,easing:'cubic-bezier(.22,.61,.36,1)',fill:'forwards'});
+      anim.onfinish=finish;
+      anim.oncancel=finish;
+    } else {
+      finish();
+    }
   }
 
   function bindHomeSwipeGesture(){
@@ -2035,36 +2145,32 @@ a{color:inherit;text-decoration:none}
     if(!zone || zone.dataset.boundSwipe==="1") return;
     zone.dataset.boundSwipe="1";
     var drag=null;
+
     zone.addEventListener("pointerdown",function(e){
       if(e.pointerType==="mouse" && e.button!==0) return;
-      drag={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastT:performance.now(),vx:0,locked:null};
-      zone.classList.add("is-dragging");
+      drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};
       try{zone.setPointerCapture(e.pointerId);}catch(err){}
-    });
+    },{passive:true});
+
     zone.addEventListener("pointermove",function(e){
       if(!drag || e.pointerId!==drag.id) return;
-      var dx=e.clientX-drag.x,dy=e.clientY-drag.y,ax=Math.abs(dx),ay=Math.abs(dy),now=performance.now(),dt=Math.max(1,now-drag.lastT);
-      if(drag.locked==null && (ax>7 || ay>7)) drag.locked=ax>ay*1.15?"x":"y";
-      if(drag.locked!=="x") return;
-      homeClickBlockedUntil=Date.now()+300;
-      drag.vx=(e.clientX-drag.lastX)/dt;drag.lastX=e.clientX;drag.lastT=now;
-      var total=homePageCount(),edge=(state.homePage===0&&dx>0)||(state.homePage===total-1&&dx<0),resistance=edge ? .18 : .42;
-      var pull=Math.max(-62,Math.min(62,dx*resistance));
-      zone.style.transform="translate3d("+pull+"px,0,0)";
-      zone.style.opacity=String(Math.max(.86,1-Math.abs(pull)/520));
-      e.preventDefault();
-    },{passive:false});
+      var dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+      if(Math.abs(dx)>10 && Math.abs(dx)>Math.abs(dy)*1.15){
+        drag.moved=true;
+        homeClickBlockedUntil=Date.now()+280;
+      }
+    },{passive:true});
+
     function finish(e){
       if(!drag || (e.pointerId!=null && e.pointerId!==drag.id)) return;
-      var dx=e.clientX-drag.x,dy=e.clientY-drag.y,velocity=drag.vx,locked=drag.locked;
+      var dx=e.clientX-drag.x,dy=e.clientY-drag.y,moved=drag.moved;
       drag=null;
-      if(locked!=="x" || Math.abs(dx)<Math.abs(dy)*1.1){settleHomeZone(zone);return;}
-      if(dx<-46 || velocity<-.48) animateHomePageChange(zone,1);
-      else if(dx>46 || velocity>.48) animateHomePageChange(zone,-1);
-      else settleHomeZone(zone);
+      if(!moved || Math.abs(dx)<48 || Math.abs(dx)<Math.abs(dy)*1.2) return;
+      animateHomePageChange(zone,dx<0?1:-1);
     }
-    zone.addEventListener("pointerup",finish);
-    zone.addEventListener("pointercancel",function(){drag=null;settleHomeZone(zone);});
+
+    zone.addEventListener("pointerup",finish,{passive:true});
+    zone.addEventListener("pointercancel",function(){drag=null;},{passive:true});
   }
 
   // 시리즈 회차는 별도 전역 감지로 두되 홈/이벤트 영역에서는 시작하지 않는다.
@@ -2280,7 +2386,7 @@ a{color:inherit;text-decoration:none}
   // 탐색은 네트워크 우선으로 처리해 새 index.html 배포가 오래 캐시되는 문제를 줄인다.
   if("serviceWorker" in navigator) {
     window.addEventListener("load",function(){
-      navigator.serviceWorker.register("./sw.js?v=20260822-swipe-v4",{scope:"./",updateViaCache:"none"}).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){});
+      navigator.serviceWorker.register("./sw.js?v=20260822-home-smooth-v5",{scope:"./",updateViaCache:"none"}).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){});
     });
   }
 
