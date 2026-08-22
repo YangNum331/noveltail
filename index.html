@@ -373,22 +373,45 @@ a{color:inherit;text-decoration:none}
 
 
 /* Swipe-first browsing */
-.event-carousel{margin:0 0 18px;user-select:none;-webkit-user-select:none}
-.event-viewport{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;padding:0 26px 2px 0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.event-carousel{--event-gap:10px;--event-peek:28px;margin:0 0 18px;user-select:none;-webkit-user-select:none}
+.event-viewport{display:flex;gap:var(--event-gap);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:0;overscroll-behavior-x:contain;padding:0 0 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;box-sizing:border-box}
 .event-viewport::-webkit-scrollbar{display:none}
-.event-banner{display:block;flex:0 0 calc(100% - 26px);scroll-snap-align:start;scroll-snap-stop:always;padding:0;border:0;background:transparent;border-radius:14px;overflow:hidden;cursor:pointer;text-align:left}
+.event-banner{display:block;flex:0 0 calc(100% - var(--event-peek));scroll-snap-align:start;scroll-snap-stop:always;padding:0;border:0;background:transparent;border-radius:14px;overflow:hidden;cursor:pointer;text-align:left;transform:translateZ(0);transition:transform .24s cubic-bezier(.2,.8,.25,1),opacity .24s ease}
+.event-banner:last-child{margin-right:var(--event-peek)}
+.event-banner:active{transform:scale(.992)}
 .event-banner img{display:block;width:100%;aspect-ratio:16/5;object-fit:cover;border-radius:14px;background:#eee;border:1px solid var(--line)}
+.event-detail{padding-top:2px}
+.event-detail-label{margin-bottom:18px}
+.event-detail-label img{display:block;width:100%;aspect-ratio:16/5;object-fit:cover;border:1px solid var(--line);border-radius:14px;background:#eee}
+.event-detail-hero{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border:1px solid var(--line);border-radius:14px;background:#f3f3f3}
+.event-detail-meta{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+.event-detail-chip{display:inline-flex;align-items:center;min-height:28px;padding:5px 9px;border-radius:999px;background:#f4f4f4;color:#555;font-size:11px;font-weight:750}
+.event-detail-copy{margin-top:25px}
+.event-detail-copy h1{margin:0 0 12px;font-size:28px;line-height:1.28;letter-spacing:-.04em}
+.event-detail-copy .lead{margin:0;color:#444;font-size:15px;line-height:1.85}
+.event-detail-section{padding:24px 0;border-top:1px solid var(--line)}
+.event-detail-section:first-of-type{margin-top:26px}
+.event-detail-section h2{margin:0 0 10px;font-size:17px;letter-spacing:-.02em}
+.event-detail-section p{margin:0;color:#555;font-size:13px;line-height:1.8}
+.event-detail-steps{display:grid;gap:0;margin-top:2px;border-top:1px solid var(--line)}
+.event-detail-step{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:13px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.65}
+.event-detail-step b{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#111;color:#fff;font-size:10px}
+.event-detail-note{margin-top:12px;padding:12px 13px;border-radius:10px;background:#f7f7f7;color:#777;font-size:11px;line-height:1.7}
+.event-detail-cta{width:100%;margin-top:18px}
 .swipe-dots{display:flex;align-items:center;justify-content:center;gap:6px;margin:9px 0 0;min-height:10px}
-.swipe-dot{width:5px;height:5px;border:0;padding:0;border-radius:999px;background:#d5d5d5;transition:width .16s ease,background .16s ease}
+.swipe-dot{width:5px;height:5px;border:0;padding:0;border-radius:999px;background:#d5d5d5;transition:width .22s cubic-bezier(.2,.8,.25,1),background .18s ease}
 .swipe-dot.on{width:17px;background:#222}
 .swipe-hint{text-align:center;color:#9a9a9a;font-size:10px;font-weight:650;margin-top:7px}
-.home-swipe-zone{touch-action:pan-y;user-select:none;-webkit-user-select:none;min-height:232px}
+.home-list-frame{overflow:hidden!important}
+.home-swipe-zone{touch-action:pan-y;user-select:none;-webkit-user-select:none;min-height:232px;will-change:transform,opacity;transform:translate3d(0,0,0);transition:transform .28s cubic-bezier(.18,.9,.28,1.12),opacity .22s ease}
+.home-swipe-zone.is-dragging{transition:none}
 .home-feed .home-pager{display:none!important}
 .home-page-status-swipe{text-align:center;font-size:10px;color:#8d8d8d;font-weight:700;margin-top:3px}
 .reader[data-episode-swipe="1"]{touch-action:pan-y}
 .episode-swipe-status{display:flex;justify-content:center;align-items:center;gap:7px;color:#999;font-size:10px;font-weight:700;padding:9px 0 2px}
 .episode-swipe-status .mini-line{width:18px;height:1px;background:#d8d8d8}
 @media(max-width:420px){.event-banner img{aspect-ratio:15/5}.event-carousel{margin-bottom:15px}}
+@media(prefers-reduced-motion:reduce){.event-banner,.home-swipe-zone,.swipe-dot{transition:none!important}}
 
 </style>
 </head>
@@ -402,7 +425,7 @@ a{color:inherit;text-decoration:none}
 
 <div id="app">
   <main class="wrap">
-    <section class="event-carousel" aria-label="이벤트 배너"><div class="event-viewport" id="eventViewport"><button class="event-banner" type="button" data-event-action="info" data-event-index="0"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23f3f4f6%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23dfe3e8%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23dfe3e8%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23111111%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3EOPEN%20BETA%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23111111%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%98%A4%ED%94%88%20%EB%B2%A0%ED%83%80%20%EC%8B%9C%EC%9E%91%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%23666666%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%A7%80%EA%B8%88%20%EC%B2%AB%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EB%A5%BC%20%EC%98%AC%EB%A0%A4%EB%B3%B4%EC%84%B8%EC%9A%94%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23111111%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%23666666%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="오픈 베타 시작 · 지금 첫 이야기를 올려보세요"></button><button class="event-banner" type="button" data-event-action="random" data-event-index="1"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23151515%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23313131%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23313131%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3EWEEKLY%20EVENT%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EB%9E%9C%EB%8D%A4%20%EB%B2%84%EC%8A%A4%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%23cfcfcf%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EB%8B%A4%EC%84%AF%20%EC%9E%91%ED%92%88%EC%9D%84%20%ED%83%80%EA%B3%A0%20%EB%82%AF%EC%84%A0%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EB%A1%9C%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23ffffff%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%23cfcfcf%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="랜덤 버스 · 다섯 작품을 타고 낯선 이야기로"></button><button class="event-banner" type="button" data-event-action="find" data-event-index="2"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23fff2e5%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23ffd7ad%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23ffd7ad%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23d66a00%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23d66a00%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ETAIL%20CHALLENGE%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%236d3100%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EA%BC%AC%EB%A6%AC%20%EC%9D%B4%EC%96%B4%EC%93%B0%EA%B8%B0%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%239a5b2c%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EB%A7%88%EC%9D%8C%EC%97%90%20%EB%93%A0%20%EC%9E%91%ED%92%88%EC%97%90%EC%84%9C%20%EB%8B%A4%EB%A5%B8%20%EA%B0%80%EB%8A%A5%EC%84%B1%EC%9C%BC%EB%A1%9C%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23d66a00%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%239a5b2c%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="꼬리 이어쓰기 · 마음에 든 작품에서 다른 가능성으로"></button><button class="event-banner" type="button" data-event-action="find" data-event-index="3"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23eaf2ff%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23c9dcf5%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23c9dcf5%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%232f65a7%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%232f65a7%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ENEW%20STORIES%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%2316335f%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%8B%A0%EC%9E%91%20%EB%B0%9C%EA%B2%AC%20%EC%A3%BC%EA%B0%84%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%2358708f%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%83%88%EB%A1%9C%20%EC%98%AC%EB%9D%BC%EC%98%A8%20%EC%B2%AB%20%EC%9E%91%ED%92%88%EC%9D%84%20%EB%A7%8C%EB%82%98%EB%B3%B4%EC%84%B8%EC%9A%94%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%232f65a7%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%2358708f%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="신작 발견 주간 · 새로 올라온 첫 작품을 만나보세요"></button><button class="event-banner" type="button" data-event-action="write" data-event-index="4"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23eef7ef%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23cce7d2%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23cce7d2%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%232d7a45%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%232d7a45%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ECREATOR%20EVENT%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23194f29%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%B2%AB%20%EC%9E%91%ED%92%88%20%EB%AA%A8%EC%A7%91%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%235f7b65%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%A7%A7%EC%9D%80%20%ED%95%9C%20%ED%8E%B8%EB%8F%84%20NovelTail%EC%9D%98%20%EC%8B%9C%EC%9E%91%EC%9E%85%EB%8B%88%EB%8B%A4%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%232d7a45%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%235f7b65%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="첫 작품 모집 · 짧은 한 편도 NovelTail의 시작입니다"></button></div><div id="eventDots"><div class="swipe-dots" aria-label="이벤트 1 / 5"><span class="swipe-dot on" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span></div></div></section>
+    <section class="event-carousel" aria-label="이벤트 배너"><div class="event-viewport" id="eventViewport"><button class="event-banner" type="button" data-event-index="0"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23f3f4f6%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23dfe3e8%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23dfe3e8%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23111111%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3EOPEN%20BETA%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23111111%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%98%A4%ED%94%88%20%EB%B2%A0%ED%83%80%20%EC%8B%9C%EC%9E%91%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%23666666%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%A7%80%EA%B8%88%20%EC%B2%AB%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EB%A5%BC%20%EC%98%AC%EB%A0%A4%EB%B3%B4%EC%84%B8%EC%9A%94%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23111111%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%23666666%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="오픈 베타 시작 · 지금 첫 이야기를 올려보세요"></button><button class="event-banner" type="button" data-event-index="1"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23151515%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23313131%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23313131%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3EWEEKLY%20EVENT%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EB%9E%9C%EB%8D%A4%20%EB%B2%84%EC%8A%A4%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%23cfcfcf%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EB%8B%A4%EC%84%AF%20%EC%9E%91%ED%92%88%EC%9D%84%20%ED%83%80%EA%B3%A0%20%EB%82%AF%EC%84%A0%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EB%A1%9C%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23ffffff%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%23cfcfcf%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="랜덤 버스 · 다섯 작품을 타고 낯선 이야기로"></button><button class="event-banner" type="button" data-event-index="2"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23fff2e5%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23ffd7ad%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23ffd7ad%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%23d66a00%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%23d66a00%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ETAIL%20CHALLENGE%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%236d3100%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EA%BC%AC%EB%A6%AC%20%EC%9D%B4%EC%96%B4%EC%93%B0%EA%B8%B0%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%239a5b2c%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EB%A7%88%EC%9D%8C%EC%97%90%20%EB%93%A0%20%EC%9E%91%ED%92%88%EC%97%90%EC%84%9C%20%EB%8B%A4%EB%A5%B8%20%EA%B0%80%EB%8A%A5%EC%84%B1%EC%9C%BC%EB%A1%9C%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23d66a00%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%239a5b2c%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="꼬리 이어쓰기 · 마음에 든 작품에서 다른 가능성으로"></button><button class="event-banner" type="button" data-event-index="3"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23eaf2ff%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23c9dcf5%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23c9dcf5%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%232f65a7%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%232f65a7%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ENEW%20STORIES%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%2316335f%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%8B%A0%EC%9E%91%20%EB%B0%9C%EA%B2%AC%20%EC%A3%BC%EA%B0%84%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%2358708f%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%83%88%EB%A1%9C%20%EC%98%AC%EB%9D%BC%EC%98%A8%20%EC%B2%AB%20%EC%9E%91%ED%92%88%EC%9D%84%20%EB%A7%8C%EB%82%98%EB%B3%B4%EC%84%B8%EC%9A%94%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%232f65a7%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%2358708f%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="신작 발견 주간 · 새로 올라온 첫 작품을 만나보세요"></button><button class="event-banner" type="button" data-event-index="4"><img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221280%22%20height%3D%22400%22%20viewBox%3D%220%200%201280%20400%22%3E%3Crect%20width%3D%221280%22%20height%3D%22400%22%20rx%3D%2234%22%20fill%3D%22%23eef7ef%22%2F%3E%3Ccircle%20cx%3D%221120%22%20cy%3D%2292%22%20r%3D%22145%22%20fill%3D%22%23cce7d2%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22318%22%20r%3D%22196%22%20fill%3D%22%23cce7d2%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M1010%20300%20C1080%20220%201170%20210%201270%20250%22%20fill%3D%22none%22%20stroke%3D%22%232d7a45%22%20stroke-width%3D%2215%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.24%22%2F%3E%3Ctext%20x%3D%2272%22%20y%3D%22105%22%20fill%3D%22%232d7a45%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2223%22%20font-weight%3D%22800%22%20letter-spacing%3D%223%22%3ECREATOR%20EVENT%3C%2Ftext%3E%3Ctext%20x%3D%2272%22%20y%3D%22184%22%20fill%3D%22%23194f29%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2258%22%20font-weight%3D%22800%22%3E%EC%B2%AB%20%EC%9E%91%ED%92%88%20%EB%AA%A8%EC%A7%91%3C%2Ftext%3E%3Ctext%20x%3D%2274%22%20y%3D%22245%22%20fill%3D%22%235f7b65%22%20font-family%3D%22Arial%2CApple%20SD%20Gothic%20Neo%2Csans-serif%22%20font-size%3D%2229%22%20font-weight%3D%22600%22%3E%EC%A7%A7%EC%9D%80%20%ED%95%9C%20%ED%8E%B8%EB%8F%84%20NovelTail%EC%9D%98%20%EC%8B%9C%EC%9E%91%EC%9E%85%EB%8B%88%EB%8B%A4%3C%2Ftext%3E%3Crect%20x%3D%2274%22%20y%3D%22292%22%20width%3D%22122%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%232d7a45%22%20opacity%3D%22.9%22%2F%3E%3Ctext%20x%3D%221038%22%20y%3D%22344%22%20fill%3D%22%235f7b65%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2221%22%20font-weight%3D%22700%22%3ENOVELTAIL%3C%2Ftext%3E%3C%2Fsvg%3E" alt="첫 작품 모집 · 짧은 한 편도 NovelTail의 시작입니다"></button></div><div id="eventDots"><div class="swipe-dots" aria-label="이벤트 1 / 5"><span class="swipe-dot on" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span><span class="swipe-dot" aria-hidden="true"></span></div></div></section>
     <section class="home-feed">
       <div class="pills"><button class="pill on" type="button">최신</button><button class="pill" type="button">인기</button></div>
       <div class="home-list-frame"><div class="home-swipe-zone" data-home-swipe="1"><div class="list">
@@ -454,7 +477,7 @@ a{color:inherit;text-decoration:none}
 (function () {
   "use strict";
 
-  var APP_BUILD = "20260822-event-carousel-v2";
+  var APP_BUILD = "20260822-swipe-isolated-v4";
   var STORAGE_KEY = "kkori_mobile_safe_v1";
   var MINE_KEY = "kkori_mine_safe_v1";
   var GENRE_PREF_KEY = "kkori_genre_tabs_v1";
@@ -502,7 +525,7 @@ a{color:inherit;text-decoration:none}
 
   var data = loadData();
   var fanarts = loadFanarts();
-  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, eventPage:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, findFilterOpen:false, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null, fanQuery:"", profileUser:null, profileTab:"works", chatUser:null};
+  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, eventPage:0, eventSelected:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, findFilterOpen:false, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null, fanQuery:"", profileUser:null, profileTab:"works", chatUser:null};
 
   function saveData() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -1158,12 +1181,52 @@ a{color:inherit;text-decoration:none}
 
   function eventItems() {
     return [
-      {title:'오픈 베타 시작',sub:'지금 첫 이야기를 올려보세요',tone:1,label:'OPEN BETA',action:'info'},
-      {title:'랜덤 버스',sub:'다섯 작품을 타고 낯선 이야기로',tone:2,label:'WEEKLY EVENT',action:'random'},
-      {title:'꼬리 이어쓰기',sub:'마음에 든 작품에서 다른 가능성으로',tone:3,label:'TAIL CHALLENGE',action:'find'},
-      {title:'신작 발견 주간',sub:'새로 올라온 첫 작품을 만나보세요',tone:4,label:'NEW STORIES',action:'find'},
-      {title:'첫 작품 모집',sub:'짧은 한 편도 NovelTail의 시작입니다',tone:5,label:'CREATOR EVENT',action:'write'}
+      {id:'open-beta',title:'오픈 베타 시작',sub:'지금 첫 이야기를 올려보세요',tone:1,label:'OPEN BETA',period:'상시',tag:'런칭 이벤트',hero:'처음 열리는 이야기의 문',lead:'NovelTail의 첫 오픈 베타 기간입니다. 짧은 단편부터 긴 시리즈까지 형식에 상관없이 첫 작품을 올리고, 다른 이용자의 꼬리가 어떻게 이어지는지 직접 경험해보세요.',about:'오픈 베타에서는 작품 등록, 꼬리 이어쓰기, 시리즈 회차, 발견 기능을 중심으로 서비스의 기본 흐름을 시험합니다. 운영 중 발견되는 불편과 오류는 정식 런칭 전 순차적으로 개선합니다.',steps:['쓰기 탭에서 첫 작품 또는 시리즈를 작성합니다.','작품을 공개한 뒤 다른 이용자의 반응과 꼬리를 확인합니다.','마음에 드는 다른 작품에도 직접 꼬리를 이어봅니다.'],note:'테스트 기간의 게시물과 계정 데이터는 정식 서비스 전 구조 변경 과정에서 일부 초기화될 수 있습니다.',cta:'첫 작품 써보기',ctaView:'write'},
+      {id:'random-bus',title:'랜덤 버스',sub:'다섯 작품을 타고 낯선 이야기로',tone:2,label:'WEEKLY EVENT',period:'매주 갱신',tag:'읽기 이벤트',hero:'다섯 정거장, 다섯 개의 이야기',lead:'장르가 서로 다른 다섯 작품을 순서대로 읽는 랜덤 독서 이벤트입니다. 평소라면 누르지 않았을 작품을 우연히 만나도록 노선을 섞어 제공합니다.',about:'버스에 탑승하면 작품 하나가 한 정거장이 됩니다. 각 작품을 읽은 뒤 짧은 한줄평을 남기면 다음 정거장이 열리는 방식으로 운영할 예정입니다. 완주 기록은 이벤트 기간 동안 프로필에 표시할 수 있습니다.',steps:['이벤트 페이지에서 랜덤 버스에 탑승합니다.','제시된 작품을 읽고 간단한 한줄평을 남깁니다.','5개 작품을 모두 지나면 이번 주 노선 완주가 기록됩니다.'],note:'현재 MVP에서는 완주 보상과 인증 기능은 예시 상태이며 실제 지급 기능은 아직 연결하지 않습니다.',cta:'랜덤 작품 보기',ctaAction:'random'},
+      {id:'tail-challenge',title:'꼬리 이어쓰기',sub:'마음에 든 작품에서 다른 가능성으로',tone:3,label:'TAIL CHALLENGE',period:'2주간',tag:'창작 이벤트',hero:'한 작품에서 갈라지는 여러 갈래',lead:'하나의 첫 작품을 읽고 각자 다른 방향의 꼬리를 만들어보는 공동창작 이벤트입니다. 같은 장면에서 출발해 전혀 다른 결말과 분위기가 만들어지는 모습을 한눈에 볼 수 있습니다.',about:'이벤트 대상 작품에는 기간 동안 눈에 띄는 이벤트 표시가 붙습니다. 다음 화, IF분기, 다른 결말, 외전 등 원하는 꼬리 형식으로 참여할 수 있고, 인기순과 최신순으로 다른 참가작도 둘러볼 수 있습니다.',steps:['이벤트 대상 첫 작품을 읽습니다.','작품 아래의 꼬리 쓰기에서 원하는 분기 유형을 선택합니다.','완성한 꼬리를 공개하고 다른 참가자의 분기도 읽어봅니다.'],note:'원작자가 꼬리 작성을 금지한 작품은 이벤트 대상에 포함되지 않습니다.',cta:'작품 발견하기',ctaView:'find'},
+      {id:'new-story-week',title:'신작 발견 주간',sub:'새로 올라온 첫 작품을 만나보세요',tone:4,label:'NEW STORIES',period:'7일간',tag:'발견 이벤트',hero:'조회수보다 먼저, 새 이야기부터',lead:'이미 인기 있는 작품보다 이제 막 올라온 첫 작품을 먼저 보여주는 한 주입니다. 조회수와 반응 수가 적어도 새로운 작품이라는 이유만으로 발견될 기회를 줍니다.',about:'이벤트 기간에는 최근 등록된 첫 작품 가운데 일정 조건을 충족한 작품을 별도 묶음으로 소개합니다. 장르별로 골고루 섞어 한쪽 장르에 노출이 몰리지 않도록 구성하는 것을 목표로 합니다.',steps:['발견 탭에서 평소 읽지 않던 장르를 하나 고릅니다.','새로 올라온 첫 작품을 최소 한 편 읽습니다.','마음에 들었다면 좋아요나 꼬리로 반응을 남깁니다.'],note:'이벤트 노출은 작품의 품질 보증이나 공식 추천을 의미하지 않습니다.',cta:'신작 둘러보기',ctaView:'find'},
+      {id:'first-work',title:'첫 작품 모집',sub:'짧은 한 편도 NovelTail의 시작입니다',tone:5,label:'CREATOR EVENT',period:'상시',tag:'작가 이벤트',hero:'첫 문장 하나면 시작됩니다',lead:'긴 연재 계획이 없어도 괜찮습니다. 한 장면, 한 사건, 한 편의 짧은 이야기만 있어도 다른 사람이 이어 쓸 수 있는 시작점이 됩니다.',about:'첫 작품은 NovelTail의 계보가 시작되는 뿌리입니다. 단편으로 끝내도 되고 직접 시리즈로 이어가도 됩니다. 꼬리 허용 여부는 작품을 올리는 사람이 선택합니다.',steps:['쓰기 탭에서 단편 또는 시리즈를 선택합니다.','제목과 본문을 작성하고 꼬리 허용 여부를 정합니다.','게시한 뒤 작품 페이지에서 이어지는 반응을 확인합니다.'],note:'처음부터 완성도가 높은 작품일 필요는 없습니다. 테스트판에서는 기능을 직접 써보는 것 자체가 중요한 참여입니다.',cta:'지금 쓰기',ctaView:'write'}
     ];
+  }
+
+  function eventDetailImageData(item) {
+    item=item||eventItems()[0];
+    var palette=[
+      {bg:'#f7f7f8',line:'#111',soft:'#dedfe3'},
+      {bg:'#171717',line:'#fff',soft:'#333'},
+      {bg:'#fff5ec',line:'#d66a00',soft:'#ffd9b8'},
+      {bg:'#eef5ff',line:'#2f65a7',soft:'#cadcf3'},
+      {bg:'#eff8f1',line:'#2d7a45',soft:'#cce6d2'}
+    ],c=palette[(Number(item.tone||1)-1)%palette.length];
+    var dark=item.tone===2,fg=dark?'#ffffff':'#111111',muted=dark?'#bdbdbd':'#666666';
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">'+
+      '<rect width="1280" height="800" rx="42" fill="'+c.bg+'"/>'+
+      '<circle cx="1000" cy="250" r="210" fill="'+c.soft+'"/>'+
+      '<circle cx="1080" cy="610" r="290" fill="'+c.soft+'" opacity=".68"/>'+
+      '<path d="M130 570 C330 390 500 670 720 450 S1040 250 1190 390" fill="none" stroke="'+c.line+'" stroke-width="18" stroke-linecap="round" opacity=".22"/>'+
+      '<circle cx="255" cy="535" r="34" fill="'+c.line+'" opacity=".9"/><circle cx="600" cy="510" r="34" fill="'+c.line+'" opacity=".9"/><circle cx="935" cy="330" r="34" fill="'+c.line+'" opacity=".9"/>'+
+      '<text x="82" y="105" fill="'+c.line+'" font-family="Arial,sans-serif" font-size="25" font-weight="800" letter-spacing="4">'+esc(item.label)+'</text>'+
+      '<text x="82" y="205" fill="'+fg+'" font-family="Arial,sans-serif" font-size="60" font-weight="800">'+esc(item.hero)+'</text>'+
+      '<text x="84" y="270" fill="'+muted+'" font-family="Arial,sans-serif" font-size="28" font-weight="600">NOVELTAIL EVENT STORY</text>'+
+      '</svg>';
+    return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+  }
+
+  function eventDetailHTML() {
+    var items=eventItems(),idx=Number(state.eventSelected||0);
+    if(idx<0 || idx>=items.length) idx=0;
+    var x=items[idx],steps='',i,cta='';
+    for(i=0;i<x.steps.length;i++) steps+='<div class="event-detail-step"><b>'+(i+1)+'</b><span>'+esc(x.steps[i])+'</span></div>';
+    if(x.ctaView) cta='<button class="btn primary event-detail-cta" type="button" data-view="'+esc(x.ctaView)+'">'+esc(x.cta)+'</button>';
+    else if(x.ctaAction==='random') cta='<button class="btn primary event-detail-cta" type="button" data-random="1">'+esc(x.cta)+'</button>';
+    return '<main class="wrap event-detail"><button class="back" type="button" data-history-back="1">←</button>'+
+      '<div class="event-detail-label"><img src="'+eventBannerData(x.title,x.sub,x.tone,x.label)+'" alt="'+esc(x.title)+'"></div>'+
+      '<img class="event-detail-hero" src="'+eventDetailImageData(x)+'" alt="'+esc(x.hero)+'">'+
+      '<div class="event-detail-meta"><span class="event-detail-chip">'+esc(x.tag)+'</span><span class="event-detail-chip">기간 · '+esc(x.period)+'</span></div>'+
+      '<section class="event-detail-copy"><h1>'+esc(x.title)+'</h1><p class="lead">'+esc(x.lead)+'</p></section>'+
+      '<section class="event-detail-section"><h2>이벤트 안내</h2><p>'+esc(x.about)+'</p></section>'+
+      '<section class="event-detail-section"><h2>참여 방법</h2><div class="event-detail-steps">'+steps+'</div><div class="event-detail-note">'+esc(x.note)+'</div>'+cta+'</section>'+
+      '</main>';
   }
 
   function eventCarouselHTML() {
@@ -1172,7 +1235,7 @@ a{color:inherit;text-decoration:none}
     if(state.eventPage>=items.length) state.eventPage=items.length-1;
     for(i=0;i<items.length;i++) {
       var x=items[i];
-      slides+='<button class="event-banner" type="button" data-event-action="'+x.action+'" data-event-index="'+i+'"><img src="'+eventBannerData(x.title,x.sub,x.tone,x.label)+'" alt="'+esc(x.title)+' · '+esc(x.sub)+'"></button>';
+      slides+='<button class="event-banner" type="button" data-event-index="'+i+'"><img src="'+eventBannerData(x.title,x.sub,x.tone,x.label)+'" alt="'+esc(x.title)+' · '+esc(x.sub)+'"></button>';
     }
     return '<section class="event-carousel" aria-label="이벤트 배너">'+
       '<div class="event-viewport" id="eventViewport">'+slides+'</div>'+
@@ -1599,20 +1662,23 @@ a{color:inherit;text-decoration:none}
     else if(state.view==="chat") { if(!FEATURES.chat){state.view="profile";app.innerHTML=profileHTML();} else app.innerHTML=chatHTML(); }
     else if(state.view==="fanart") { if(!FEATURES.fanart){state.view="find";app.innerHTML=findHTML();} else app.innerHTML=fanartDetailHTML(); }
     else if(state.view==="fanartwrite") { if(!FEATURES.fanart){state.view="find";app.innerHTML=findHTML();} else app.innerHTML=fanartFormHTML(); }
+    else if(state.view==="event") app.innerHTML=eventDetailHTML();
     else if(state.view==="info") app.innerHTML=infoHTML();
     updateNav();
     if(state.view==="home") {
       requestAnimationFrame(function(){
-        var vp=document.getElementById("eventViewport"),first=vp&&vp.querySelector(".event-banner");
-        if(vp&&first){vp.scrollLeft=state.eventPage*(first.getBoundingClientRect().width+10);}
+        syncEventCarouselPosition(false);
+        bindEventCarouselGestures();
+        bindHomeSwipeGesture();
       });
     }
   }
 
   function updateNav() {
     var buttons=document.querySelectorAll("#bottomNav .nav"),i;
+    var activeView=state.view==="event"?"home":state.view;
     for(i=0;i<buttons.length;i++) {
-      if(buttons[i].getAttribute("data-view")===state.view) buttons[i].classList.add("on");
+      if(buttons[i].getAttribute("data-view")===activeView) buttons[i].classList.add("on");
       else buttons[i].classList.remove("on");
     }
   }
@@ -1620,7 +1686,7 @@ a{color:inherit;text-decoration:none}
   var navIndex=0,maxNavIndex=0;
 
   function navSnapshot() {
-    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,eventPage:state.eventPage,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,findFilterOpen:state.findFilterOpen,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter,fanQuery:state.fanQuery,profileUser:state.profileUser,profileTab:state.profileTab,chatUser:state.chatUser};
+    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,eventPage:state.eventPage,eventSelected:state.eventSelected,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,findFilterOpen:state.findFilterOpen,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter,fanQuery:state.fanQuery,profileUser:state.profileUser,profileTab:state.profileTab,chatUser:state.chatUser};
   }
 
   function updateHistoryButtons() {
@@ -1761,15 +1827,14 @@ a{color:inherit;text-decoration:none}
   }
 
   document.addEventListener("click", function(e){
+    if(Date.now()<homeClickBlockedUntil && e.target && e.target.closest && e.target.closest('[data-home-swipe="1"]')) { e.preventDefault(); return; }
     var t=e.target;
     while(t && t!==document.body) {
       if(t.getAttribute) {
-        if(t.getAttribute("data-event-action")) {
-          var ea=t.getAttribute("data-event-action");
-          if(ea==="random") randomStory();
-          else if(ea==="find") go("find");
-          else if(ea==="write") go("write");
-          else go("info");
+        if(t.getAttribute("data-event-index")!==null) {
+          if(Date.now()<eventClickBlockedUntil) return;
+          state.eventSelected=Number(t.getAttribute("data-event-index")||0);
+          go("event");
           return;
         }
         if(t.getAttribute("data-info-toggle")) {
@@ -1846,19 +1911,60 @@ a{color:inherit;text-decoration:none}
     }
   });
 
-  document.addEventListener("scroll", function(e){
-    var vp=e.target;
-    if(!vp || vp.id!=="eventViewport") return;
-    var first=vp.querySelector(".event-banner");
-    if(!first) return;
-    var step=first.getBoundingClientRect().width+10;
+  var eventSnapTimer=null,eventGestureMoved=false,eventGestureActive=false,eventGestureStartX=0,eventGestureStartY=0,eventClickBlockedUntil=0;
+
+  function eventStep(vp) {
+    var first=vp&&vp.querySelector(".event-banner");
+    if(!first) return 0;
+    var style=getComputedStyle(vp),gap=parseFloat(style.columnGap||style.gap||"10")||10;
+    return first.getBoundingClientRect().width+gap;
+  }
+
+  function syncEventCarouselPosition(smooth) {
+    var vp=document.getElementById("eventViewport"),step=eventStep(vp);
+    if(!vp || step<=0) return;
+    var left=state.eventPage*step;
+    if(smooth && vp.scrollTo) vp.scrollTo({left:left,behavior:"smooth"});
+    else vp.scrollLeft=left;
+  }
+
+  function updateEventPageFromScroll(vp) {
+    var step=eventStep(vp);
     if(step<=0) return;
     var page=Math.max(0,Math.min(eventItems().length-1,Math.round(vp.scrollLeft/step)));
-    if(page===state.eventPage) return;
-    state.eventPage=page;
-    var dots=document.getElementById("eventDots");
-    if(dots) dots.innerHTML=swipeDotsHTML(state.eventPage,eventItems().length,'이벤트');
-  },true);
+    if(page!==state.eventPage) {
+      state.eventPage=page;
+      var dots=document.getElementById("eventDots");
+      if(dots) dots.innerHTML=swipeDotsHTML(state.eventPage,eventItems().length,'이벤트');
+    }
+    clearTimeout(eventSnapTimer);
+    if(!eventGestureActive) {
+      eventSnapTimer=setTimeout(function(){
+        if(document.getElementById("eventViewport")===vp) syncEventCarouselPosition(true);
+      },90);
+    }
+  }
+
+  function bindEventCarouselGestures() {
+    var vp=document.getElementById("eventViewport");
+    if(!vp || vp.dataset.boundSwipe==="1") return;
+    vp.dataset.boundSwipe="1";
+    vp.addEventListener("scroll",function(){updateEventPageFromScroll(vp);},{passive:true});
+    vp.addEventListener("pointerdown",function(e){
+      eventGestureActive=true;eventGestureMoved=false;eventGestureStartX=e.clientX;eventGestureStartY=e.clientY;
+      clearTimeout(eventSnapTimer);
+    },{passive:true});
+    vp.addEventListener("pointermove",function(e){
+      if(Math.abs(e.clientX-eventGestureStartX)>9 && Math.abs(e.clientX-eventGestureStartX)>Math.abs(e.clientY-eventGestureStartY)) eventGestureMoved=true;
+    },{passive:true});
+    function endEventGesture(){
+      eventGestureActive=false;
+      if(eventGestureMoved) eventClickBlockedUntil=Date.now()+260;
+      updateEventPageFromScroll(vp);
+    }
+    vp.addEventListener("pointerup",endEventGesture,{passive:true});
+    vp.addEventListener("pointercancel",endEventGesture,{passive:true});
+  }
 
   document.addEventListener("submit", function(e){
     if(e.target && e.target.id==="storyForm") {e.preventDefault();submitStory(e.target);}
@@ -1881,42 +1987,104 @@ a{color:inherit;text-decoration:none}
   });
 
 
-  // 좌우 스와이프는 홈 작품/시리즈 회차 전용 영역에서만 작동한다.
-  // 세로 스크롤과 충돌하지 않도록 충분한 수평 이동일 때만 판정한다.
-  var swipeGesture=null;
-  document.addEventListener("touchstart",function(e){
-    if(!e.touches || e.touches.length!==1) return;
-    var target=e.target && e.target.closest ? e.target.closest('[data-home-swipe="1"],[data-episode-swipe="1"]') : null;
-    if(!target) { swipeGesture=null; return; }
-    var t=e.touches[0];
-    swipeGesture={target:target,x:t.clientX,y:t.clientY,time:Date.now()};
-  },{passive:true});
+  // 홈 작품 스와이프는 홈 목록 요소에만 직접 바인딩한다.
+  // 이벤트 캐러셀의 네이티브 가로 스크롤과 완전히 분리해 서로 간섭하지 않는다.
+  var homeClickBlockedUntil=0;
 
-  document.addEventListener("touchend",function(e){
-    if(!swipeGesture || !e.changedTouches || e.changedTouches.length!==1) { swipeGesture=null; return; }
-    var t=e.changedTouches[0],dx=t.clientX-swipeGesture.x,dy=t.clientY-swipeGesture.y,absX=Math.abs(dx),absY=Math.abs(dy),target=swipeGesture.target;
-    swipeGesture=null;
-    if(absX<58 || absX<absY*1.35) return;
+  function homePageCount(){
+    var arr=rootWorks(),pageSize=state.homeExpanded?20:5;
+    return Math.max(1,Math.ceil(arr.length/pageSize));
+  }
 
+  function settleHomeZone(zone){
+    if(!zone) return;
+    zone.classList.remove("is-dragging");
+    zone.style.transform="translate3d(0,0,0)";
+    zone.style.opacity="1";
+  }
 
-    if(target.getAttribute("data-home-swipe")) {
-      var arr=rootWorks(),pageSize=state.homeExpanded?20:5,total=Math.max(1,Math.ceil(arr.length/pageSize));
-      if(dx<0 && state.homePage<total-1) state.homePage++;
-      else if(dx>0 && state.homePage>0) state.homePage--;
-      else return;
-      render();
+  function animateHomePageChange(zone,direction){
+    var total=homePageCount(),next=state.homePage+direction;
+    if(next<0 || next>=total){
+      settleHomeZone(zone);
       return;
     }
+    zone.classList.remove("is-dragging");
+    zone.style.transform="translate3d("+(direction>0?"-18%":"18%")+",0,0)";
+    zone.style.opacity=".72";
+    setTimeout(function(){
+      state.homePage=next;
+      render();
+      requestAnimationFrame(function(){
+        var fresh=document.querySelector('[data-home-swipe="1"]');
+        if(!fresh) return;
+        fresh.classList.add("is-dragging");
+        fresh.style.transform="translate3d("+(direction>0?"16%":"-16%")+",0,0)";
+        fresh.style.opacity=".76";
+        requestAnimationFrame(function(){
+          fresh.classList.remove("is-dragging");
+          fresh.style.transform="translate3d(0,0,0)";
+          fresh.style.opacity="1";
+        });
+      });
+    },135);
+  }
 
-    if(target.getAttribute("data-episode-swipe")) {
-      var cur=getStory(state.selected);
-      if(!cur || !isSeriesEpisode(cur)) return;
-      var eps=seriesEpisodes(cur.seriesId),idx=-1,i;
-      for(i=0;i<eps.length;i++) if(eps[i].id===cur.id) {idx=i;break;}
-      if(idx<0) return;
-      if(dx<0 && idx<eps.length-1) openStory(eps[idx+1].id);
-      else if(dx>0 && idx>0) openStory(eps[idx-1].id);
+  function bindHomeSwipeGesture(){
+    var zone=document.querySelector('[data-home-swipe="1"]');
+    if(!zone || zone.dataset.boundSwipe==="1") return;
+    zone.dataset.boundSwipe="1";
+    var drag=null;
+    zone.addEventListener("pointerdown",function(e){
+      if(e.pointerType==="mouse" && e.button!==0) return;
+      drag={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastT:performance.now(),vx:0,locked:null};
+      zone.classList.add("is-dragging");
+      try{zone.setPointerCapture(e.pointerId);}catch(err){}
+    });
+    zone.addEventListener("pointermove",function(e){
+      if(!drag || e.pointerId!==drag.id) return;
+      var dx=e.clientX-drag.x,dy=e.clientY-drag.y,ax=Math.abs(dx),ay=Math.abs(dy),now=performance.now(),dt=Math.max(1,now-drag.lastT);
+      if(drag.locked==null && (ax>7 || ay>7)) drag.locked=ax>ay*1.15?"x":"y";
+      if(drag.locked!=="x") return;
+      homeClickBlockedUntil=Date.now()+300;
+      drag.vx=(e.clientX-drag.lastX)/dt;drag.lastX=e.clientX;drag.lastT=now;
+      var total=homePageCount(),edge=(state.homePage===0&&dx>0)||(state.homePage===total-1&&dx<0),resistance=edge ? .18 : .42;
+      var pull=Math.max(-62,Math.min(62,dx*resistance));
+      zone.style.transform="translate3d("+pull+"px,0,0)";
+      zone.style.opacity=String(Math.max(.86,1-Math.abs(pull)/520));
+      e.preventDefault();
+    },{passive:false});
+    function finish(e){
+      if(!drag || (e.pointerId!=null && e.pointerId!==drag.id)) return;
+      var dx=e.clientX-drag.x,dy=e.clientY-drag.y,velocity=drag.vx,locked=drag.locked;
+      drag=null;
+      if(locked!=="x" || Math.abs(dx)<Math.abs(dy)*1.1){settleHomeZone(zone);return;}
+      if(dx<-46 || velocity<-.48) animateHomePageChange(zone,1);
+      else if(dx>46 || velocity>.48) animateHomePageChange(zone,-1);
+      else settleHomeZone(zone);
     }
+    zone.addEventListener("pointerup",finish);
+    zone.addEventListener("pointercancel",function(){drag=null;settleHomeZone(zone);});
+  }
+
+  // 시리즈 회차는 별도 전역 감지로 두되 홈/이벤트 영역에서는 시작하지 않는다.
+  var episodeSwipeGesture=null;
+  document.addEventListener("touchstart",function(e){
+    if(!e.touches || e.touches.length!==1) return;
+    var target=e.target && e.target.closest ? e.target.closest('[data-episode-swipe="1"]') : null;
+    if(!target){episodeSwipeGesture=null;return;}
+    var t=e.touches[0];episodeSwipeGesture={target:target,x:t.clientX,y:t.clientY};
+  },{passive:true});
+  document.addEventListener("touchend",function(e){
+    if(!episodeSwipeGesture || !e.changedTouches || e.changedTouches.length!==1){episodeSwipeGesture=null;return;}
+    var t=e.changedTouches[0],dx=t.clientX-episodeSwipeGesture.x,dy=t.clientY-episodeSwipeGesture.y;episodeSwipeGesture=null;
+    if(Math.abs(dx)<58 || Math.abs(dx)<Math.abs(dy)*1.35) return;
+    var cur=getStory(state.selected);if(!cur || !isSeriesEpisode(cur)) return;
+    var eps=seriesEpisodes(cur.seriesId),idx=-1,i;
+    for(i=0;i<eps.length;i++) if(eps[i].id===cur.id){idx=i;break;}
+    if(idx<0) return;
+    if(dx<0 && idx<eps.length-1) openStory(eps[idx+1].id);
+    else if(dx>0 && idx>0) openStory(eps[idx-1].id);
   },{passive:true});
 
   document.addEventListener("change", function(e){
@@ -1952,6 +2120,7 @@ a{color:inherit;text-decoration:none}
       state.homeExpanded=!!h.homeExpanded;
       state.homePage=Number(h.homePage||0);
       state.eventPage=Number(h.eventPage||0);
+      state.eventSelected=Number(h.eventSelected||0);
       state.findKind=h.findKind||"works";
       state.findGenre=h.findGenre||"전체";
       state.findShowTails=!!h.findShowTails;
@@ -2111,7 +2280,7 @@ a{color:inherit;text-decoration:none}
   // 탐색은 네트워크 우선으로 처리해 새 index.html 배포가 오래 캐시되는 문제를 줄인다.
   if("serviceWorker" in navigator) {
     window.addEventListener("load",function(){
-      navigator.serviceWorker.register("./sw.js?v=20260822-event-v2",{scope:"./",updateViaCache:"none"}).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){});
+      navigator.serviceWorker.register("./sw.js?v=20260822-swipe-v4",{scope:"./",updateViaCache:"none"}).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){});
     });
   }
 
