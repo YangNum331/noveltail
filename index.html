@@ -322,6 +322,37 @@ a{color:inherit;text-decoration:none}
 .profile-benefit-num{display:grid;place-items:center;width:26px;height:26px;border-radius:999px;background:#111;color:#fff;font-size:10px;font-weight:800}
 .profile-signup{width:100%;margin-top:8px}
 .profile-test-note{margin:10px 0 0;text-align:center;color:#999;font-size:10px;line-height:1.5}
+.signup-panel{margin-top:24px}
+.signup-title{font-size:12px;font-weight:850;color:#555;margin:0 0 10px}
+.signup-social-grid{display:grid;gap:9px}
+.signup-provider{appearance:none;-webkit-appearance:none;width:100%;min-height:50px;border:1px solid var(--line-strong);background:#fff;border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:11px;text-align:left;font-size:13px;font-weight:800}
+.signup-provider:active{transform:scale(.992);background:#fafafa}
+.signup-provider-mark{width:28px;height:28px;border-radius:9px;border:1px solid var(--line);display:grid;place-items:center;flex:0 0 auto;font-size:12px;font-weight:900;background:#fafafa}
+.signup-provider-copy{min-width:0;flex:1}
+.signup-provider-copy b{display:block;font-size:13px;line-height:1.35}
+.signup-provider-copy span{display:block;margin-top:2px;color:#999;font-size:9px;font-weight:650;line-height:1.4}
+.signup-provider-arrow{color:#aaa;font-size:15px;font-weight:700}
+.signup-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:#aaa;font-size:10px;font-weight:700}
+.signup-divider:before,.signup-divider:after{content:"";height:1px;background:var(--line);flex:1}
+.signup-email{border-color:#111;background:#111;color:#fff}
+.signup-email .signup-provider-mark{background:#fff;color:#111;border-color:#fff}
+.signup-email .signup-provider-copy span{color:#bbb}
+.signup-email .signup-provider-arrow{color:#bbb}
+.signup-terms{margin:12px 2px 0;color:#999;font-size:9px;line-height:1.6;text-align:center}
+.email-signup-page{padding-top:2px}
+.email-signup-head{margin:8px 0 24px}
+.email-signup-head h1{margin:0;font-size:30px;letter-spacing:-.04em}
+.email-signup-head p{margin:8px 0 0;color:#777;font-size:12px;line-height:1.7}
+.email-signup-form{border-top:1px solid var(--line);padding-top:20px}
+.email-signup-form .field{margin-bottom:16px}
+.email-signup-form .field label{font-size:12px}
+.email-signup-form input{min-height:48px;font-size:16px}
+.email-signup-submit{width:100%;margin-top:4px}
+.email-signup-error{display:none;margin:0 0 12px;padding:10px 12px;border-radius:9px;background:#fff3f3;border:1px solid #f1d0d0;color:#a13a3a;font-size:11px;line-height:1.55}
+.email-signup-error.show{display:block}
+.email-signup-note{margin:12px 2px 0;color:#999;font-size:9px;line-height:1.6;text-align:center}
+
+
 .profile-member-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px}
 .profile-member-badge{font-size:11px;font-weight:750;color:#555;border:1px solid var(--line-strong);border-radius:999px;padding:5px 8px}
 .profile-section{margin-top:28px}
@@ -1728,10 +1759,31 @@ a{color:inherit;text-decoration:none}
     return html||'<div class="empty">아직 대화가 없습니다.<br>작가 프로필에서 채팅을 시작할 수 있습니다.</div>';
   }
 
+  function emailSignupHTML() {
+    if(isMember()) return profileHTML();
+    return '<main class="wrap"><section class="email-signup-page"><button class="back" type="button" data-view="profile">←</button>'+
+      '<div class="email-signup-head"><h1>이메일로 회원가입</h1><p>이메일과 비밀번호로 NovelTail 계정을 만듭니다.</p></div>'+
+      '<form class="email-signup-form" id="emailSignupForm">'+
+      '<div class="field"><label for="signupEmail">이메일</label><input id="signupEmail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required></div>'+
+      '<div class="field"><label for="signupPassword">비밀번호</label><input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="8자 이상" required></div>'+
+      '<div class="field"><label for="signupPasswordConfirm">비밀번호 확인</label><input id="signupPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="8" placeholder="비밀번호를 한 번 더 입력" required></div>'+
+      '<div class="email-signup-error" id="emailSignupError" role="alert"></div>'+
+      '<button class="btn primary email-signup-submit" type="submit">회원가입</button>'+
+      '<p class="email-signup-note">현재 테스트판에서는 실제 이메일 인증이나 계정 생성은 하지 않습니다.</p>'+
+      '</form></section></main>';
+  }
+
   function profileHTML() {
     var ids,arr=[],cards="",i,bids,barr=[],bcards="",seen={},work,fids,farr=[],fcards="",fa,me=currentProfile();
     if(!isMember()) {
-      return '<main class="wrap"><section class="profile-guest"><h1>프로필</h1><div class="profile-guest-lead">회원가입하면<br>이야기를 모아둘 수 있습니다.</div><p class="profile-guest-copy">읽기와 둘러보기는 가볍게 시작하고, 내 작품과 마음에 든 작품을 계속 관리하고 싶을 때 계정을 만들 수 있습니다.</p><div class="profile-benefits"><div class="profile-benefit"><div class="profile-benefit-num">1</div><div><b>내 작품을 한곳에서</b><span>내가 작성한 첫 작품과 꼬리 작품, 시리즈를 프로필에서 모아볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">2</div><div><b>북마크</b><span>마음에 든 소설을 북마크에 저장해 다시 볼 수 있습니다.</span></div></div><div class="profile-benefit"><div class="profile-benefit-num">3</div><div><b>회원 프로필</b><span>회원만 프로필을 가지며, 회원이 작성한 작품에서만 작성자 프로필로 이동할 수 있습니다.</span></div></div></div><button class="btn primary profile-signup" type="button" data-signup="1">회원가입</button><p class="profile-test-note">현재 테스트판에서는 개인정보 입력 없이 버튼을 누르면 바로 회원 상태가 됩니다.</p></section></main>';
+      return '<main class="wrap"><section class="profile-guest"><h1>프로필</h1><div class="profile-guest-lead">계정을 만들고<br>내 이야기를 이어가세요.</div><p class="profile-guest-copy">읽기와 둘러보기는 계정 없이도 가능합니다. 작품 관리, 북마크, 회원 프로필이 필요할 때 원하는 방식으로 가입할 수 있습니다.</p><div class="signup-panel"><div class="signup-title">간편 회원가입</div><div class="signup-social-grid">'+
+        '<button class="signup-provider" type="button" data-signup-provider="google"><span class="signup-provider-mark">G</span><span class="signup-provider-copy"><b>Google로 계속하기</b><span>Google 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
+        '<button class="signup-provider" type="button" data-signup-provider="apple"><span class="signup-provider-mark">A</span><span class="signup-provider-copy"><b>Apple로 계속하기</b><span>Apple 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
+        '<button class="signup-provider" type="button" data-signup-provider="kakao"><span class="signup-provider-mark">K</span><span class="signup-provider-copy"><b>카카오로 계속하기</b><span>카카오 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
+        '<button class="signup-provider" type="button" data-signup-provider="discord"><span class="signup-provider-mark">D</span><span class="signup-provider-copy"><b>Discord로 계속하기</b><span>Discord 계정으로 간편 가입</span></span><span class="signup-provider-arrow">→</span></button>'+ 
+      '</div><div class="signup-divider"><span>또는</span></div>'+ 
+      '<button class="signup-provider signup-email" type="button" data-signup-provider="email"><span class="signup-provider-mark">@</span><span class="signup-provider-copy"><b>이메일로 회원가입</b><span>이메일과 비밀번호로 계정 만들기</span></span><span class="signup-provider-arrow">→</span></button>'+ 
+      '<p class="signup-terms">현재는 회원가입 방식의 UI 영역만 구현한 테스트판입니다. 실제 Google · Apple · 카카오 · Discord · 이메일 인증은 아직 연결되지 않았습니다.</p></div></section></main>';
     }
     ids=mineIds();
     for(i=0;i<data.length;i++) {if(ids.indexOf(data[i].id)===-1) continue;if(isSeriesEpisode(data[i])&&data[i].episode!==1) continue;arr.push(data[i]);}
@@ -1788,6 +1840,7 @@ a{color:inherit;text-decoration:none}
     else if(state.view==="write") app.innerHTML=formHTML(null);
     else if(state.view==="tail") app.innerHTML=formHTML(state.selected);
     else if(state.view==="profile") app.innerHTML=profileHTML();
+    else if(state.view==="emailsignup") app.innerHTML=emailSignupHTML();
     else if(state.view==="publicprofile") app.innerHTML=publicProfileHTML();
     else if(state.view==="chat") { if(!FEATURES.chat){state.view="profile";app.innerHTML=profileHTML();} else app.innerHTML=chatHTML(); }
     else if(state.view==="fanart") { if(!FEATURES.fanart){state.view="find";app.innerHTML=findHTML();} else app.innerHTML=fanartDetailHTML(); }
@@ -1806,7 +1859,7 @@ a{color:inherit;text-decoration:none}
 
   function updateNav() {
     var buttons=document.querySelectorAll("#bottomNav .nav"),i;
-    var activeView=state.view==="event"?"home":state.view;
+    var activeView=state.view==="event"?"home":((state.view==="emailsignup")?"profile":state.view);
     for(i=0;i<buttons.length;i++) {
       if(buttons[i].getAttribute("data-view")===activeView) buttons[i].classList.add("on");
       else buttons[i].classList.remove("on");
@@ -2019,6 +2072,7 @@ a{color:inherit;text-decoration:none}
           }
           return;
         }
+        if(t.getAttribute("data-signup-provider")) {var signupProvider=t.getAttribute("data-signup-provider");if(signupProvider==="email"){go("emailsignup");return;}try{localStorage.setItem("noveltail_test_signup_provider_v1",signupProvider);}catch(err){}setMember(true);render();return;}
         if(t.getAttribute("data-signup")) {setMember(true);render();return;}
         if(t.getAttribute("data-withdraw")) {setMember(false);try{localStorage.removeItem(BOOKMARK_KEY);localStorage.removeItem(FANART_FAVORITE_KEY);}catch(err){}render();return;}
         if(t.getAttribute("data-bookmark")) {toggleBookmark(t.getAttribute("data-bookmark"));render();return;}
@@ -2142,7 +2196,17 @@ a{color:inherit;text-decoration:none}
   }
 
   document.addEventListener("submit", function(e){
-    if(e.target && e.target.id==="storyForm") {e.preventDefault();submitStory(e.target);}
+    if(e.target && e.target.id==="emailSignupForm") {
+      e.preventDefault();
+      var sf=new FormData(e.target),email=String(sf.get("email")||"").trim(),pw=String(sf.get("password")||""),pw2=String(sf.get("passwordConfirm")||""),errBox=document.getElementById("emailSignupError");
+      function signupError(msg){if(errBox){errBox.textContent=msg;errBox.classList.add("show");}}
+      if(!email){signupError("이메일을 입력해주세요.");return;}
+      if(pw.length<8){signupError("비밀번호는 8자 이상 입력해주세요.");return;}
+      if(pw!==pw2){signupError("비밀번호가 서로 다릅니다.");return;}
+      try{localStorage.setItem("noveltail_test_signup_provider_v1","email");localStorage.setItem("noveltail_test_signup_email_v1",email);}catch(err){}
+      setMember(true);go("profile");
+    }
+    else if(e.target && e.target.id==="storyForm") {e.preventDefault();submitStory(e.target);}
     else if(e.target && e.target.id==="seriesEpisodeForm") {e.preventDefault();submitSeriesEpisode(e.target);}
     else if(e.target && e.target.id==="fanartForm") {e.preventDefault();submitFanart(e.target);}
     else if(e.target && e.target.id==="chatForm") {
