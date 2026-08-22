@@ -18,7 +18,7 @@
   --line:#e8e8e8;
   --line-strong:#d7d7d7;
   --panel:#fafafa;
-  --nav-h:74px;
+  --nav-h:62px;
 }
 *{box-sizing:border-box}
 html,body{touch-action:manipulation}
@@ -35,7 +35,7 @@ a{color:inherit;text-decoration:none}
 .logo:active{opacity:.58}
 .top-actions{display:flex;align-items:center;gap:7px}
 .top-link{appearance:none;border:0;background:transparent;padding:7px 5px;font-size:12px;font-weight:700;color:#666}
-.wrap{max-width:760px;margin:0 auto;padding:22px 18px calc(142px + env(safe-area-inset-bottom))}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px calc(88px + env(safe-area-inset-bottom))}
 .sec{margin-top:28px}
 .head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
 .head h2{margin:0;font-size:18px;letter-spacing:-.02em}
@@ -51,8 +51,9 @@ a{color:inherit;text-decoration:none}
 .search{width:100%;border:1px solid var(--line-strong);background:#fff;border-radius:10px;padding:12px 13px;margin-bottom:12px;outline:none}
 .search:focus,.field input:focus,.field textarea:focus,.field select:focus,.commentbox input:focus{border-color:#111;box-shadow:none}
 .list{display:grid;gap:0}
-.card{border-top:1px solid var(--line)}
-.card:last-child{border-bottom:1px solid var(--line)}
+.card{border-bottom:1px solid #f0f0f0}
+.card:first-child{border-top:0}
+.card:last-child{border-bottom:0}
 .card button{all:unset;display:block;width:100%;padding:10px 0;cursor:pointer}
 .card button:active{opacity:.65}
 .card-row{display:flex;align-items:center;justify-content:space-between;gap:14px}
@@ -62,7 +63,8 @@ a{color:inherit;text-decoration:none}
 .meta{display:flex;gap:10px 14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:10px}
 .badge{display:inline-block;border:1px solid var(--line-strong);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:600;color:#4f4f4f;background:#fff;flex:0 0 auto}
 .number{color:var(--muted);font-weight:700;margin-right:8px}
-.reader,.form{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+.reader{background:#fff;padding:4px 0 0}
+.form{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
 .reader h1{font-size:31px;line-height:1.2;margin:0;letter-spacing:-.04em}
 .body{white-space:pre-wrap;font-size:16px;line-height:1.95;margin-top:24px;color:#1b1b1b}
 .triple{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
@@ -72,7 +74,7 @@ a{color:inherit;text-decoration:none}
 .tree{border-left:1px solid var(--line-strong);padding-left:14px;display:grid;gap:10px}
 .node{border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px}
 .node b{display:block;font-size:14px;line-height:1.5}
-.series-head{padding:4px 0 18px;border-bottom:1px solid var(--line)}
+.series-head{padding:4px 0 12px}
 .series-head .badge{margin-bottom:9px}
 .series-head h1{margin:0;font-size:29px;line-height:1.25;letter-spacing:-.035em}
 .episode-list{border-top:1px solid var(--line)}
@@ -101,8 +103,9 @@ a{color:inherit;text-decoration:none}
 .bottom{display:grid;grid-template-columns:repeat(4,1fr);padding:7px 8px 6px}
 .nav{border:0;background:none;color:var(--muted);font-size:13px;font-weight:750;padding:9px 4px;min-height:40px}
 .nav.on{color:var(--text)}
-.bottom-tools{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding:3px 8px 5px}
-.history-btn{height:36px;border:0;background:transparent;border-radius:8px;font-size:21px;line-height:1;color:#222;padding:0;font-weight:500}
+.bottom-tools{display:none;position:absolute;right:10px;bottom:calc(100% + 8px);grid-template-columns:repeat(3,42px);gap:2px;padding:4px;background:rgba(255,255,255,.98);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.10);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.bottom-tools.open{display:grid}
+.history-btn{width:42px;height:38px;border:0;background:transparent;border-radius:9px;font-size:20px;line-height:1;color:#222;padding:0;font-weight:500}
 .history-btn:active{background:#f3f3f3}
 .history-btn:disabled{color:#c8c8c8;cursor:default;background:transparent}
 .refresh-btn{font-size:19px}
@@ -147,15 +150,18 @@ a{color:inherit;text-decoration:none}
 .royalty{border-left:3px solid #111}
 .hint{font-size:11px;line-height:1.55;color:var(--muted);margin-top:6px}
 .empty.compact{padding:18px 8px;margin-top:10px}
-.find-controls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}
-.find-toggle{appearance:none;border:1px solid var(--line-strong);background:#fff;border-radius:9px;padding:9px 11px;font-size:12px;font-weight:750}
-.find-toggle.on{background:#111;color:#fff;border-color:#111}
-.family-block{border-top:1px solid var(--line)}
-.family-block:last-child{border-bottom:1px solid var(--line)}
+.find-filter-bar{display:flex;align-items:center;justify-content:flex-end;margin:2px 0 10px}
+.find-filter-btn{appearance:none;border:0;background:#f4f4f4;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:800;color:#555}
+.find-filter-btn.on{background:#111;color:#fff}
+.find-filter-panel{margin:0 0 13px;padding:11px 12px;background:#fafafa;border-radius:11px}
+.find-controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 8px}
+.find-toggle{appearance:none;border:0;background:#ededed;border-radius:9px;padding:9px 11px;font-size:12px;font-weight:750}
+.find-toggle.on{background:#111;color:#fff}
+.family-block{padding:0}
+.family-block+.family-block{border-top:1px solid #f2f2f2}
 .family-block>.card{border-top:0;border-bottom:0}
 .family-tails{margin:0 0 7px 22px;border-left:1px solid var(--line-strong);padding-left:12px}
-.family-tail-row{border-top:1px solid #f0f0f0}
-.family-tail-row:first-child{border-top:0}
+.family-tail-row{border-top:0}
 .family-tail-row button{all:unset;display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 0;cursor:pointer}
 .family-tail-title{font-size:13px;font-weight:620;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .family-tail-views{font-size:11px;color:var(--muted);white-space:nowrap}
@@ -234,7 +240,7 @@ a{color:inherit;text-decoration:none}
 .work-fanarts-all{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:#666;font-size:11px;font-weight:800;padding:8px 0 0}
 @media(max-width:380px){.fanart-grid{gap:12px 8px}.fanart-card-title{font-size:11px}}
 
-.home-feed{border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;background:#fff;overflow:hidden;box-sizing:border-box}
+.home-feed{border:0;border-radius:0;padding:2px 0 8px;background:#fff;overflow:hidden;box-sizing:border-box}
 .home-feed .pills{margin-bottom:6px}
 .home-feed .card:first-child{border-top:0}
 .home-feed-more{display:flex;justify-content:center;padding:8px 0 1px}
@@ -242,15 +248,21 @@ a{color:inherit;text-decoration:none}
 .home-expand-btn:active{background:#f4f4f4}
 .home-list-frame{width:100%;min-width:0;max-width:100%;overflow:hidden;overflow:clip;box-sizing:border-box}
 .home-pager{position:relative!important;inset:auto!important;transform:none!important;display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-width:0;max-width:100%;box-sizing:border-box;margin:0;padding:7px 8px 9px;overflow:hidden}
-.home-pager.pager-top{border-bottom:1px solid #f2f2f2}
-.home-pager.pager-bottom{border-top:1px solid #f2f2f2;padding:9px 8px 7px}
+.home-pager.pager-top{border-bottom:0}
+.home-pager.pager-bottom{border-top:0;padding:9px 8px 7px}
 .home-page-btn{-webkit-appearance:none!important;appearance:none!important;position:static!important;inset:auto!important;transform:none!important;flex:0 0 34px;display:grid;place-items:center;width:34px!important;min-width:34px!important;max-width:34px!important;height:32px!important;box-sizing:border-box;border:1px solid var(--line-strong);background:#fff;border-radius:8px;font-size:16px;line-height:1;padding:0!important;margin:0!important}
 .home-page-btn:disabled{color:#c9c9c9;background:#fafafa}
 .home-page-status{flex:1 1 auto;min-width:0;text-align:center;font-size:11px;color:#777;font-weight:700;white-space:nowrap;overflow:hidden}
 .home-list-frame>.list{width:100%;min-width:0;max-width:100%;overflow:hidden}
 .home-slot-empty button{pointer-events:none;cursor:default}
 .home-slot-empty .card-row{visibility:hidden}
-.ad-slot{height:108px;margin:26px 0 34px;border-radius:10px;background:#ececec;color:#8b8b8b;display:grid;place-items:center;font-size:12px;font-weight:700;letter-spacing:.02em}
+.ad-slot{height:96px;margin:24px 0 28px;border-radius:10px;background:#f0f0f0;color:#999;display:grid;place-items:center;font-size:11px;font-weight:700;letter-spacing:.02em}
+.home-about{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:4px 0 8px;padding:18px 0}
+.home-about-copy{min-width:0}
+.home-about-kicker{font-size:10px;font-weight:850;letter-spacing:.12em;color:#999;margin-bottom:5px}
+.home-about strong{display:block;font-size:17px;line-height:1.45;letter-spacing:-.025em}
+.home-about p{margin:5px 0 0;font-size:12px;line-height:1.65;color:#777}
+.home-about-btn{appearance:none;border:0;background:#f3f3f3;border-radius:9px;padding:9px 11px;font-size:11px;font-weight:800;white-space:nowrap}
 .project-intro{padding:18px 0 24px}
 .project-kicker{font-size:12px;font-weight:850;letter-spacing:.12em;color:#777;margin-bottom:15px}
 .project-intro h1{margin:0;font-size:42px;line-height:1.08;letter-spacing:-.055em}
@@ -327,7 +339,7 @@ a{color:inherit;text-decoration:none}
 .chat-msg.them{align-self:flex-start;background:#f2f2f2;color:#333;border-bottom-left-radius:4px}
 .chat-msg.me{align-self:flex-end;background:#111;color:#fff;border-bottom-right-radius:4px}
 .chat-msg-time{display:block;font-size:8px;opacity:.55;margin-top:4px}
-.chat-compose{position:sticky;bottom:calc(94px + var(--vv-bottom));display:grid;grid-template-columns:1fr auto;gap:7px;background:rgba(255,255,255,.96);padding:9px 0 5px;border-top:1px solid var(--line)}
+.chat-compose{position:sticky;bottom:calc(68px + var(--vv-bottom));display:grid;grid-template-columns:1fr auto;gap:7px;background:rgba(255,255,255,.96);padding:9px 0 5px;border-top:1px solid var(--line)}
 .chat-compose input{min-width:0;border:1px solid var(--line-strong);border-radius:9px;padding:10px 11px;font-size:16px;line-height:1.35;background:#fff;-webkit-text-size-adjust:100%}
 .chat-compose button{appearance:none;border:0;border-radius:9px;background:#111;color:#fff;font-weight:850;padding:0 14px}
 .fanart-search{margin:10px 0 12px}
@@ -355,7 +367,8 @@ a{color:inherit;text-decoration:none}
 
 @media (min-width:720px){
   .title{font-size:19px}
-  .reader,.form{padding:22px}
+  .reader{padding-top:6px}
+  .form{padding:22px}
 }
 </style>
 </head>
@@ -363,7 +376,7 @@ a{color:inherit;text-decoration:none}
 <header class="site-header">
   <div class="topin">
     <button class="logo" id="logoProject" type="button" aria-label="홈 프로젝트 소개로 이동"><span class="logo-en">NovelTail</span><span class="logo-ko">노벨테일</span></button>
-    <div class="top-actions"><button class="top-link" id="installApp" type="button">앱 설치</button><button class="top-link" id="infoToggle" type="button" data-info-toggle="1">안내</button><button class="btn ghost small" id="randomTop" type="button">랜덤</button></div>
+    <div class="top-actions"><button class="top-link" id="installApp" type="button">앱 설치</button><button class="top-link" id="infoToggle" type="button" data-info-toggle="1">안내</button><button class="top-link" id="pageToolsToggle" type="button" aria-expanded="false">도구</button><button class="btn ghost small" id="randomTop" type="button">랜덤</button></div>
   </div>
 </header>
 
@@ -387,17 +400,7 @@ a{color:inherit;text-decoration:none}
       </div>
     </section>
     <div class="ad-slot">광고 영역</div>
-    <section class="project-intro" id="projectIntro">
-      <div class="project-kicker">NovelTail · 노벨테일</div>
-      <h1>작가를 위한<br>플랫폼.</h1>
-      <p class="project-lead">좋은 이야기가 더 많은 사람에게 닿고, 그 가치가 가능한 한 창작자에게 돌아가야 한다고 생각합니다. NovelTail(노벨테일)은 읽는 사람을 다음 작가로 연결하고, 혼자 시작한 이야기가 함께 자랄 수 있게 만드는 공동창작 플랫폼입니다.</p>
-    </section>
-    <section class="project-fee"><strong>플랫폼이 가져가는 몫은 <em>10%</em>.</strong><p>작품에서 수익이 발생하면 NovelTail의 플랫폼 운영 수수료는 10%입니다. 나머지 90%는 창작자 배분금으로 남습니다. 꼬리 작품에서는 최초 원작자와 앞선 창작자의 기여도 계보에 따라 함께 기록하고 배분합니다.</p><div class="fee-note">창작물이 커질수록 플랫폼보다 창작자에게 더 많은 가치가 돌아가는 구조를 지향합니다.</div></section>
-    <section class="project-section"><h2>누구나 쓰기 시작할 수 있도록.</h2><p>이름값이나 등단 여부, 팔로워 수보다 이야기가 먼저 보이는 공간을 지향합니다. 짧은 단편 하나도 시작이 될 수 있고, 누군가가 그 뒤를 이어 더 큰 세계를 만들 수 있습니다.</p></section>
-    <section class="project-section"><h2>이어 쓴 사람의 기여가 사라지지 않도록.</h2><p><b>첫</b> 작품에서 시작된 모든 <b>꼬리</b>는 어디에서 이어졌는지 계보를 남깁니다. 꼬리에서 다시 꼬리가 이어져도 앞선 창작자의 흔적과 기여가 함께 보존되는 구조를 지향합니다.</p></section>
-    <section class="project-section"><h2>원작자의 이야기는 원작자가 결정합니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 분명하게 구분됩니다. 꼬리 창작 허용 범위 역시 원작자가 정합니다.</p><p class="project-highlight">원작자의 권리는 지키면서, 허용된 범위 안에서는 누구나 새로운 가능성을 만들 수 있게.</p></section>
-    <section class="project-section"><h2>읽는 사람도 창작자가 될 수 있도록.</h2><p>다음 화, 다른 결말, 외전, 패러디, 다른 인물의 시점. 마음속에 떠오른 ‘이렇게 이어지면 어떨까?’를 감상으로 끝내지 않고 하나의 작품으로 이어갈 수 있습니다.</p></section>
-    <section class="project-final"><strong>이야기를 독점하는 플랫폼보다,<br>이야기가 계속 태어나는 공간으로.</strong><span>NovelTail(노벨테일)은 창작의 문턱을 낮추고, 창작자의 권리와 기여를 연결하는 플랫폼을 지향합니다.</span></section>
+    <section class="home-about" id="projectIntro"><div class="home-about-copy"><div class="home-about-kicker">NOVELTAIL · 노벨테일</div><strong>읽은 이야기를, 다음 이야기로.</strong><p>첫 작품에서 꼬리가 이어지는 공동창작 플랫폼입니다.</p></div><button class="home-about-btn" type="button" data-info-toggle="1">서비스 안내 →</button></section>
   </main>
 </div>
 
@@ -481,7 +484,7 @@ a{color:inherit;text-decoration:none}
 
   var data = loadData();
   var fanarts = loadFanarts();
-  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null, fanQuery:"", profileUser:null, profileTab:"works", chatUser:null};
+  var state = {view:"home", selected:null, query:"", rank:"최신", homeExpanded:false, homePage:0, findKind:"works", findGenre:"전체", findShowTails:false, findFlat:false, findExpanded:{}, findFilterOpen:false, genreSettingsOpen:false, fanRank:"최신", fanGenre:"전체", fanWorkFilter:null, fanQuery:"", profileUser:null, profileTab:"works", chatUser:null};
 
   function saveData() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -1142,13 +1145,7 @@ a{color:inherit;text-decoration:none}
     return '<main class="wrap">'+
       '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame">'+pagerTop+'<div class="list">'+cards+'</div>'+pagerBottom+'</div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
       '<div class="ad-slot">광고 영역</div>'+ 
-      '<section class="project-intro" id="projectIntro"><div class="project-kicker">NovelTail · 노벨테일</div><h1>작가를 위한<br>플랫폼.</h1><p class="project-lead">좋은 이야기가 더 많은 사람에게 닿고, 그 가치가 가능한 한 창작자에게 돌아가야 한다고 생각합니다. NovelTail(노벨테일)은 읽는 사람을 다음 작가로 연결하고, 혼자 시작한 이야기가 함께 자랄 수 있게 만드는 공동창작 플랫폼입니다.</p></section>'+ 
-      '<section class="project-fee"><strong>플랫폼이 가져가는 몫은 <em>10%</em>.</strong><p>작품에서 수익이 발생하면 NovelTail의 플랫폼 운영 수수료는 10%입니다. 나머지 90%는 창작자 배분금으로 남습니다. 꼬리 작품에서는 최초 원작자와 앞선 창작자의 기여도 계보에 따라 함께 기록하고 배분합니다.</p><div class="fee-note">창작물이 커질수록 플랫폼보다 창작자에게 더 많은 가치가 돌아가는 구조를 지향합니다.</div></section>'+ 
-      '<section class="project-section"><h2>누구나 쓰기 시작할 수 있도록.</h2><p>이름값이나 등단 여부, 팔로워 수보다 이야기가 먼저 보이는 공간을 지향합니다. 짧은 단편 하나도 시작이 될 수 있고, 누군가가 그 뒤를 이어 더 큰 세계를 만들 수 있습니다.</p></section>'+ 
-      '<section class="project-section"><h2>이어 쓴 사람의 기여가 사라지지 않도록.</h2><p><b>첫</b> 작품에서 시작된 모든 <b>꼬리</b>는 어디에서 이어졌는지 계보를 남깁니다. 꼬리에서 다시 꼬리가 이어져도 앞선 창작자의 흔적과 기여가 함께 보존되는 구조를 지향합니다.</p></section>'+ 
-      '<section class="project-section"><h2>원작자의 이야기는 원작자가 결정합니다.</h2><p>시리즈의 공식 회차는 원작자가 이어가는 정사로 분명하게 구분됩니다. 꼬리 창작 허용 범위 역시 원작자가 정합니다.</p><p class="project-highlight">원작자의 권리는 지키면서, 허용된 범위 안에서는 누구나 새로운 가능성을 만들 수 있게.</p></section>'+ 
-      '<section class="project-section"><h2>읽는 사람도 창작자가 될 수 있도록.</h2><p>다음 화, 다른 결말, 외전, 패러디, 다른 인물의 시점. 마음속에 떠오른 ‘이렇게 이어지면 어떨까?’를 감상으로 끝내지 않고 하나의 작품으로 이어갈 수 있습니다.</p></section>'+ 
-      '<section class="project-final"><strong>이야기를 독점하는 플랫폼보다,<br>이야기가 계속 태어나는 공간으로.</strong><span>NovelTail(노벨테일)은 창작의 문턱을 낮추고, 창작자의 권리와 기여를 연결하는 플랫폼을 지향합니다.</span></section>'+ 
+      '<section class="home-about" id="projectIntro"><div class="home-about-copy"><div class="home-about-kicker">NOVELTAIL · 노벨테일</div><strong>읽은 이야기를, 다음 이야기로.</strong><p>첫 작품에서 꼬리가 이어지는 공동창작 플랫폼입니다.</p></div><button class="home-about-btn" type="button" data-info-toggle="1">서비스 안내 →</button></section>'+ 
       '</main>';
   }
 
@@ -1238,12 +1235,11 @@ a{color:inherit;text-decoration:none}
       var g=visibleGenres[i];
       genresHtml+='<button class="pill '+(state.findGenre===g?'on':'')+'" type="button" data-find-genre="'+esc(g)+'">'+esc(g)+'</button>';
     }
+    var activeFilters=(state.findShowTails?1:0)+(state.findFlat?1:0);
+    var filterPanel=state.findFilterOpen?'<div class="find-filter-panel"><div class="find-controls"><button class="find-toggle '+(state.findShowTails?'on':'')+'" type="button" data-find-tails="1">꼬리작품도 보기</button><button class="find-toggle '+(state.findFlat?'on':'')+'" type="button" data-find-flat="1">장르만 보기</button></div><div class="genre-setting-row"><button class="genre-setting-btn" type="button" data-genre-settings="1">장르 탭 순서·숨김 설정</button></div>'+genreSettingsHTML()+'<div class="find-note">장르 분류는 첫 작품을 기준으로 합니다. 장르만 보기는 첫 작품과 꼬리를 한 목록에서 보여줍니다.</div></div>':'';
     return '<input class="search" id="searchInput" value="'+esc(state.query)+'" placeholder="작품 제목 검색">'+
       '<div class="pills">'+genresHtml+'</div>'+
-      '<div class="find-controls"><button class="find-toggle '+(state.findShowTails?'on':'')+'" type="button" data-find-tails="1">꼬리작품도 보기</button><button class="find-toggle '+(state.findFlat?'on':'')+'" type="button" data-find-flat="1">장르만 보기</button></div>'+
-      '<div class="genre-setting-row"><button class="genre-setting-btn" type="button" data-genre-settings="1">장르 탭 설정</button></div>'+
-      genreSettingsHTML()+
-      '<div class="find-note">기본 장르 분류는 첫 작품의 장르를 따릅니다. 장르만 보기를 켜면 첫 작품과 꼬리를 구분하지 않고 한 목록에서 봅니다.</div>'+
+      '<div class="find-filter-bar"><button class="find-filter-btn '+(state.findFilterOpen?'on':'')+'" type="button" data-find-filter="1">필터'+(activeFilters?' · '+activeFilters:'')+'</button></div>'+filterPanel+
       '<div class="list">'+(cards||'<div class="empty">작품이 없습니다.</div>')+'</div>';
   }
 
@@ -1557,7 +1553,7 @@ a{color:inherit;text-decoration:none}
   var navIndex=0,maxNavIndex=0;
 
   function navSnapshot() {
-    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter,fanQuery:state.fanQuery,profileUser:state.profileUser,profileTab:state.profileTab,chatUser:state.chatUser};
+    return {kkori:true,navIndex:navIndex,view:state.view,selected:state.selected,query:state.query,rank:state.rank,homeExpanded:state.homeExpanded,homePage:state.homePage,findKind:state.findKind,findGenre:state.findGenre,findShowTails:state.findShowTails,findFlat:state.findFlat,findExpanded:state.findExpanded,findFilterOpen:state.findFilterOpen,fanRank:state.fanRank,fanGenre:state.fanGenre,fanWorkFilter:state.fanWorkFilter,fanQuery:state.fanQuery,profileUser:state.profileUser,profileTab:state.profileTab,chatUser:state.chatUser};
   }
 
   function updateHistoryButtons() {
@@ -1726,7 +1722,7 @@ a{color:inherit;text-decoration:none}
         if(t.getAttribute("data-work-fanarts")) {if(!FEATURES.fanart)return;state.findKind="fanart";state.fanWorkFilter=t.getAttribute("data-work-fanarts");state.fanGenre="전체";go("find");return;}
         if(t.getAttribute("data-clear-fan-work")) {if(!FEATURES.fanart)return;state.fanWorkFilter=null;render();return;}
         if(t.getAttribute("data-history-back")) {if(navIndex>0)history.back();else go("profile");return;}
-        if(t.getAttribute("data-view")) {go(t.getAttribute("data-view"));return;}
+        if(t.getAttribute("data-view")) {setPageToolsOpen(false);go(t.getAttribute("data-view"));return;}
         if(t.getAttribute("data-series")) {openSeries(t.getAttribute("data-series"));return;}
         if(t.getAttribute("data-seriesnext")) {state.selected=t.getAttribute("data-seriesnext");go("serieswrite");return;}
         if(t.getAttribute("data-story")) {openStory(t.getAttribute("data-story"));return;}
@@ -1743,6 +1739,7 @@ a{color:inherit;text-decoration:none}
         if(t.getAttribute("data-home-page")) {var hp=t.getAttribute("data-home-page");state.homePage+=hp==="next"?1:-1;render();return;}
         if(t.getAttribute("data-rank")) {state.rank=t.getAttribute("data-rank");state.homePage=0;render();return;}
         if(t.getAttribute("data-find-genre")) {state.findGenre=t.getAttribute("data-find-genre");render();return;}
+        if(t.getAttribute("data-find-filter")) {state.findFilterOpen=!state.findFilterOpen;if(!state.findFilterOpen)state.genreSettingsOpen=false;render();return;}
         if(t.getAttribute("data-find-tails")) {state.findShowTails=!state.findShowTails;render();return;}
         if(t.getAttribute("data-find-flat")) {state.findFlat=!state.findFlat;render();return;}
         if(t.getAttribute("data-genre-settings")) {state.genreSettingsOpen=!state.genreSettingsOpen;render();return;}
@@ -1832,6 +1829,7 @@ a{color:inherit;text-decoration:none}
       state.findShowTails=!!h.findShowTails;
       state.findFlat=!!h.findFlat;
       state.findExpanded=h.findExpanded||{};
+      state.findFilterOpen=!!h.findFilterOpen;
       state.fanRank=h.fanRank||"최신";
       state.fanGenre=h.fanGenre||"전체";
       state.fanWorkFilter=h.fanWorkFilter||null;
@@ -1859,9 +1857,16 @@ a{color:inherit;text-decoration:none}
     jumpProject();
   });
   var siteBack=document.getElementById("siteBack"),siteForward=document.getElementById("siteForward"),siteRefresh=document.getElementById("siteRefresh");
-  if(siteBack) siteBack.addEventListener("click",function(){if(navIndex>0) history.back();});
-  if(siteForward) siteForward.addEventListener("click",function(){if(navIndex<maxNavIndex) history.forward();});
-  if(siteRefresh) siteRefresh.addEventListener("click",function(){location.reload();});
+  var pageToolsToggle=document.getElementById("pageToolsToggle"),bottomTools=document.querySelector(".bottom-tools");
+  function setPageToolsOpen(open){
+    if(!bottomTools||!pageToolsToggle)return;
+    bottomTools.classList.toggle("open",!!open);
+    pageToolsToggle.setAttribute("aria-expanded",open?"true":"false");
+  }
+  if(pageToolsToggle) pageToolsToggle.addEventListener("click",function(){setPageToolsOpen(!(bottomTools&&bottomTools.classList.contains("open")));});
+  if(siteBack) siteBack.addEventListener("click",function(){setPageToolsOpen(false);if(navIndex>0) history.back();});
+  if(siteForward) siteForward.addEventListener("click",function(){setPageToolsOpen(false);if(navIndex<maxNavIndex) history.forward();});
+  if(siteRefresh) siteRefresh.addEventListener("click",function(){setPageToolsOpen(false);location.reload();});
 
   // iOS Safari의 더블탭 스마트 확대를 막되, 일반 스크롤과 핀치 확대는 유지한다.
   (function preventDoubleTapZoom(){
