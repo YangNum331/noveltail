@@ -276,6 +276,7 @@ a{color:inherit;text-decoration:none}
 .home-slot-empty button{pointer-events:none;cursor:default}
 .home-slot-empty .card-row{visibility:hidden}
 .ad-slot{height:96px;margin:24px 0 28px;border-radius:10px;background:#f0f0f0;color:#999;display:grid;place-items:center;font-size:11px;font-weight:700;letter-spacing:.02em}
+.home-ad-slot{margin-top:12px;margin-bottom:26px}
 .home-about{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:4px 0 8px;padding:18px 0}
 .home-about-copy{min-width:0}
 .home-about-kicker{font-size:10px;font-weight:850;letter-spacing:.12em;color:#999;margin-bottom:5px}
@@ -525,7 +526,7 @@ a{color:inherit;text-decoration:none}
       </div></div><div class="swipe-dots" aria-label="작품 1 / 7"><span class="swipe-dot on"></span><span class="swipe-dot"></span><span class="swipe-dot"></span><span class="swipe-dot"></span><span class="swipe-dot"></span><span class="swipe-dot"></span><span class="swipe-dot"></span></div><div class="home-page-status-swipe">1 / 7 · 좌우로 넘기기</div></div>
       <div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">펼치기</button></div>
     </section>
-    <div class="ad-slot">광고 영역</div>
+    <div class="ad-slot home-ad-slot">광고 영역</div>
     <section class="home-about" id="projectIntro"><div class="home-about-copy"><div class="home-about-kicker">NOVELTAIL · 노벨테일</div><strong>읽은 이야기를, 다음 이야기로.</strong><p>첫 작품에서 꼬리가 이어지는 공동창작 플랫폼입니다.</p></div><button class="home-about-btn" type="button" data-info-toggle="1">서비스 안내 →</button></section>
   </main>
 </div>
@@ -1410,7 +1411,7 @@ a{color:inherit;text-decoration:none}
     return '<main class="wrap">'+
       eventCarouselHTML()+
       '<section class="home-feed"><div class="pills">'+rankButtons+'</div><div class="home-list-frame"><div class="home-swipe-zone" data-home-swipe="1">'+pages+'</div><div id="homeDots">'+swipeDotsHTML(state.homePage,totalPages,'작품')+'</div><div class="home-page-status-swipe" id="homePageStatus">'+(state.homePage+1)+' / '+totalPages+' · 좌우로 넘기기</div></div><div class="home-feed-more"><button class="home-expand-btn" type="button" data-home-expand="1">'+(state.homeExpanded?'접기':'펼치기')+'</button></div></section>'+ 
-      '<div class="ad-slot">광고 영역</div>'+ 
+      '<div class="ad-slot home-ad-slot">광고 영역</div>'+ 
       '<section class="home-about" id="projectIntro"><div class="home-about-copy"><div class="home-about-kicker">NOVELTAIL · 노벨테일</div><strong>읽은 이야기를, 다음 이야기로.</strong><p>첫 작품에서 꼬리가 이어지는 공동창작 플랫폼입니다.</p></div><button class="home-about-btn" type="button" data-info-toggle="1">서비스 안내 →</button></section>'+ 
       '</main>';
   }
